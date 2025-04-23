@@ -2,6 +2,7 @@ NAME = minishell
 CC = cc
 FLAGS = -Wall -Wextra -Werror -fsanitize=address
 RM = rm -rf
+LIBS = -lreadline
 MKDIR = mkdir -p # Si ya existe no da problemas
 
 INCLUDE_DIR = inc
@@ -10,7 +11,8 @@ INCLUDE = $(INCLUDE_DIR)/minishell.h
 
 SRC_DIR = src/
 SRC_FILES = main.c\
-			signal/signal.c
+			signal/signal.c\
+			libft/ft_putstr_fd.c\
 
 
 SRCS = $(addprefix $(SRC_DIR), $(SRC_FILES))
@@ -26,7 +28,7 @@ $(OBJ_DIR):
 	@$(MKDIR) $(OBJ_DIR)
 
 $(NAME): $(OBJS)
-	@$(CC) $(FLAGS) $(OBJS) -o $(NAME)
+	@$(CC) $(FLAGS) $(OBJS) -o $(NAME) $(LIBS)
 
 $(OBJ_DIR)%.o: $(SRC_DIR)%.c $(INCLUDE)
 	@$(MKDIR) $(dir $@)  #Crea el subdirectorio
