@@ -7,8 +7,18 @@ int main(int argc, char **argv, char **env)
     if (argc != 1)
         return (1);
     signal_init();
-    printf("End signal!\n");
-    (void)msl;
+    while (1)
+    {
+        msl.input = readline("> "); //Muestra un prompt
+        if (!msl.input)
+        {
+            printf("exit\n");
+            break ;
+        }
+        if (*msl.input)
+            add_history(msl.input); //Guarda (char*) en el historial
+        free(msl.input);
+    }
     (void)argv;
     (void)env;
     return(0);

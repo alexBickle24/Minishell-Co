@@ -6,7 +6,10 @@
 */
 # include <unistd.h>
 # include <stdio.h>
+# include <stdlib.h>
+# include <signal.h>
 # include <readline/readline.h>
+# include <readline/history.h>
 
 /*
  * DEFINES
@@ -23,7 +26,7 @@ typedef enum e_signal
  */
 typedef struct s_mshell
 {
-    char *name;
+    char *input;
 }   t_mshell;
 
 /*
