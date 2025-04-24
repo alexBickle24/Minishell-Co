@@ -2,7 +2,7 @@
 
 int g_signal;
 
-void    signal_init(void)
+void    ft_signal_init(void)
 {
     g_signal = S_INIT;
     if (g_signal == S_INIT)

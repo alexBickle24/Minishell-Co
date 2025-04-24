@@ -1,12 +1,17 @@
 #include "minishell.h"
-
+/*
+ * env: Es lo mismo que extern char **environ
+  *         env[i] = "PATH=/usr/bin" (ejemplo)
+  *         env[N] == NULL
+ */
 int main(int argc, char **argv, char **env)
 {
     t_mshell msl;
 
     if (argc != 1)
         return (1);
-    signal_init();
+    ft_environ_init(env);
+    ft_signal_init();
     while (1)
     {
         msl.input = readline("> "); //Muestra un prompt
@@ -20,6 +25,5 @@ int main(int argc, char **argv, char **env)
         free(msl.input);
     }
     (void)argv;
-    (void)env;
     return(0);
 }

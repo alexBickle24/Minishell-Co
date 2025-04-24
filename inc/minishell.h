@@ -32,8 +32,10 @@ typedef struct s_mshell
 /*
  * FUNCIONES
  */
+// environ
+void    ft_environ_init(char **env);
 // signal
-void    signal_init(void);
+void    ft_signal_init(void);
 
 // libft
 void    ft_putstr_fd(char *str, int fd);

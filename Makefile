@@ -11,6 +11,7 @@ INCLUDE = $(INCLUDE_DIR)/minishell.h
 
 SRC_DIR = src/
 SRC_FILES = main.c\
+			environ/environ.c\
 			signal/signal.c\
 			libft/ft_putstr_fd.c\
 
