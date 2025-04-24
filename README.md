@@ -1,9 +1,15 @@
 # PROYECTO MINISHELL
 
+## TASKS:
+Task1: Separar environ_name y environ_value
+Task2: Aplicar señales (Ctrl+C, Ctrl+\, ...)
+
 ## INDICE
 ```
   1. GIT
   2. SEÑALES
+  3. RL
+  4. ENVIRON
 ```
 
 ## 1. GIT
@@ -44,3 +50,17 @@ Esta funcion se va a encargar de detectar las señales que entran por teclado o 
 4. SIGTSTP: (Ctrl + z) Suspender --> No creo que haga falta
 5. SIGCHLD: Procesos hijos --> No se como funciona
 ```
+
+## 3. RL
+Con rl vamos a poder editar la pantalla de nuestra minishell.
+
+rl_on_new_line(): Va a pedir que pasemos a la siguiente linea.
+
+rl_redisplay(): Va  a actualizar la pantalla.
+
+readline: Va a esperar a que introduzcamos un mensaje por pantalla.
+
+add_history(): Va a guardarlo en el historial.
+
+## 4. ENVIRON
+Con env vamos a poder acceder a nuestro archivo con la variables de entorno. Una vez que accedamos vamos a tener que extraer el nombre de la variable y el valor de la misma.
