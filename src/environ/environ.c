@@ -13,28 +13,39 @@ void    ft_environ_init(char **env)
     printf("\n");
 }
 
-// Funcion para extraer cada variable de entorno
-/*
- * 1. Las variables van desde el principio hasta \n
- * 2. Los nombres van desde el principio hasta =
- * 3. Los valores pueden ser varios, separados con ;
- * 
- * ¿Como los organizo?
- * [PATH] - [/usr/local/sbin, /usr/local/bin, ...]
- * [GDMSESSION] - [ubuntu]
- * 
- *      - La estructura debe ser un nombre de valor
- *      - Y un valor en modo lista (puede ser de 1 o mas elementos)
+/* Funcion para extraer valores de variables de entorno
+ * Luego estas variables las modificaremos segun lo necesitemos
+ * Ejemplo: PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin
+ * ft_get_env(env, PATH)
+ *     /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin
  */
-void    ft_get_env(char **env, char *id)
+char *ft_get_env(char **env, char *id)
 {
     int i;
+    int j;
+    int k;
+    int len;
+    char *value;
 
-    i = -1;
-    while (env[++i])
+    if (!env || !id)
+        return NULL;
+    i = 0;
+    while (env[i])
     {
-        if (ft_strncmp(env[i], id, ft_strlen(id)) == 0)
-            printf("result: %s", env[i]);
+        if (ft_strncmp(env[i], id, ft_strlen(id)) == 0 && env[i][ft_strlen(id)] == '=')
+        {
+            j = ft_strlen(id) + 1;
+            len = ft_strlen(env[i]) - j;
+            value = malloc(sizeof(char) * (len + 1));
+            if (!value)
+                return NULL;
+            k = 0;
+            while (env[i][j])
+                value[k++] = env[i][j++];
+            value[k] = '\0';
+            return value;
+        }
+        i++;
     }
-    //return (id);
+    return NULL;
 }

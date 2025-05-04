@@ -41,7 +41,7 @@ typedef struct s_mshell
  */
 // environ
 void    ft_environ_init(char **env);
-void    ft_get_env(char **env, char *id);
+char    *ft_get_env(char **env, char *id);
 
 // signal
 void    ft_signal_init(void);
