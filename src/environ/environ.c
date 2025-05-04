@@ -12,3 +12,17 @@ void    ft_environ_init(char **env)
     }
     printf("\n");
 }
+
+// Funcion para extraer cada variable de entorno
+/*
+ * 1. Las variables van desde el principio hasta \n
+ * 2. Los nombres van desde el principio hasta =
+ * 3. Los valores pueden ser varios, separados con ;
+ * 
+ * ¿Como los organizo?
+ * [PATH] - [/usr/local/sbin, /usr/local/bin, ...]
+ * [GDMSESSION] - [ubuntu]
+ * 
+ *      - La estructura debe ser un nombre de valor
+ *      - Y un valor en modo lista (puede ser de 1 o mas elementos)
+ */
