@@ -11,6 +11,8 @@ int main(int argc, char **argv, char **env)
     if (argc != 1)
         return (1);
     ft_environ_init(env);
+    printf("\n\n");
+    ft_get_env(env, "PATH");
     ft_signal_init();
     while (1)
     {

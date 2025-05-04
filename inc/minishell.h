@@ -24,9 +24,16 @@ typedef enum e_signal
 /*
  * ESTRUCTURAS
  */
+typedef struct s_env
+{
+    char *id;
+    char **value;
+} t_env;
+
 typedef struct s_mshell
 {
     char *input;
+    t_env   *own_env;
 }   t_mshell;
 
 /*
@@ -34,9 +41,13 @@ typedef struct s_mshell
  */
 // environ
 void    ft_environ_init(char **env);
+void    ft_get_env(char **env, char *id);
+
 // signal
 void    ft_signal_init(void);
 
 // libft
 void    ft_putstr_fd(char *str, int fd);
+int     ft_strlen(char *str);
+int     ft_strncmp(char *s1, char *s2, int n);
 #endif

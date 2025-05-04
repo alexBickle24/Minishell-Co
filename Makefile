@@ -14,6 +14,8 @@ SRC_FILES = main.c\
 			environ/environ.c\
 			signal/signal.c\
 			libft/ft_putstr_fd.c\
+			libft/ft_strlen.c\
+			libft/ft_strncmp.c\
 
 
 SRCS = $(addprefix $(SRC_DIR), $(SRC_FILES))

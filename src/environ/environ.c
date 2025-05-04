@@ -26,3 +26,15 @@ void    ft_environ_init(char **env)
  *      - La estructura debe ser un nombre de valor
  *      - Y un valor en modo lista (puede ser de 1 o mas elementos)
  */
+void    ft_get_env(char **env, char *id)
+{
+    int i;
+
+    i = -1;
+    while (env[++i])
+    {
+        if (ft_strncmp(env[i], id, ft_strlen(id)) == 0)
+            printf("result: %s", env[i]);
+    }
+    //return (id);
+}
