@@ -5,9 +5,13 @@ int g_signal; //Variable global
 void ft_sigint(int signal)
 {
     (void)signal;
-    printf("hello\n")
-    //if (g_signal == S_SIGINT)
+    write(1, "\nCtrl+C\n", 8);
+    rl_replace_line("", 0);
+    rl_on_new_line();
+    rl_redisplay(); 
+    g_signal = S_SIGINT;
 }
+
 
 void    ft_signal_init(void)
 {
@@ -17,13 +21,10 @@ void    ft_signal_init(void)
     g_signal = S_INIT;
     sa_int.sa_handler = ft_sigint;
     sigemptyset(&sa_int.sa_mask);
+    sa_int.sa_flags = SA_RESTART;
     sigaction(SIGINT, &sa_int, NULL);
     sa_quit.sa_handler = SIG_IGN;
     sigemptyset(&sa_int.sa_mask);
+    sa_quit.sa_flags = 0;
     sigaction(SIGQUIT, &sa_quit, NULL);
-    if (g_signal == S_INIT)
-    {
-        rl_on_new_line(); // Comienza una nueva linea
-        rl_redisplay(); // Actualiza el display
-    }
 }

@@ -7,19 +7,16 @@
 int main(int argc, char **argv, char **env)
 {
     t_mshell msl;
-    char    *example;
 
     if (argc != 1)
         return (1);
     ft_environ_init(env);
-    printf("\n\n");
-    example = ft_get_env(env, "PATH");
-    printf("%s\n", example);
     ft_signal_init();
+    //rl_catch_signals = 0; Desactibva handlers por defecto de readline
     while (1)
     {
-        msl.input = readline("> "); //Muestra un prompt
-        if (!msl.input)
+        msl.input = readline("> "); // Muestra un prompt
+        if (!msl.input) //Ctrl + D
         {
             printf("exit\n");
             break ;
