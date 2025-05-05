@@ -18,7 +18,8 @@ extern int  g_signal;
 
 typedef enum e_signal
 {
-    S_INIT // Señal inicio
+    S_INIT, // Señal inicio
+    S_SIGINT // Señal Ctrl + C
 }   t_signal;
 
 /*
