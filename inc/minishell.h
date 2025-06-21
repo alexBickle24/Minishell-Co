@@ -51,4 +51,17 @@ void    ft_signal_init(void);
 void    ft_putstr_fd(char *str, int fd);
 int     ft_strlen(char *str);
 int     ft_strncmp(char *s1, char *s2, int n);
+char	*ft_strjoin(char const *s1, char const *s2);
+char	*ft_substr(char const *s, unsigned int start, size_t len);
+void	ft_putchar_fd(char c, int fd);
+
+
+
+// heredoc
+char            *create_heredoc(char *string, char *h_delimiter, char **env);
+void	        write_line_in_heredoc(char *line, int fd_inter, char **env);
+char	        *trim_line(char *line);
+unsigned int	write_env(char *line, int fd, unsigned int count, char **env);
+char	        *get_env_value(const char *key_value, char **env);
+
 #endif

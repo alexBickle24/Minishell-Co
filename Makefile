@@ -13,9 +13,14 @@ SRC_DIR = src/
 SRC_FILES = main.c\
 			environ/environ.c\
 			signal/signal.c\
+			Create_heredoc/heredoc.c\
 			libft/ft_putstr_fd.c\
 			libft/ft_strlen.c\
 			libft/ft_strncmp.c\
+			libft/ft_putstr_fd\
+			libft/ft_strjoin.c\
+			libft/ft_substr.c\
+			libft/ft_putchar_fd.c
 
 
 SRCS = $(addprefix $(SRC_DIR), $(SRC_FILES))
