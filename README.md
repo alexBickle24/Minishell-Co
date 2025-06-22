@@ -63,3 +63,7 @@ add_history(): Va a guardarlo en el historial.
 
 ## 4. ENVIRON
 Con env vamos a poder acceder a nuestro archivo con la variables de entorno. Una vez que accedamos vamos a tener que extraer el nombre de la variable y el valor de la misma.
+
+## 5. HEREDOCS
+Es un archivo o IPC creado en plena ejecucion de las ordenes de bash. Se usa como imput de informacion para los comandos que ejecuta bash a traves de execve. Hemos optado por la opcion
+de usar un archivo como heredoc. Lo creamos en la carpeta "/tmp" dentro del àrbol de Linux, ya que esto es lo que hace bash.
