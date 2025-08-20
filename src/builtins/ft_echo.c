@@ -54,3 +54,9 @@ int main(int argc, char **argv)
         ft_echo(argc, argv);
     return 0;
 }
+
+
+/*
+    argv = ft_pcmds_to_tab(tocken->pcmds)
+    argz = ft_count_lines(tocken->cdm_tab[0])
+*/

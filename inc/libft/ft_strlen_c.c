@@ -1,6 +1,9 @@
-#include "minishell.h"
 
-int ft_strlen(char *str)
+
+//falta el header y norminette
+#include "libft.h"
+
+int ft_strlen_c(char *str)
 {
     int i;
     
