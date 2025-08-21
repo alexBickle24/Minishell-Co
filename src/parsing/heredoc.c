@@ -88,24 +88,54 @@ void	write_line_in_heredoc(char *line, int fd, t_msl *msl, char *modes)
 	write(fd, "\n", 1);
 }
 
+
 //mod parseo, msl->env / fd->newbuffer / i -> &i return -> newstr
 int	write_dollar_cases(char *t_line, t_msl *msl, int fd, int i)
 {
-	if (t_line[i + 1] == '$')
-	{
-		ft_putnbr_fd(msl->msl_pid, fd);//pid minishell
-		i++;
-	}
-	else if (t_line[i + 1] == '?')
-	{
-		ft_putnbr_fd(msl->exit_status, fd);//exit_status
-		i++;
-	}
-	else if (ft_isdigit(t_line[i + 1]))//si es un numero se lo salta
-		i++;
-	else if (ft_isalpha(t_line[i+1]))
-		i = write_env(&t_line[i], fd, i, ft_env_to_table(msl->own_env));
-	else
+	char *dolim;
+	unsigned char idx;
+
+	dolim = msl->parsing_utils->dollar_lim;
+	idx = (unsigned char)t_line[i+1];
+	if (dolim[idx] == 0)
+		i = write_env(&t_line[i], fd, i, msl);
+	else if (dolim[idx] > 0 && dolim[idx] <= 6)
 		ft_putchar_fd(t_line[i], fd);
+	else if (dolim[idx] <= 8)
+	{
+		if (t_line[i + 1] == '$')
+			ft_putnbr_fd(msl->msl_pid, fd);//pid minishell
+		else if (t_line[i + 1] == '?')
+			ft_putnbr_fd(msl->last_process, fd);//pid del ultimo proceso (opcional)
+		else if (t_line[i + 1] == '?')
+			ft_putnbr_fd(msl->exit_status, fd);//exit_status
+		else if (t_line[i + 1] == '0')
+			ft_putstr_fd(INTERPRETER_NAME, fd);
+		i++;
+	}
+	if (dolim[idx] == 9)
+		i++;
 	return (i);
 }
+
+//mod parseo, msl->env / fd->newbuffer / i -> &i return -> newstr
+// int	write_dollar_cases(char *t_line, t_msl *msl, int fd, int i)
+// {
+// 	if (t_line[i + 1] == '$')
+// 	{
+// 		ft_putnbr_fd(msl->msl_pid, fd);//pid minishell
+// 		i++;
+// 	}
+// 	else if (t_line[i + 1] == '?')
+// 	{
+// 		ft_putnbr_fd(msl->exit_status, fd);//exit_status
+// 		i++;
+// 	}
+// 	else if (ft_isdigit(t_line[i + 1]))//si es un numero se lo salta
+// 		i++;
+// 	else if (ft_isalpha(t_line[i+1]))
+// 		i = write_env(&t_line[i], fd, i, ft_env_to_table(msl->own_env));
+// 	else
+// 		ft_putchar_fd(t_line[i], fd);
+// 	return (i);
+// }

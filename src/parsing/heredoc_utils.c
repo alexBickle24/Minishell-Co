@@ -36,14 +36,20 @@ char	*new_file_name(char *path)
 	return (name_str);
 }
 
-unsigned int	write_env(char *line, int fd, unsigned int count, char **env)
+
+
+unsigned int	write_env(char *line, int fd, unsigned int count, t_msl *msl)
 {
 	char		*env_value;
 	char		*env_name;
+	char		**env;
+	unsigned char *linei;
 	int			i;
 
+	env = ft_env_to_table(msl->own_env);
+	linei = (unsigned char *)line;
 	i = 1;
-	while (!is_space(line[i]) && line[i] != '$' && line[i] != '\0')
+	while (!(msl->parsing_utils->dollar_lim[linei[i]] < 8 && (msl->parsing_utils->dollar_lim[linei[i]] > 0)))
 		i++;
 	count = count + i;
 	env_name = ft_substr((const char *)line, 1, i - 1);

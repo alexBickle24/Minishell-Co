@@ -238,7 +238,7 @@ void    heredoc_child_process(t_msl *msl, int fd, char *delimiter, char *modes);
 void    heredoc_loop(t_msl *msl, char *delimiter, int fd, char *modes);
 void    write_line_in_heredoc(char *line, int fd, t_msl *msl, char *modes);
 int     write_dollar_cases(char *t_line, t_msl *msl, int fd, int i);
-unsigned int	write_env(char *line, int fd, unsigned int count, char **env);
+unsigned int	write_env(char *line, int fd, unsigned int count, t_msl *msl);
 void ft_hwarningexit(char *delimiter);
 
 

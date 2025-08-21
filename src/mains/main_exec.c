@@ -31,8 +31,8 @@ int main(int argc, char **argv, char **env)
 		free(line);
 		free(msl->clean_line);
 		msl->clean_line = NULL;//Esta linea es solo para poder printear los valores de la minishell
-		printf("\n");
-		print_msl(msl);
+		// printf("\n");
+		// print_msl(msl);
 	}
 	free_msl(&msl);
 	return (0);

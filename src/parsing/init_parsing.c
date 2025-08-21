@@ -34,16 +34,16 @@ void init_dollar_lim(char *dollar_limits, char *separators, char *operators)
         if (operators[i] != 0)
             dollar_limits[i] = operators[i];//print
         if (i >= '1' && i <= '9')
-            dollar_limits[i] = 8;//borradp junto con numero
+            dollar_limits[i] = 9;//borradp junto con numero
         i++;
     }
     dollar_limits['\"'] = 5;//borrado
     dollar_limits['\''] = 5;
-    dollar_limits['?'] = 6;//sustiucion por valores de msl
-    dollar_limits['$'] = 6;
-    dollar_limits['!'] = 6;
-    dollar_limits['0'] = 6;
-    dollar_limits['='] = 7;//pritn junto a caracter
+    dollar_limits['='] = 6;//pritn junto a caracter
+    dollar_limits['?'] = 7;//sustiucion por valores de msl
+    dollar_limits['$'] = 7;
+    dollar_limits['!'] = 7;
+    dollar_limits['0'] = 8;
 }
 
 t_parsing *init_parsing(t_msl *msl)
@@ -64,4 +64,3 @@ t_parsing *init_parsing(t_msl *msl)
     }
     return (pars);
 }
-
