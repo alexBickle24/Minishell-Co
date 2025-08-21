@@ -17,6 +17,7 @@
 # include <stdio.h>
 # include <string.h>
 # include <limits.h>
+# include <stdbool.h>
 //señales / bloqueos / errores
 # include <errno.h>
 # include <signal.h>
@@ -31,6 +32,7 @@
 */
 # define MLEN_INT 12
 # define PROMPT "\001\033[0;32m\002minishell\001\033[0m\002$"
+# define INTERPRETER_NAME "minishell"
 
 //Para el manejo de señales
 extern int  g_signal;
@@ -50,12 +52,14 @@ typedef enum e_states
 }   t_states;
 
 
-typedef enum e_redir_type
+typedef enum e_type_tocken
 {
+    CMD,
     HEREDOC,
     INFILE,
     APPEND,
     OUTFILE,
+    PIPE,
 }   t_filetype;
 
 /*
@@ -100,21 +104,56 @@ typedef struct s_env
     struct s_env *next;
 }   t_env;
  
+typedef struct s_parsing_utils
+{
+    //el tipo de tocken que stamos creando
+    int type; //Pr defecto es CMD
+    //Para saber si estamos dentro de comillas o no
+    bool in_quotes;
+    //Caracteres de separacion
+    char separators[255];
+
+    //Cuando no estamos en quotes son separadores y crean lex tockens
+    char special_op[255];//>0 si es limitante =0
+    //Funciones de la JUMP_TABLE.
+    
+    char *start;//Puntero al inicion de la palabra
+    char *end;//Puntero al final de la palabra
+
+    //Para la expansion de variables
+    char dollar_lim[255];//>0 limitante =0 no lo es
+
+}   t_parsing;
+
+typedef struct s_lex_tockens
+{
+    int type;
+    char *str;
+    struct s_lexer *next;
+
+}   t_lex;
+
 typedef struct s_msl
 {
     t_env   *own_env;
     t_states states;//*
     int exit_status; 
     char *clean_line;
-    int msl_pid;
-    // t_parsing_utils *parsing_utils;*
+    pid_t msl_pid;
+    pid_t last_process;
     int total_tockens;
     t_tocken *tocken;
+    t_parsing *parsing_utils;
+    t_lex *lexer;
 }   t_msl;
 
+
+
+
+
 /*
- * /////////////////////////////////FUNCIONES///////////////////////////
- */
+    * /////////////////////////////////FUNCIONES///////////////////////////
+*/
 
 //testing exec
 void parser1(t_msl *msl);
@@ -125,7 +164,8 @@ void print_files(t_files *files);
 void print_pcmds(t_pcmds *pcmds);
 void print_tockens_info(t_tocken *tockens);
 void print_own_env(t_env *env);
-void print_msl(t_msl *msl);
+void print_parsing_info(t_parsing *parsing);
+void print_msl(t_msl *msl);//
 
 //minishell init
 void    minishell_init(t_msl **msl, char **env, char **argv);
@@ -168,6 +208,13 @@ void ft_shlvl_warning(char *str);
 
 
 /////////////////////////LEXER AND PARSING////////////////////////
+
+
+//init parsing
+t_parsing *init_parsing(t_msl *msl);
+void init_separators(char *separators);
+void init_special_op(char *operators);
+void init_dollar_lim(char *dollar_limits, char *separators, char *operators);
 
 //Create_tockens
 t_tocken    *list_new_tocken(int position);

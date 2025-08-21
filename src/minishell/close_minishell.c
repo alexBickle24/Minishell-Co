@@ -34,6 +34,8 @@ void free_msl(t_msl **msl)
 	free_tockens(*msl);
 	if ((*msl)->clean_line)
 		free((*msl)->clean_line);
+	if ((*msl)->parsing_utils)
+		free((*msl)->parsing_utils);
 	free(*msl);
 	*msl = NULL;
 }

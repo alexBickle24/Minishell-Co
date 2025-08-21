@@ -61,14 +61,36 @@ void print_msl(t_msl *msl)
         printf("msl is NULL\n");
         return;
     }
-    // printf("own_env:\n");
-    // print_env_list(msl->own_env);
+    printf("own_env:\n");
+    print_own_env(msl->own_env);
     // printf("states: %d\n", msl->states);
     printf("exit_status: %d\n", msl->exit_status);
     printf("clean_line: %s\n", msl->clean_line ? msl->clean_line : "(null)");
     printf("msl_pid: %d\n", msl->msl_pid);
+    printf("msl_last_process_pid: %d\n", msl->last_process);
     printf("total_tockens: %d\n", msl->total_tockens);
+    printf("parsing info\n");
+    print_parsing_info(msl->parsing_utils);
     printf("tockens:\n");
     print_tockens_info(msl->tocken);
 }
 
+void print_parsing_info(t_parsing *parsing)
+{
+    if (!parsing)
+        return;
+    printf("Parsing info:\n");
+    printf("  - type: %d\n", parsing->type);
+    printf("  - in_quotes: %d\n", parsing->in_quotes);
+    printf("  - separators: %s\n", parsing->separators);
+    printf("  - special_op: %d\n", parsing->special_op[10]);
+    printf("  - start: %s\n", parsing->start);
+    printf("  - end: %s\n", parsing->end);
+    printf("  - dollar_lim: %d\n", parsing->dollar_lim[33]);
+    printf("  - dollar_lim: %d\n", parsing->dollar_lim[49]);
+    printf("  - dollar_lim: %d\n", parsing->dollar_lim[39]);
+    printf("  - dollar_lim: %d\n", parsing->dollar_lim[60]);
+    printf("  - dollar_lim: %d\n", parsing->dollar_lim[11]);
+    printf("  - dollar_lim: %d\n", parsing->dollar_lim[61]);
+    // Imprime otros campos si los tienes
+}

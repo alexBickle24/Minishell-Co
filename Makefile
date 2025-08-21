@@ -29,6 +29,7 @@ SRC_FILES=  mains/main_exec.c\
 			executor/redirs_utils.c\
 			executor/free_and_close.c\
 			executor/wait_pids.c\
+			parsing/init_parsing.c\
 			parsing/list_utils.c\
 			parsing/heredoc.c \
 			parsing/heredoc_utils.c \

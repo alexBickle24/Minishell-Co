@@ -6,6 +6,7 @@
     comando en ejecutarse sino el error code del ultimo comando en
     acabar. El que quiero recoger es el del ultimo en ejecutarse
 */
+
 //error_code->trsnformar(p)->captutrar->error_code
 void wait_childs1(t_msl *msl)
 {
@@ -53,8 +54,8 @@ int ft_getpid(void)
 
 void wait_childs3(t_msl *msl)
 {
-    pid_t pid;
     t_tocken *c_tocken;
+    pid_t pid;
     int status;
     
     c_tocken = msl->tocken;
@@ -63,6 +64,8 @@ void wait_childs3(t_msl *msl)
     while(1)
     {
         pid = waitpid(-1, &status, 0);
+        if (pid > 0)
+            msl->last_process = pid;
         if (pid == c_tocken->pid)
         {
             if (WIFEXITED(status))
