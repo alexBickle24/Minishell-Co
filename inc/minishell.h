@@ -33,6 +33,7 @@
 # define MLEN_INT 12
 # define PROMPT "\001\033[0;32m\002minishell\001\033[0m\002$"
 # define INTERPRETER_NAME "minishell"
+# define MINI "minishell"
 
 //Para el manejo de señales
 extern int  g_signal;
@@ -40,26 +41,27 @@ extern int  g_signal;
 
 typedef enum e_states
 {
-    S_INIT,    // Señal de inicio
-    S_SIGINT,    // Señal Ctrl + C
-    S_SIGQUIT,   // Señal inicio
-    // *Estados de la minishell (opcionales)
-    S_LEXING,    // *Indica que estamos en el proceso de lexing
-    S_PARSING,   // *Indica que estamos en el proceso de parsing
-    S_IN_HEREDOC,// *Indica que estamos en un heredoc
-    S_END_HEREDOC,// *Indica que hemos terminado un heredoc
-    S_EXECUTING, // *Indica que estamos en el proceso de ejecución
+	S_INIT,    // Señal de inicio
+	S_SIGINT,    // Señal Ctrl + C
+	S_SIGQUIT,   // Señal inicio
+	// *Estados de la minishell (opcionales)
+	S_LEXING,    // *Indica que estamos en el proceso de lexing
+	S_PARSING,   // *Indica que estamos en el proceso de parsing
+	S_IN_HEREDOC,// *Indica que estamos en un heredoc
+	S_END_HEREDOC,// *Indica que hemos terminado un heredoc
+	S_EXECUTING, // *Indica que estamos en el proceso de ejecución
 }   t_states;
 
 
 typedef enum e_type_tocken
 {
-    CMD,
-    HEREDOC,
-    INFILE,
-    APPEND,
-    OUTFILE,
-    PIPE,
+	CMD,
+	HEREDOC,
+	HEREDOC_S,
+	INFILE,
+	APPEND,
+	OUTFILE,
+	PIPE,
 }   t_filetype;
 
 /*
@@ -68,83 +70,84 @@ typedef enum e_type_tocken
 
 typedef struct s_tocken_files
 {
-    int type; //HEREDOC, INFILE, APPEND, OUTFILE
-    char *file_name; //NOMBRE DEL ARCHIVO
-    int fd; //*FD DEL ARCHIVO (opcional)
-    struct s_tocken_files *next;
+	int type; //HEREDOC, INFILE, APPEND, OUTFILE
+	char *file_name; //NOMBRE DEL ARCHIVO
+	int fd; //*FD DEL ARCHIVO (opcional)
+	struct s_tocken_files *next;
 }   t_files;
 
 typedef struct s_tocken_cmds
 {
-    char *cmd;
-    struct s_tocken_cmds *next;
+	char *cmd;
+	struct s_tocken_cmds *next;
 }   t_pcmds;
 
 typedef struct s_tocken_subshells
 {
-    int index;//numero de tocken, quizas no lo necesitemos
-    t_files *files;//lista de in files se recorre y llena redir in y redir out o error 
-    t_files *redir_in;
-    t_files *redir_out;
-    t_pcmds *pcmds; //lista de comandos, si es NULL no hay comando  
-    char **cmd_tb; //tabla de comandos para execve
-    int error_file;//flag para manejar el exit desde el proceso hijo
-    int error_cmd; //Puede ser 0, 1 o 2 manej los mensajes de error
-    char **env_tb;//esto no es lo mas eficiente porque la guardao en cada tocken pero es comodo
-    int pipe_fds[2];//con las bonus tendria que ser tocken operands
-    pid_t pid;
-    struct s_tocken_subshells *next;
+	int index;//numero de tocken, quizas no lo necesitemos
+	t_files *files;//lista de in files se recorre y llena redir in y redir out o error 
+	t_files *redir_in;
+	t_files *redir_out;
+	t_pcmds *pcmds; //lista de comandos, si es NULL no hay comando  
+	char **cmd_tb; //tabla de comandos para execve
+	int error_file;//flag para manejar el exit desde el proceso hijo
+	int error_cmd; //Puede ser 0, 1 o 2 manej los mensajes de error
+	char **env_tb;//esto no es lo mas eficiente porque la guardao en cada tocken pero es comodo
+	int pipe_fds[2];//con las bonus tendria que ser tocken operands
+	pid_t pid;
+	struct s_tocken_subshells *next;
 }   t_tocken;
 
 
 typedef struct s_env
 {
-    char *id;
-    char *value;
-    struct s_env *next;
+	char *id;
+	char *value;
+	struct s_env *next;
 }   t_env;
  
 typedef struct s_parsing_utils
 {
-    //el tipo de tocken que stamos creando
-    int type; //Pr defecto es CMD
-    //Para saber si estamos dentro de comillas o no
-    bool in_quotes;
-    //Caracteres de separacion
-    char separators[255];
+	//el tipo de tocken que stamos creando
+	int type; //Pr defecto es CMD
+	//Para saber si estamos dentro de comillas o no
+	bool in_quotes;
+	//Caracteres de separacion
+	char separators[255];
 
-    //Cuando no estamos en quotes son separadores y crean lex tockens
-    char special_op[255];//>0 si es limitante =0
-    //Funciones de la JUMP_TABLE.
-    
-    char *start;//Puntero al inicion de la palabra
-    char *end;//Puntero al final de la palabra
+	//Cuando no estamos en quotes son separadores y crean lex tockens
+	char special_op[255];//>0 si es limitante =0
+	//Funciones de la JUMP_TABLE.
+	
+	char *start;//Puntero al inicion de la palabra
+	char *end;//Puntero al final de la palabra
 
-    //Para la expansion de variables
-    char dollar_lim[255];//>0 limitante =0 no lo es
+	//Para la expansion de variables
+	char dollar_lim[255];//>0 limitante =0 no lo es
 
 }   t_parsing;
 
 typedef struct s_lex_tockens
 {
-    int type;
-    char *str;
-    struct s_lexer *next;
+	int type;
+	char *str;
+	size_t len;
+	struct s_lexer *next;
 
 }   t_lex;
 
 typedef struct s_msl
 {
-    t_env   *own_env;
-    t_states states;//*
-    int exit_status; 
-    char *clean_line;
-    pid_t msl_pid;
-    pid_t last_process;
-    int total_tockens;
-    t_tocken *tocken;
-    t_parsing *parsing_utils;
-    t_lex *lexer;
+	t_env   *own_env;
+	t_states states;//*
+	int exit_status; 
+	char *clean_line;
+	pid_t msl_pid;
+	pid_t last_process;
+	int total_tockens;
+	t_tocken *tocken;
+	t_parsing *parsing_utils;
+	t_lex *lexer;
 }   t_msl;
 
 
@@ -152,7 +155,7 @@ typedef struct s_msl
 
 
 /*
-    * /////////////////////////////////FUNCIONES///////////////////////////
+	* /////////////////////////////////FUNCIONES///////////////////////////
 */
 
 //testing exec

@@ -1,6 +1,6 @@
 #include "../../inc/minishell.h"
 
-void ft_hwarningexit(char *delimiter)
+void	ft_hwarningexit(char *delimiter)
 {
 	char *n_line_history;
 
@@ -40,11 +40,11 @@ char	*new_file_name(char *path)
 
 unsigned int	write_env(char *line, int fd, unsigned int count, t_msl *msl)
 {
-	char		*env_value;
-	char		*env_name;
-	char		**env;
-	unsigned char *linei;
-	int			i;
+	char	*env_value;
+	char	*env_name;
+	char	**env;
+	unsigned char	*linei;
+	int		i;
 
 	env = ft_env_to_table(msl->own_env);
 	linei = (unsigned char *)line;

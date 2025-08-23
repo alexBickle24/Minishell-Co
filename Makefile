@@ -14,7 +14,7 @@ INCLUDE = $(INCLUDE_DIR)/minishell.h
 SRC_DIR = src/
 #falta añadir los builtins
 #Cambiando el archivo de la carpeta main testeamos unas cosas u otras /mains/"archivo.c"
-SRC_FILES=  mains/main_exec.c\
+SRC_FILES=  main/main_exec.c\
 			debugin/print.c\
 			minishell/init.c\
 			minishell/close_minishell.c\

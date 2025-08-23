@@ -105,3 +105,4 @@ void	parser1(t_msl *msl)
 	ft_free_table(comands);
 }
 
+
