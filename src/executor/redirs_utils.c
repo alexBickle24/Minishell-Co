@@ -17,21 +17,21 @@ void check_create_redirs(t_tocken *c_tocken, t_files *files_list)
 		return ;
 	while (current_f)
 	{
-		if (current_f->type == HEREDOC || current_f->type == INFILE)
+		if (current_f->type == T_HEREDOC || current_f->type == T_INFILE)
 		{
 			c_tocken->redir_in = current_f;
-			if (access(current_f->file_name, F_OK | R_OK) == -1)
+			if (access(current_f->file_name, F_OK | R_OK) == -1 || current_f->ambiguos)
 				break ;
 		}
-		if (current_f->type == OUTFILE || current_f->type == APPEND)
+		if (current_f->type == T_OUTFILE || current_f->type == T_APPEND)
 		{
 			c_tocken->redir_out = current_f;
-			if (current_f->type == OUTFILE)
+			if (current_f->type == T_OUTFILE)
 				fd = open(current_f->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0664);
 			else
 				fd = open(current_f->file_name, O_WRONLY | O_CREAT | O_APPEND, 0664);
 			close(fd);
-			if (fd == -1)
+			if (fd == -1 || current_f->ambiguos)
 				break ;
 		}
 		current_f = current_f->next;
@@ -107,9 +107,9 @@ void fordward_in(t_tocken *c_tocken)
 	{
 		if(c_tocken->index != 1)
 			close_fds(c_tocken->pipe_fds);
-		if (tunel_in_file(c_tocken->redir_in->file_name))
+		if (c_tocken->redir_in->ambiguos || tunel_in_file(c_tocken->redir_in->file_name))
 		{
-			ft_error_redirs(c_tocken->redir_in->file_name);
+			ft_error_redirs(c_tocken->redir_in->file_name, c_tocken->redir_in->ambiguos);
 			c_tocken->error_file = 1;
 		}
 	}
@@ -130,13 +130,13 @@ void fordward_out(t_tocken *c_tocken)
 	}
 	else
 	{
-		if (c_tocken->redir_out->type == APPEND)
+		if (c_tocken->redir_out->type == T_APPEND)
 			append_mode = 1;
 		if(c_tocken->next != NULL)
 			close_fds(c_tocken->next->pipe_fds);
-		if (tunel_out_file(c_tocken->redir_out->file_name, append_mode) == 1)
+		if (c_tocken->redir_out->ambiguos || tunel_out_file(c_tocken->redir_out->file_name, append_mode) == 1)
 		{
-			ft_error_redirs(c_tocken->redir_out->file_name);
+			ft_error_redirs(c_tocken->redir_out->file_name, c_tocken->redir_out->ambiguos);
 			c_tocken->error_file = 1;
 		}
 	}

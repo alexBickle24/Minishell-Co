@@ -87,3 +87,30 @@ void create_pipes(t_tocken *c_tocken)
 		printf("Pipe created successfully\n");
 
 }
+
+// void evaluate_local_variable(t_tocken *c_tocken)
+// {
+// 	int	i;
+// 	t_pcmds *aux;
+// 	char *tmp;
+
+// 	i = 0;
+// 	aux = c_tocken->pcmds;
+// 	while (aux->cmd[i])
+// 	{
+// 		if (ft_strchr(aux->cmd, '=') == 1 && aux->next != NULL)
+// 		{
+// 			tmp = c_tocken->cmd_tb[i];
+// 			while(c_tocken->cmd_tb[i] != NULL)
+// 			{
+// 				c_tocken->cmd_tb[i] = c_tocken->cmd_tb[i+1];
+// 				i++;
+// 			}
+// 			free(tmp);
+// 		}
+// 		else
+// 			//crear variable
+// 		i = 0;
+// 	}
+// }
+

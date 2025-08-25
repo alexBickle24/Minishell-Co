@@ -42,7 +42,7 @@ void	free_tocken_files(t_tocken *tocken)
 		return ;
 	while (files)
 	{
-		if (files->type == HEREDOC && files->file_name)
+		if ((files->type == T_HEREDOC || files->type == T_HEREDOC_S) && files->file_name)
 			unlink(files->file_name);
 		if (files->file_name)
 			free(files->file_name);

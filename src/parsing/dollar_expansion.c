@@ -1,5 +1,7 @@
 #include "../../inc/minishell.h"
 
+void	expand_and_cleanstr(char **str, t_msl *msl);
+void	dollar_expansion(char **str, int *i, size_t *len, t_msl *msl);
 void	replace_dollar(char **str, int *i, size_t *len, t_msl *msl);
 void	concatenate_strings(char **str, int *i, size_t *len, char *replace);
 void	concatenate_strings2(char **str, int *i, size_t *len, char *replace);
@@ -22,11 +24,14 @@ void dollar_expansion(char **str, int *i, size_t *len, t_msl *msl)
 	}
 	else if(dolim[idx[*i + 1]] == 5)//FUNCIONA
 	{
+		//caso fura de comillas
 		printf("Caso 5: dolim=5, char=%c\n", (*str)[*i + 1]);
 		ft_memmove(&((*str)[*i]), &((*str)[*i + 1]), *len - *i);
 		(*len) --;
+		//caso dentrol de comillas
+			// (*i)++;
 	}
-	else if (dolim[idx[*i + 1]] == 6)//FUNCIONA
+	else if (dolim[idx[*i + 1]] == 6 || dolim[idx[*i + 1]] == 0)//FUNCIONA
 	{
 		printf("Caso 6: dolim=6, char=%c\n", (*str)[*i + 1]);
 		(*i)++;
@@ -43,7 +48,7 @@ void dollar_expansion(char **str, int *i, size_t *len, t_msl *msl)
 		*i = *i + 2;
 		*len -= 2;
 	}
-	else if (dolim[idx[*i + 1]] == 0)
+	else if (dolim[idx[*i + 1]] == 10)//igual hayq ue meter un sialpha
 	{
 		printf("Caso envvar: dolim=0, char=%c\n", (*str)[*i + 1]);
 		expand_envvars(str, i, len, msl);
@@ -112,8 +117,10 @@ void	expand_envvars(char **str, int *i, size_t *len, t_msl *msl)
 	char	*new;
 
 	i_tmp = ++(*i);
-	while (msl->parsing_utils->dollar_lim[(unsigned char)(*str)[i_tmp]] == 0)
+	while (msl->parsing_utils->dollar_lim[(unsigned char)(*str)[i_tmp]] >= 8)
 		i_tmp++;
+	printf("Valor de dollar_lim[%c] = %d\n", (*str)[i_tmp], msl->parsing_utils->dollar_lim[(unsigned char)(*str)[i_tmp]]);
+	printf("el valor del linite es %s\n", &(*str)[i_tmp]);
 	tmp = (*str)[i_tmp];
 	(*str)[i_tmp] = '\0';
 	env_node = search_id_node(msl, &((*str)[*i]));
@@ -133,7 +140,6 @@ void	expand_envvars(char **str, int *i, size_t *len, t_msl *msl)
 	}
 }
 
-
 void	concatenate_strings2(char **str, int *i, size_t *len, char *replace)
 {
 	size_t	replace_len;
@@ -150,64 +156,72 @@ void	concatenate_strings2(char **str, int *i, size_t *len, char *replace)
 	*len = *len + replace_len;
 }
 
+void	expand_and_cleanstr(char **str, t_msl *msl)
+{
+	size_t len;
+	int i;
 
-// void parser2(t_msl *msl)
-// {
-// 	char *line = ft_strdup(msl->clean_line);
-// 	size_t len;
-// 	int i;
+	if (!str)
+		return ;
+	len = ft_strlen(*str);
+	i = 0;
+	while(1)
+	{
+		if ((*str)[i] == '$')
+		{
+			dollar_expansion(str, &i, &len, msl);
+			printf("el valor de line[i] es: %c\n", (*str)[i]);
+		}
+		else
+			i++;
+		if ((*str)[i] == 0)
+			break ;
+	}
+	printf("la linea despues de la expansion es %s con un len de %ld\n", *str, ft_strlen(*str));
+	printf("el len de la linea es %ld\n", len);
+	// clean_quotes(str);
+	printf("La cadena despues de limpiar las comillas es %s\n", *str);
+}
 
-// 	if (!line)
-// 		return ;
-// 	len = ft_strlen(line);
-// 	i = 0;
-// 	while(1)
-// 	{
-// 		if (line[i] == '$')
-// 		{
-// 			dollar_expansion(&line, &i, &len, msl);
-// 			printf("el valor de line[i] es: %c\n", line[i]);
-// 		}
-// 		else
-// 			i++;
-// 		if (line[i] == 0)
-// 			break ;
-// 	}
-// 	printf("la linea despues de la expansion es %s con un len de %ld\n", line, ft_strlen(line));
-// 	printf("el len de la linea es %ld\n", len);
-// 	free(line);//seria la linea del lexer ose boora y se copia o se hace logica para atraparla
-// }
+void parser2(t_msl *msl)
+{
+	char *line = ft_strdup(msl->clean_line);
+	expand_and_cleanstr(&line, msl);
+	free(line);//seria la linea del lexer ose boora y se copia o se hace logica para atraparla
+}
 
-// int main(int argc, char **argv, char **env)
-// {
-// 	t_msl *msl;
-// 	char *line;//la linea en bruto
 
-// 	(void)argv;//para que no se queje el compilador
-// 	if (argc != 1)
-// 		return (1);//si no hacemos el modo literal
-// 	minishell_init(&msl, env, argv);//inicamos la estrcutura de minishell y el manejados
-// 	while (1)
-// 	{
-// 		line = readline(PROMPT);
-// 		add_history(line);//exit tambien se mete al historial
-// 		msl->clean_line = line;
-// 		if (!msl->clean_line || ft_strncmp(msl->clean_line, "exit\0", 5) == 0)
-// 		{
-// 			ft_putstr_fd("exit\n", 2);
-// 			free(msl->clean_line);
-// 			msl->clean_line = NULL;//Esta linea es solo para poder printear los valores de la minishell
-// 			free(line);
-// 			break ;
-// 		}
-// 		// meter la linea en tester de variables
-// 		parser2(msl);
-// 		// free(line);
-// 		free(msl->clean_line);
-// 		msl->clean_line = NULL;//Esta linea es solo para poder printear los valores de la minishell
-// 		// printf("\n");
-// 		// print_msl(msl);
-// 	}
-// 	free_msl(&msl);
-// 	return (0);
-// }
+int main(int argc, char **argv, char **env)
+{
+	t_msl *msl;
+	char *line;//la linea en bruto
+
+	(void)argv;//para que no se queje el compilador
+	if (argc != 1)
+		return (1);//si no hacemos el modo literal
+	minishell_init(&msl, env, argv);//inicamos la estrcutura de minishell y el manejados
+	while (1)
+	{
+		line = readline(PROMPT);
+		add_history(line);//exit tambien se mete al historial
+		msl->clean_line = line;
+		if (!msl->clean_line || ft_strncmp(msl->clean_line, "exit\0", 5) == 0)
+		{
+			ft_putstr_fd("exit\n", 2);
+			free(msl->clean_line);
+			msl->clean_line = NULL;//Esta linea es solo para poder printear los valores de la minishell
+			free(line);
+			break ;
+		}
+		// meter la linea en tester de variables
+		parser2(msl);
+		// free(line);
+		free(msl->clean_line);
+		msl->clean_line = NULL;//Esta linea es solo para poder printear los valores de la minishell
+		// printf("\n");
+		// print_msl(msl);
+	}
+	free_msl(&msl);
+	return (0);
+}
+

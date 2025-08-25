@@ -2,49 +2,58 @@
 
 #include "../../inc/minishell.h"
 
-void	init_separators(char *separators)
+void	init_sep_op( char *sep_op)
 {
-	separators['\0'] = 1;
-	separators['\t'] = 1;
-	separators['\n'] = 1;
-	separators['\v'] = 1;
-	separators['\f'] = 1;
-	separators['\r'] = 1;
-	separators[' '] = 1;
+	sep_op['\0'] = 1;
+	sep_op['\t'] = 1;
+	sep_op['\n'] = 1;
+	sep_op['\v'] = 1;
+	sep_op['\f'] = 1;
+	sep_op['\r'] = 1;
+	sep_op[' '] = 1;
+	sep_op['>'] = 2;
+	sep_op['<'] = 3;
+	sep_op['|'] = 4;
+	sep_op['\"'] = 5;//borrado
+	sep_op['\''] = 5;
 }
 
-void	init_special_op(char *operators)
-{
-	operators['>'] = 2;
-	operators['<'] = 3;
-	operators['|'] = 4;
-}
-
-void	init_dollar_lim(char *dollar_limits, char *separators, char *operators)
+void	init_dollar_lim(char *dollar_limits, char *sep_op)
 {
 	int	i;
 	int	max;
 
-	i = 0;
+	i = -1;
 	max = 255;
-	while (i <= max)
+	while (++i <= max)
 	{
-		if (separators[i] != 0)
-			dollar_limits[i] = separators[i];//print
-		if (operators[i] != 0)
-			dollar_limits[i] = operators[i];//print
+		if (sep_op[i] != 0)
+			dollar_limits[i] = sep_op[i];//print
 		if (i >= '1' && i <= '9')
 			dollar_limits[i] = 9;//borradp junto con numero
-		i++;
+		if (ft_isalpha(i))
+			dollar_limits[i] = 10;//caracteres asccii
 	}
-	dollar_limits['\"'] = 5;//borrado
-	dollar_limits['\''] = 5;
 	dollar_limits['='] = 6;//pritn junto a caracter
 	dollar_limits['?'] = 7;//sustiucion por valores de msl
 	dollar_limits['$'] = 7;
 	dollar_limits['!'] = 7;
+	// dollar_limits['-'] = 7;
+	// dollar_limits['#'] = 7;
 	dollar_limits['0'] = 8;
 }
+
+
+void	init_jump_table(int (**f)(t_msl *, int *, unsigned char *, t_parsing *))
+{
+	f[0] = info;
+	f[1] = spaces;
+	f[2] = redir_out;
+	f[3] = redir_in;
+	f[4] = pipe_op;
+	f[5] = quotes;
+}
+
 
 t_parsing	*init_parsing(t_msl *msl)
 {
@@ -58,9 +67,9 @@ t_parsing	*init_parsing(t_msl *msl)
 		pars = (t_parsing *)ft_calloc(sizeof(t_parsing), 1);
 		if (pars == NULL)
 			return (NULL);
-		init_separators(pars->separators);
-		init_special_op(pars->special_op);
-		init_dollar_lim(pars->dollar_lim, pars->separators, pars->special_op);
+		init_sep_op(pars->sep_op);
+		init_dollar_lim(pars->dollar_lim, pars->sep_op);
+		init_jump_table(pars->lex);
 	}
 	return (pars);
 }

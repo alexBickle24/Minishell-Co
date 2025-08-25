@@ -86,7 +86,7 @@ void set_shlvl(t_msl *msl)
     if (!msl || !msl->own_env)
         return ;
     shlvl_node = search_id_node(msl, "SHLVL");
-    if (shlvl_node == NULL)
+    if (shlvl_node == NULL)//estopuede que haya que cambiarlo
         return ;
     shlvl_num = ft_atoi(shlvl_node->value);
     free(shlvl_node->value);

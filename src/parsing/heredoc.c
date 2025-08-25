@@ -53,7 +53,6 @@ void heredoc_loop(t_msl *msl, char *delimiter, int fd, char *modes)
 		line = readline("> ");
 		if (!line)
 			ft_hwarningexit(delimiter);
-		add_history((const char *)line);//esto quizas haya que quitarlo (ver como fucniona internamete)
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0)
 		{
 			free(line);
@@ -96,9 +95,7 @@ int write_dollar_cases(char *t_line, t_msl *msl, int fd, int i)
 
 	dolim = msl->parsing_utils->dollar_lim;
 	idx = (unsigned char)t_line[i + 1];
-	if (dolim[idx] == 0)
-		i = write_env(&t_line[i], fd, i, msl);
-	else if (dolim[idx] > 0 && dolim[idx] <= 6)
+	if (dolim[idx] > 0 && dolim[idx] <= 6)
 		ft_putchar_fd(t_line[i], fd);
 	else if (dolim[idx] <= 8)
 	{
@@ -112,8 +109,10 @@ int write_dollar_cases(char *t_line, t_msl *msl, int fd, int i)
 			ft_putstr_fd(INTERPRETER_NAME, fd);
 		i++;
 	}
-	if (dolim[idx] == 9)
+	else if (dolim[idx] == 9)
 		i++;
+	else if (dolim[idx] == 10)//vamos a cambiarlo por 10 o añdir isascii
+		i = write_env(&t_line[i], fd, i, msl);
 	return (i);
 }
 

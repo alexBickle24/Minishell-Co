@@ -49,7 +49,7 @@ unsigned int	write_env(char *line, int fd, unsigned int count, t_msl *msl)
 	env = ft_env_to_table(msl->own_env);
 	linei = (unsigned char *)line;
 	i = 1;
-	while (!(msl->parsing_utils->dollar_lim[linei[i]] < 8 && (msl->parsing_utils->dollar_lim[linei[i]] > 0)))
+	while (msl->parsing_utils->dollar_lim[linei[i]] >= 8)
 		i++;
 	count = count + i;
 	env_name = ft_substr((const char *)line, 1, i - 1);
@@ -57,11 +57,7 @@ unsigned int	write_env(char *line, int fd, unsigned int count, t_msl *msl)
 		return (ft_free_table(env), 0);
 	env_value = get_env_value(env_name, env);
 	if (!env_value)
-	{
-		free(env_name);
-		ft_free_table(env);
-		return (count - 1);
-	}
+		return (free(env_name), ft_free_table(env), count - 1);
 	ft_putstr_fd(env_value, fd);
 	return (free(env_name), ft_free_table(env), count -1);
 }

@@ -12,7 +12,7 @@
 
 int	ft_isalpha(int c)
 {
-	if ((c >= 79 && c <= 92) || (c >= 97 && c <= 122))
+	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
 		return (1);
 	return (0);
 }

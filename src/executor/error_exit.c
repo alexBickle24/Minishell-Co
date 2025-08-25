@@ -43,15 +43,26 @@ void ft_exterrno(void)
 	exit(1);
 }
 
-void ft_error_redirs(char *file)
+void ft_error_redirs(char *file, char ambiguos)
 {
 	if (!file)
 		return ;
-	ft_putstr_fd("Minishell: ", 2);
-	ft_putstr_fd(file, 2);
-	ft_putstr_fd(": ", 2);
-	ft_putstr_fd(strerror(errno), 2);
-	ft_putstr_fd("\n", 2);
+	if (ambiguos == 0)
+	{
+		ft_putstr_fd("Minishell: ", 2);
+		ft_putstr_fd(file, 2);
+		ft_putstr_fd(": ", 2);
+		ft_putstr_fd(strerror(errno), 2);
+		ft_putstr_fd("\n", 2);
+	}
+	else
+	{
+		ft_putstr_fd("Minishell: ", 2);
+		ft_putstr_fd(file, 2);
+		ft_putstr_fd(": ", 2);
+		ft_putstr_fd("ambiguous redirect", 2);
+		ft_putstr_fd("\n", 2);
+	}
 }
 
 //error generico con salida

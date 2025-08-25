@@ -41,8 +41,10 @@ void evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl)
 
 	if (!c_tocken->pcmds)
 		return ;
-	c_tocken->cmd_tb = ft_pcmds_to_table(c_tocken->pcmds);
-	c_tocken->env_tb = ft_env_to_table(msl->own_env);
+	if (!c_tocken->cmd_tb)
+		c_tocken->cmd_tb = ft_pcmds_to_table(c_tocken->pcmds);
+	if (!c_tocken->env_tb)
+		c_tocken->env_tb = ft_env_to_table(msl->own_env);
 	// if (!ft_strncmp(c_tocken->cmd_tb[0], "./", 2) || !ft_strncmp(c_tocken->cmd_tb[0], "/", 1) || !ft_strncmp(c_tocken->cmd_tb[0], "../", 2))//1
 	// {
 	// 	if (access(c_tocken->cmd_tb[0], F_OK | X_OK) == -1)
