@@ -23,7 +23,7 @@
 
 void    executer(t_msl *msl)
 {
-	if (msl && g_signal == S_INIT)//temer que la lista de tockens exista o msl errro
+	if (msl && g_signal == S_INIT)//temer que la lista de tockens exista o msl errro (probar a ver como se comporta waitchild)
 	{
 		if (msl->total_tockens == 1 && is_builtin(msl->tocken))
 			only_builtin(msl);
@@ -32,6 +32,7 @@ void    executer(t_msl *msl)
 	}
 	//Funcion para el caso de señal activad aantes de ejecucion (evalua la vairable global)
 	g_signal = S_INIT;
+	msl->pars_err = 0;
 	//Funcion de liberacion de memeria y cierre de fds de p_tockens
 	free_tockens(msl);
 }

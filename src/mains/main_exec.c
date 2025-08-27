@@ -3,7 +3,7 @@
 
 #include "../../inc/minishell.h"
 
-void parser1(t_msl *msl);
+void parser1(t_msl *msl);//
 int g_signal = S_INIT;
 
 int main(int argc, char **argv, char **env)
