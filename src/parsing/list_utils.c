@@ -2,7 +2,7 @@
 
 #include "../../inc/minishell.h"
 
-t_tocken    *list_new_tocken(int position)
+t_tocken    *list_new_tocken(int position)//se puede susutituir por calloc
 {
 	t_tocken   *new_node;
 
@@ -23,7 +23,7 @@ t_tocken    *list_new_tocken(int position)
 	return (new_node);
 }
 
-t_files    *list_new_files(char *file, int type)
+t_files    *list_new_files(char *file, int type, char ambiguos)
 {
 	t_files   *new_node;
 
@@ -32,6 +32,7 @@ t_files    *list_new_files(char *file, int type)
 		return(NULL);
 	new_node->file_name = file;
 	new_node->type = type;
+	new_node->ambiguos = ambiguos;
 	new_node->next = NULL;
 	return (new_node);
 }
@@ -48,7 +49,7 @@ t_pcmds    *list_new_pcmds(char *cmd)
 	return (new_node);
 }
 
-void   list_addback_tocken(t_tocken **list, t_tocken *new_node)
+void   list_addback_tocken(t_tocken **list, t_tocken *new_node)//quizas no haga falta
 {
 	t_tocken   *current;
 

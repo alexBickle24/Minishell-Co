@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-FLAGS = -Wall -Wextra -Werror -fsanitize=address -g3
+FLAGS = -Wall -Wextra -Werror 
 RM = rm -rf
 LIBS = -lreadline
 MKDIR = mkdir -p # Si ya existe no da problemas
@@ -14,7 +14,7 @@ INCLUDE = $(INCLUDE_DIR)/minishell.h
 SRC_DIR = src/
 #falta añadir los builtins
 #Cambiando el archivo de la carpeta main testeamos unas cosas u otras /mains/"archivo.c"
-SRC_FILES=  parsing/dollar_expansion.c\
+SRC_FILES=  parsing/lexing.c\
 			debugin/print.c\
 			minishell/init.c\
 			minishell/close_minishell.c\
@@ -34,7 +34,8 @@ SRC_FILES=  parsing/dollar_expansion.c\
 			parsing/heredoc.c \
 			parsing/heredoc_utils.c \
 			parsing/parsing_utils.c \
-			parsing/lexing.c\
+			parsing/dollar_expansion.c\
+			parsing/parsing.c\
 			utils/data_formats.c
 
 	

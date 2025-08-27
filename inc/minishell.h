@@ -116,7 +116,6 @@ typedef struct s_tocken_subshells
 	struct s_tocken_subshells *next;
 } t_tocken;
 
-
 typedef struct s_env
 {
 	char *id;
@@ -136,7 +135,7 @@ typedef struct s_parsing_utils
 
 	int	(*lex[6])(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
 	// Caracteres de separacion  (code 1)y operadores (code 2)
-	char sep_op[255];
+	char sep_op[255];//unsigned 
 	unsigned char *ptr;
 	// Para la expansion de variables-
 	char dollar_lim[255];
@@ -146,7 +145,8 @@ typedef struct s_parsing_utils
 typedef struct s_lex_tockens
 {
     int type;
-    char *str;
+    char *raw;//esta la creo para el caso de ambiguos redirect
+	char *str;
     size_t len;
     struct s_lex_tockens *next;
 } t_lex;
@@ -167,7 +167,7 @@ typedef struct s_msl
 } t_msl;
 
 /*
- * /////////////////////////////////FUNCIONES///////////////////////////
+ * /////////////////////////////////FUNCIONES////////////////////////////////
  */
 
 // debugin
@@ -184,6 +184,7 @@ void print_parser_state(t_parsing *parser, unsigned char c, int i);
 // minishell init
 void minishell_init(t_msl **msl, char **env, char **argv);
 void interpreter_mode(t_msl *msl);
+void interpreter_mode2(t_msl *msl, char *clean_line);
 
 // minishell close
 void free_own_env(t_msl *msl);
@@ -228,7 +229,7 @@ void	init_jump_table(int (**f)(t_msl *, int *, unsigned char *, t_parsing *));
 
 // Create_tockens
 t_tocken *list_new_tocken(int position);
-t_files *list_new_files(char *file, int type);
+t_files *list_new_files(char *file, int type, char ambiguos);
 t_pcmds *list_new_pcmds(char *cmd);
 void list_addback_tocken(t_tocken **list, t_tocken *new_node);
 void list_addback_infiles(t_files **list, t_files *new_node);
@@ -254,8 +255,33 @@ int	quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
 // parsing_utils
 int have_quotes(char *str);
 char *clean_quotes(char *str);
-char *jump_caracter(char *str, char caracter);
-int is_space(char c);
+char	*jump_caracter(char *str, char caracter);
+int	is_space(char c);
+void	jump_separator(char **str);
+char	check_clean_quotes(t_msl *msl, char *str, char clean);
+char	check_clean_squotes(t_msl *msl, char *str, char clean);
+char	check_clean_dquotes(t_msl *msl, char *str, char clean);
+
+//adding and expansion
+void	clean_expand_add_toexecuter(t_msl *msl);
+void	adding_files(t_msl *msl, t_tocken *current, t_lex *lex);
+void	expand_str(char **str, t_msl *msl, size_t *len);
+void	adding_cmds(t_msl *msl, t_tocken *current, t_lex *lex);
+void	adding_files(t_msl *msl, t_tocken *current, t_lex *lex);
+void	adding_heredoc(t_msl *msl, t_tocken *current, t_lex *lex);
+//fix error
+char	new_line_err(t_msl *msl);
+void	heredoc_new_line_errror(t_msl *msl, t_lex *lex);
+char	check_heredocs_and_newline_error(t_msl *msl);
+
+
+//dollar expansion
+void	expand_and_cleanstr(char **str, t_msl *msl);//prueba main
+void	dollar_expansion(char **str, int *i, size_t *len, t_msl *msl);
+void	replace_dollar(char **str, int *i, size_t *len, t_msl *msl);
+void	concatenate_strings(char **str, int *i, size_t *len, char *replace);
+void	concatenate_strings2(char **str, int *i, size_t *len, char *replace);
+void	expand_envvars(char **str, int *i, size_t *len, t_msl *msl);
 
 // heredoc
 char *create_heredoc(t_msl *msl, char *delimiter, char mode);
@@ -268,6 +294,7 @@ unsigned int write_env(char *line, int fd, unsigned int count, t_msl *msl);
 void ft_hwarningexit(char *delimiter);
 
 ///////////////////////////EXECUTION//////////////////////////////////
+
 // exec
 void executer(t_msl *msl);
 void only_builtin(t_msl *msl);

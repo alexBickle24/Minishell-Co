@@ -28,7 +28,7 @@ void print_files(t_files *files)
 {
 	while (files)
 	{
-		printf("  file: %s (type: %d)\n", files->file_name, files->type);
+		printf("  file: %s (type: %d)  (amb: %d)\n", files->file_name, files->type, files->ambiguos);
 		files = files->next;
 	}
 }
@@ -113,7 +113,7 @@ void print_lex(t_lex *lexer, t_parsing *parser)
 	int i = 0;
 	while (lexer)
 	{
-		printf("LEX[%d]: type=%d, len=%zu, str=\"%s\"\n", i, lexer->type, lexer->len, lexer->str);
+		printf("LEX[%d]: type=%d, len=%zu, str=\"%s\" str=\"%s\" \n", i, lexer->type, lexer->len, lexer->str ,lexer->raw);
 		if (parser)
 		{
 			printf("  parser states: parstat=%d, lexstat=%d, infstat=%d\n",
