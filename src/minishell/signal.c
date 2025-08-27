@@ -103,7 +103,7 @@ void sig_handler(int signal)
     rl_replace_line("", 0);//para que loque hayamos escrito se sustituya por un caracteer vcacio
     rl_on_new_line();//no cmabia nada a efectos practicos creoque es solo para el conteo de lineas en el historial
     rl_redisplay();//hace un redisplay del propmpt
-    g_signal = S_INIT; // Reset the signal state after handling
+    // g_signal = S_INIT; // Reset the signal state after handling
 }
 
 //se peuede hacer con signal o exit o kill. En al practica el manejador que
@@ -119,7 +119,12 @@ void sig_child_handler(int signals)
 //en este caso solo queremos libera la memeria reservada y cualquiera de las opciones vale.
 void    sig_heredoc_handler(int signal)
 {
-    (void)signal;
+	int i;
+
+	(void)signal;
+	i = -1;
+	while (close(++i) == 0)
+		close (i);
     kill((pid_t)ft_getpid(), SIGKILL);
 }
 

@@ -1,22 +1,33 @@
+
+
 #include "../../inc/minishell.h"
+
+extern int g_signal;
 
 char *create_heredoc(t_msl *msl, char *delimiter, char sangria)
 {
 	char modes[2];
 	int fd;
 	char *file_name;
+	char *tmp;
 
+	printf("entra en heredoc\n");
 	if (g_signal == SIGINT)
 		return (NULL);
 	file_name = new_file_name("/tmp/");
 	fd = open(file_name, O_CREAT | O_TRUNC | O_RDWR, 0664);
 	if (fd < 0)
 		return (NULL);
-	if (have_quotes(delimiter))
+	tmp = delimiter;
+	printf("el valor del delimitador es %s\n", delimiter);
+	while((*delimiter))
 	{
-		clean_quotes(delimiter);
-		modes[0] = 1;
+		if (check_clean_quotes(msl, delimiter, 1))
+			delimiter++;
 	}
+	delimiter = tmp;
+	if (have_quotes(delimiter))
+		modes[0] = 1;
 	else
 		modes[0] = 0;
 	if (sangria == 1)
@@ -24,8 +35,7 @@ char *create_heredoc(t_msl *msl, char *delimiter, char sangria)
 	else
 		modes[1] = 0;
 	heredoc_child_process(msl, fd, delimiter, modes);
-	close(fd);
-	return (file_name);
+	return (close(fd), file_name);
 }
 
 void	heredoc_child_process(t_msl *msl, int fd, char *delimiter, char *modes)
@@ -56,11 +66,13 @@ void heredoc_loop(t_msl *msl, char *delimiter, int fd, char *modes)
 		if (ft_strncmp(line, delimiter, ft_strlen(delimiter) + 1) == 0)
 		{
 			free(line);
-			exit(0);
+			break ;
 		}
 		write_line_in_heredoc(line, fd, msl, modes);
 		free(line);
 	}
+	close (fd);
+	exit (0);
 }
 
 void write_line_in_heredoc(char *line, int fd, t_msl *msl, char *modes)
