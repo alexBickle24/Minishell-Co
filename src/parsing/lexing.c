@@ -18,65 +18,9 @@
 
 #include "../../inc/minishell.h"
 
-// int g_signal = S_INIT;
+int g_signal = S_INIT;
+// extern int g_signal;
 
-int	s_quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars)
-{
-	char tmp;
-
-	pars->infstat = WORD;
-	if (pars->lexstat == NO_QUOTES && pars->lexstat != D_QUOTES)
-	{
-		if (*i == 0 || (*i > 0 && (pars->sep_op[line[*i - 1]] > 0 &&
-			pars->sep_op[line[*i - 1]] < 5)))
-		{
-			pars->ptr = &line[*i];
-		}
-		pars->lexstat = S_QUOTES;
-	}
-	else if (pars->lexstat == S_QUOTES)
-	{
-		if (line[*i + 1] == '\0' || (pars->sep_op[line[*i + 1]] > 0 &&
-			pars->sep_op[line[*i + 1]] < 5))
-		{
-			tmp = line[*i +1];
-			line[*i +1] = '\0';
-			addback_lex(msl, lex_newnode(pars->parstat, ft_strdup((const char *)pars->ptr)));
-			line[*i+ 1] = tmp;
-		}
-		pars->lexstat = NO_QUOTES;
-	}
-	return((*i)++, 0);
-}
-
-int	d_quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars)
-{
-	char tmp;
-
-	pars->infstat = WORD;
-	if (pars->lexstat == NO_QUOTES && pars->lexstat != S_QUOTES)
-	{
-		if (*i == 0 || (*i > 0 && (pars->sep_op[line[*i - 1]] > 0 &&
-			pars->sep_op[line[*i - 1]] < 5)))
-		{
-			pars->ptr = &line[*i];
-		}
-		pars->lexstat = D_QUOTES;
-	}
-	else if (pars->lexstat == D_QUOTES)
-	{
-		if (line[*i + 1] == '\0' || (pars->sep_op[line[*i + 1]] > 0 &&
-			pars->sep_op[line[*i + 1]] < 5))
-		{
-			tmp = line[*i + 1];
-			line[*i + 1] = '\0';
-			addback_lex(msl, lex_newnode(pars->parstat, ft_strdup((const char *)pars->ptr)));
-			line[*i + 1] = tmp;
-		}
-		pars->lexstat = NO_QUOTES;
-	}
-	return((*i)++, 0);
-}
 
 int	quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars)
 {
@@ -87,6 +31,66 @@ int	quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars)
 	if (line[*i] == '\"')
 		ret = d_quotes(msl, i, line, pars);
 	return (ret);
+}
+
+int	s_quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars)
+{
+	char tmp;
+
+	pars->infstat = WORD;
+	if (pars->lexstat == NO_QUOTES)
+	{
+		pars->lexstat = S_QUOTES;//
+		if (*i == 0 || (*i > 0 && (pars->sep_op[line[*i - 1]] > 0 &&
+			pars->sep_op[line[*i - 1]] < 5)))
+		{
+			pars->ptr = &line[*i];
+		}
+	}
+	else if (pars->lexstat == S_QUOTES)
+	{
+		pars->lexstat = NO_QUOTES;//
+		if (line[*i + 1] == '\0' || (pars->sep_op[line[*i + 1]] > 0 &&
+			pars->sep_op[line[*i + 1]] < 5))
+		{
+			tmp = line[*i +1];
+			line[*i +1] = '\0';
+			addback_lex(msl, lex_newnode(pars->parstat, ft_strdup((const char *)pars->ptr)));
+			line[*i+ 1] = tmp;
+			pars->parstat = T_CMD;
+		}
+	}
+	return((*i)++, 0);
+}
+
+int	d_quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars)
+{
+	char tmp;
+
+	pars->infstat = WORD;
+	if (pars->lexstat == NO_QUOTES)
+	{
+		pars->lexstat = D_QUOTES;//
+		if (*i == 0 || (*i > 0 && (pars->sep_op[line[*i - 1]] > 0 &&
+			pars->sep_op[line[*i - 1]] < 5)))
+		{
+			pars->ptr = &line[*i];
+		}
+	}
+	else if (pars->lexstat == D_QUOTES)
+	{
+		pars->lexstat = NO_QUOTES;//
+		if (line[*i + 1] == '\0' || (pars->sep_op[line[*i + 1]] > 0 &&
+			pars->sep_op[line[*i + 1]] < 5))
+		{
+			tmp = line[*i + 1];
+			line[*i + 1] = '\0';
+			addback_lex(msl, lex_newnode(pars->parstat, ft_strdup((const char *)pars->ptr)));
+			line[*i + 1] = tmp;
+			pars->parstat = T_CMD;
+		}
+	}
+	return((*i)++, 0);
 }
 
 int	info(t_msl *msl, int *i, unsigned char *line, t_parsing *pars)
@@ -107,6 +111,7 @@ int	info(t_msl *msl, int *i, unsigned char *line, t_parsing *pars)
 			line[*i + 1] = '\0';
 			addback_lex(msl, lex_newnode(pars->parstat, ft_strdup((const char *)pars->ptr)));
 			line[*i + 1] = tmp;
+			pars->parstat = T_CMD;
 		}
 	}
 	pars->infstat = WORD;
@@ -142,6 +147,7 @@ int	pipe_op(t_msl *msl, int *i, unsigned char *line, t_parsing *pars)
 			line[*i+1] = tmp;
 		}
 		pars->infstat = OPERATOR;
+		pars->parstat = T_CMD;
 	}
 	else
 		pars->infstat = WORD;
@@ -233,6 +239,7 @@ void	ft_error_unexpect(char *simbol)
 }
 
 
+
 t_lex	*lex_newnode(int type, char *raw)
 {
 	t_lex *node;
@@ -240,10 +247,11 @@ t_lex	*lex_newnode(int type, char *raw)
 	node = (t_lex *)malloc(sizeof(t_lex));
 	if (node == NULL)
 		return (NULL);
-	node->str = raw;
+	node->raw = raw;
 	node->len = ft_strlen(raw);
 	node->type = type;
 	node->next = NULL;
+	node->str = ft_strdup(raw);
 	return (node);
 }
 
@@ -262,6 +270,8 @@ void	addback_lex(t_msl *msl, t_lex *node)
 	current->next = node;
 }
 
+
+
 void	lexer(t_msl *msl, char *line)
 {
 	t_parsing *parser;
@@ -269,6 +279,8 @@ void	lexer(t_msl *msl, char *line)
 	int i;
 	int err;
 
+	if (g_signal != S_INIT)
+		return ;
 	i = 0;
 	err = 0;
 	line_ptr = (unsigned char *)line;
@@ -276,36 +288,33 @@ void	lexer(t_msl *msl, char *line)
 	while (line[i])
 	{
 		err = parser->lex[(unsigned char)parser->sep_op[line_ptr[i]]](msl, &i, line_ptr, parser);
-		// print_parser_state(parser, line[i], i);
 		if (err)
 			break;
 	}
 	print_lex(msl->lexer, parser);
-	if (err)//proabaer esto
-	{
-		msl->pars_err = 1;
+	if (err)//para los errires interiores (unexpected tocken)
 		free_lexer(msl, 1);
-	}
 	else
 	{
 		if (parser->infstat == REDIR)
-		{
-			ft_putstr_fd(NEWLINE_ERR, 2);
-			free_lexer(msl, 1);
-		}
+			msl->pars_err = 1;
 		else if(parser->infstat == OPERATOR)
 		{
+			// msl->pars_err = 1;
 			ft_putstr_fd(MIPIPE_ERR, 2);
-			free_lexer(msl, 1);
+			free_lexer(msl, 1);//
 		}
 		else if (parser->lexstat != NO_QUOTES)
 		{
+			// msl->pars_err = 1;
 			ft_putstr_fd(MIQUOTE_ERR, 2);
-			free_lexer(msl, 1);
+			free_lexer(msl, 1);//
 		}
 	}
-	free_lexer(msl, 1);//esto es solo para el tester
+	set_parsdefaultvals(msl);//esto creo que es redundante ya se soluciono con parche en redirecciones
+	// free_lexer(msl, 1);//esto es solo para el tester//
 }
+
 
 void	free_lexer(t_msl *msl, char all)
 {
@@ -315,8 +324,15 @@ void	free_lexer(t_msl *msl, char all)
 	lexer = msl->lexer;
 	while (lexer)
 	{
+		if ((lexer->type == T_HEREDOC || T_HEREDOC_S) && lexer->str != NULL)
+			unlink(lexer->str);
 		if (all == 1)
+		{
+			if (lexer->raw != NULL)
+				free (lexer->raw);
+			if (lexer->str != NULL)
 			free (lexer->str);
+		}
 		tmp = lexer->next;
 		free(lexer);
 		lexer = tmp;
@@ -333,38 +349,73 @@ void	set_parsdefaultvals(t_msl *msl)
 	msl->parsing_utils->ptr = 0;
 }
 
-// int main(int argc, char **argv, char **env)
-// {
-// 	t_msl *msl;
-// 	char *line;//la linea en bruto
+int main(int argc, char **argv, char **env)
+{
+	t_msl *msl;
+	char *line;//la linea en bruto
 
-// 	(void)argv;//para que no se queje el compilador
-//     if (argc != 1)
-// 		return (1);//si no hacemos el modo literal
-//     minishell_init(&msl, env, argv);//inicamos la estrcutura de minishell y el manejados
-// 	while (1)
-// 	{
-// 		line = readline(PROMPT);
-// 		add_history(line);//exit tambien se mete al historial
-// 		msl->clean_line = ft_strtrim(line, " \t\n\v\f\r");//por el mod literal de bash con control+V
-// 		if (!msl->clean_line || ft_strncmp(msl->clean_line, "exit\0", 5) == 0)
-// 		{
-// 			ft_putstr_fd("exit\n", 2);
-// 			free(msl->clean_line);
-// 			msl->clean_line = NULL;//Esta linea es solo para poder printear los valores de la minishell
-// 			free(line);
-// 			break ;
-// 		}
-// 		// meter la linea en minishell (lexerizaciion y parseo)
-// 		if (!line || !msl)
-// 			printf("hola\n");
-// 		lexer(msl, line);
-// 		free(line);
-// 		free(msl->clean_line);
-// 		msl->clean_line = NULL;//Esta linea es solo para poder printear los valores de la minishell
-// 		// printf("\n");
-// 		// print_msl(msl);
-// 	}
-// 	free_msl(&msl);
-// 	return (0);
-// }
+	(void)argv;//para que no se queje el compilador
+    if (argc != 1)
+		return (1);//si no hacemos el modo literal
+    minishell_init(&msl, env, argv);//inicamos la estrcutura de minishell y el manejados
+	while (1)
+	{
+		line = readline(PROMPT);
+		add_history(line);//exit tambien se mete al historial
+		msl->clean_line = ft_strtrim(line, " \t\n\v\f\r");//por el mod literal de bash con control+V
+		if (!msl->clean_line || ft_strncmp(msl->clean_line, "exit\0", 5) == 0)
+		{
+			ft_putstr_fd("exit\n", 2);
+			free(msl->clean_line);
+			msl->clean_line = NULL;//Esta linea es solo para poder printear los valores de la minishell
+			free(line);
+			break ;
+		}
+		// meter la linea en minishell (lexerizaciion y parseo)
+		if (!line || !msl)
+			printf("hola\n");
+		// lexer(msl, line);
+		// clean_expand_add_toexecuter(msl);
+		interpreter_mode2(msl, msl->clean_line);
+		free(line);
+		free(msl->clean_line);
+		msl->clean_line = NULL;//Esta linea es solo para poder printear los valores de la minishell
+		// printf("\n");
+		// print_msl(msl);
+	}
+	free_msl(&msl);
+	return (0);
+}
+
+void interpreter_mode2(t_msl *msl, char *clean_line)
+{
+	lexer(msl, clean_line);
+	clean_expand_add_toexecuter(msl);
+	free_tockens(msl);//Cuanndo no tengo el ejecutor
+	// executer(msl);
+	g_signal = S_INIT;
+}
+
+
+
+//caundo me encuentro un hereco lo creo
+t_lex	*lex_newnode2(int type, char *raw, t_msl *msl)
+{
+	t_lex *node;
+
+	node = (t_lex *)malloc(sizeof(t_lex));
+	if (node == NULL)
+		return (NULL);
+	node->raw = raw;
+	node->len = ft_strlen(raw);
+	node->type = type;
+	node->next = NULL;
+	if (type == T_HEREDOC)
+		node->str = create_heredoc(msl, raw, 0);
+	else if (type == T_HEREDOC_S)
+		node->str = create_heredoc(msl, raw, 1);
+	else
+		node->str = ft_strdup(raw);
+	return (node);
+}
+
