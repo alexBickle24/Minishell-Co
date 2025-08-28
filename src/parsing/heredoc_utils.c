@@ -72,3 +72,22 @@ unsigned int	write_env(char *line, int fd, unsigned int count, t_msl *msl)
 	ft_putstr_fd(env_value, fd);
 	return (free(env_name), ft_free_table(env), count -1);
 }
+
+char	*create_here_str(char *line)
+{
+	int	fd;
+	char *file_name;
+
+	if (line == NULL || g_signal != S_INIT)
+		return (NULL);
+	file_name = new_file_name("/tmp/");
+	if (file_name == NULL)
+		return (NULL);
+	fd = open(file_name, O_CREAT | O_TRUNC | O_RDWR, 0664);
+	if (fd < 0)
+		return (NULL);
+	ft_putstr_fd(line, fd);
+	ft_putchar_fd('\n', fd);
+	close (fd);
+	return (file_name);
+}

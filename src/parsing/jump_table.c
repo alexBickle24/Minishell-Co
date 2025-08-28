@@ -88,6 +88,11 @@ int	redir_in(t_msl *msl, int *i, unsigned char *line, t_parsing *pars)
 				if (pars->sep_op[line[*i + 1]] == 0 || pars->sep_op[line[*i + 1]] == 5)
 					pars->ptr = &line[*i + 1];
 			}
+			else if (line[*i + 1] == '<')
+			{
+				pars->parstat = T_HERE_STR;
+				(*i)++;
+			}
 			else
 				pars->parstat = T_HEREDOC;
 		}

@@ -23,7 +23,7 @@ void	clean_expand_add_toexecuter(t_msl *msl)
 			adding_tocken(msl, &current, lexer);
 		else if (lexer->type == T_CMD)
 			adding_cmds(msl, current, lexer);
-		else if (lexer->type == T_HEREDOC || lexer->type == T_HEREDOC_S)
+		else if (lexer->type == T_HEREDOC || lexer->type == T_HEREDOC_S || lexer->type == T_HERE_STR)
 			adding_here(msl, current, lexer);
 		else
 			adding_files(msl, current, lexer);
@@ -111,6 +111,8 @@ void	adding_here(t_msl *msl, t_tocken *current, t_lex *lex)
 		lex->str = create_heredoc(msl, lex->raw, 0);
 	else if (lex->type == T_HEREDOC_S)
 		lex->str = create_heredoc(msl, lex->raw, 1);
+	else if (lex->type == T_HERE_STR)
+		lex->str = create_here_str(lex->raw);
 	node = list_new_files(lex->str, lex->type, 0);
 	if (!node)
 		return ;

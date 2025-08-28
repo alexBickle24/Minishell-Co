@@ -71,8 +71,8 @@ void	free_lexer(t_msl *msl, char all)
 	lexer = msl->lexer;
 	while (lexer)
 	{
-		if ((lexer->type == T_HEREDOC || lexer->type == T_HEREDOC_S)
-				&& lexer->str != NULL)
+		if ((lexer->type == T_HEREDOC || lexer->type == T_HEREDOC_S ||
+			lexer->type == T_HERE_STR) && lexer->str != NULL)
 			unlink(lexer->str);
 		if (all == 1)
 		{
