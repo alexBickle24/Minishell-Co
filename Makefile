@@ -14,7 +14,7 @@ INCLUDE = $(INCLUDE_DIR)/minishell.h
 SRC_DIR = src/
 #falta añadir los builtins
 #Cambiando el archivo de la carpeta main testeamos unas cosas u otras /mains/"archivo.c"
-SRC_FILES=  parsing/lexing.c\
+SRC_FILES=  parsing/lexer_parser.c\
 			debugin/print.c\
 			minishell/init.c\
 			minishell/close_minishell.c\
@@ -34,8 +34,14 @@ SRC_FILES=  parsing/lexing.c\
 			parsing/heredoc.c \
 			parsing/heredoc_utils.c \
 			parsing/parsing_utils.c \
-			parsing/dollar_expansion.c\
+			parsing/parsing_utils2.c\
+			parsing/expand.c\
+			parsing/expand_utils.c\
 			parsing/parsing.c\
+			parsing/parsing_errors.c\
+			parsing/jump_table.c\
+			parsing/jump_table2.c\
+			parsing/lexer_utils.c\
 			utils/data_formats.c
 
 	

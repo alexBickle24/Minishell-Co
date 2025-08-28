@@ -2,7 +2,7 @@
 
 #include "../../inc/minishell.h"
 
-void	init_sep_op( char *sep_op)
+void	init_sep_op(unsigned char *sep_op)
 {
 	sep_op['\0'] = 1;
 	sep_op['\t'] = 1;
@@ -18,7 +18,7 @@ void	init_sep_op( char *sep_op)
 	sep_op['\''] = 5;
 }
 
-void	init_dollar_lim(char *dollar_limits, char *sep_op)
+void	init_dollar_lim(char *dollar_limits, unsigned char *sep_op)
 {
 	int	i;
 	int	max;
@@ -73,3 +73,12 @@ t_parsing	*init_parsing(t_msl *msl)
 	}
 	return (pars);
 }
+
+void	set_parsdefaultvals(t_msl *msl)
+{
+	msl->parsing_utils->infstat = 0;
+	msl->parsing_utils->lexstat = 0;
+	msl->parsing_utils->parstat = 0;
+	msl->parsing_utils->ptr = 0;
+}
+

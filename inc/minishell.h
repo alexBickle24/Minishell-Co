@@ -135,7 +135,7 @@ typedef struct s_parsing_utils
 
 	int	(*lex[6])(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
 	// Caracteres de separacion  (code 1)y operadores (code 2)
-	char sep_op[255];//unsigned 
+	unsigned char sep_op[255];//unsigned 
 	unsigned char *ptr;
 	// Para la expansion de variables-
 	char dollar_lim[255];
@@ -184,7 +184,7 @@ void print_parser_state(t_parsing *parser, unsigned char c, int i);
 // minishell init
 void minishell_init(t_msl **msl, char **env, char **argv);
 void interpreter_mode(t_msl *msl);
-void interpreter_mode2(t_msl *msl, char *clean_line);
+void interpreter_mode2(t_msl *msl, unsigned char *clean_line);
 
 // minishell close
 void free_own_env(t_msl *msl);
@@ -223,8 +223,8 @@ void ft_shlvl_warning(char *str);
 
 // init parsing
 t_parsing *init_parsing(t_msl *msl);
-void init_sep_op(char *sep_op);
-void init_dollar_lim(char *dollar_limits, char *sep_op);
+void init_sep_op(unsigned char *sep_op);
+void init_dollar_lim(char *dollar_limits, unsigned char *sep_op);
 void	init_jump_table(int (**f)(t_msl *, int *, unsigned char *, t_parsing *));
 
 // Create_tockens
@@ -238,7 +238,7 @@ void list_addback_pcmds(t_pcmds **list, t_pcmds *new_node);
 //Lexer (momentaneo)
 void	set_parsdefaultvals(t_msl *msl);
 void	free_lexer(t_msl *msl, char all);
-void	lexer(t_msl *msl, char *line);
+void	lexer_parser(t_msl *msl, unsigned char *line);
 void	addback_lex(t_msl *msl, t_lex *node);
 t_lex	*lex_newnode(int type, char *raw);
 void	ft_error_unexpect(char *simbol);
@@ -251,6 +251,8 @@ int	info(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
 int	d_quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
 int	s_quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
 int	quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
+void	create_new_lex( t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
+void	manage_last_state(t_msl *msl, t_parsing *parser);
 
 // parsing_utils
 int have_quotes(char *str);
@@ -265,27 +267,30 @@ char	check_clean_dquotes(t_msl *msl, char *str, char clean);
 //adding and expansion
 void	clean_expand_add_toexecuter(t_msl *msl);
 void	adding_files(t_msl *msl, t_tocken *current, t_lex *lex);
-void	expand_str(char **str, t_msl *msl, size_t *len);
 void	adding_cmds(t_msl *msl, t_tocken *current, t_lex *lex);
 void	adding_files(t_msl *msl, t_tocken *current, t_lex *lex);
-void	adding_heredoc(t_msl *msl, t_tocken *current, t_lex *lex);
+void	adding_here(t_msl *msl, t_tocken *current, t_lex *lex);
+void	adding_tocken(t_msl *msl, t_tocken **current, t_lex *lexer);
+
 //fix error
 char	new_line_err(t_msl *msl);
-void	heredoc_new_line_errror(t_msl *msl, t_lex *lex);
-char	check_heredocs_and_newline_error(t_msl *msl);
+void	create_heredoc_nwlerr(t_msl *msl, t_lex *lex);
+char	check_nwl_error(t_msl *msl);
 
 
 //dollar expansion
-void	expand_and_cleanstr(char **str, t_msl *msl);//prueba main
+void	vars_interpolation(char **str, t_msl *msl, size_t *len);
 void	dollar_expansion(char **str, int *i, size_t *len, t_msl *msl);
+void dollar_expansion2(char **str, int *i, size_t *len, t_msl *msl);
 void	replace_dollar(char **str, int *i, size_t *len, t_msl *msl);
 void	concatenate_strings(char **str, int *i, size_t *len, char *replace);
 void	concatenate_strings2(char **str, int *i, size_t *len, char *replace);
-void	expand_envvars(char **str, int *i, size_t *len, t_msl *msl);
+void	expand_vars(char **str, int *i, size_t *len, t_msl *msl);
 
 // heredoc
 char *create_heredoc(t_msl *msl, char *delimiter, char mode);
 char *new_file_name(char *path);
+void	set_heredocs_modes(char *modes, char *delimiter, char sangria);
 void heredoc_child_process(t_msl *msl, int fd, char *delimiter, char *modes);
 void heredoc_loop(t_msl *msl, char *delimiter, int fd, char *modes);
 void write_line_in_heredoc(char *line, int fd, t_msl *msl, char *modes);

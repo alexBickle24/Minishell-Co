@@ -1,61 +1,60 @@
 #include "../../inc/minishell.h"
-#include <stdio.h> // Añadido para printf
 
-int have_quotes(char *str)
+char	check_clean_quotes(t_msl *msl, char *str, char clean)
 {
-	int i;
+	char jump;
 
-	i = 0;
-	while (str[i])
+	jump = 1;
+	if (*str == '\'')
+		jump = check_clean_squotes(msl, str, clean);
+	if (*str == '\"')
+		jump = check_clean_dquotes(msl, str, clean);
+	return (jump);
+}
+
+char	check_clean_squotes(t_msl *msl, char *str, char clean)
+{
+	t_parsing *pars;
+
+	pars = msl->parsing_utils;
+	if (pars->lexstat == NO_QUOTES)
 	{
-		if (str[i] == '\'' || str[i] == '\"')
-			return (1);
-		i++;
+		pars->lexstat = S_QUOTES;
+		if (clean)
+			ft_memmove(str, str + 1, ft_strlen(str));
+		return(0);
 	}
-	return (0);
-}
-
-char *clean_quotes(char *str)
-{
-	char *tmp;
-	int lensrc;
-	int i;
-
-	tmp = str;
-	if (!tmp)
-		return (NULL);
-	lensrc = (int)ft_strlen(str);
-	i = 0;
-	while(tmp[i])
+	else if (pars->lexstat == S_QUOTES)
 	{
-		if (tmp[i] == '\'' || tmp[i] == '\"')
-		{
-			ft_memmove(&tmp[i], &tmp[i + 1], lensrc - i);
-			lensrc--;
-		}
-		i++;
+		pars->lexstat = NO_QUOTES;
+		if (clean)
+			ft_memmove(str, str + 1, ft_strlen(str));
+		return(0);
 	}
-	return(str);
+	return(1);
 }
 
-char	*jump_caracter(char *str, char caracter)
+char	check_clean_dquotes(t_msl *msl, char *str, char clean)
 {
-	while (str && *str && *str == caracter)
-		str++;
-	return(str);
-}
+	t_parsing *pars;
 
-void	jump_separator(char **str)
-{
-	while (str && *str && is_space(**str))
-		(*str)++;
-}
+	pars = msl->parsing_utils;
+	if (pars->lexstat == NO_QUOTES)
+	{
+		pars->lexstat = D_QUOTES;
+		if (clean)
+			ft_memmove(str, str + 1, ft_strlen(str));
+		return(0);
+	}
+	else if (pars->lexstat == D_QUOTES)
+	{
+		pars->lexstat = NO_QUOTES;
+		if (clean)
+			ft_memmove(str, str + 1, ft_strlen(str));
+		return(0);
+	}
+	return(1);
 
-int is_space(char c)
-{
-	if ((c >= '\t' && c <= '\r') || c == ' ')
-		return (1);
-	return (0);
 }
 
 

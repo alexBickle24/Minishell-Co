@@ -85,18 +85,18 @@ void	parser1(t_msl *msl)
 		if (control == 1 && ft_strncmp(comands[i], "null\0", 5) != 0)
 			list_addback_pcmds(&(c_tockens->pcmds), list_new_pcmds(ft_strdup(comands[i])));
 		if (control == 2 && ft_strncmp(comands[i], "null\0", 5) != 0)
-			list_addback_infiles(&(c_tockens->files), list_new_files(ft_strdup(comands[i]), T_INFILE));
+			list_addback_infiles(&(c_tockens->files), list_new_files(ft_strdup(comands[i]), T_INFILE, 0));
 		if (control == 3 && ft_strncmp(comands[i], "null\0", 5) != 0)
 		{
 			file_name = create_heredoc(msl, comands[i], 1);//desactiavda por defecto
-			heredoc = list_new_files(ft_strdup(file_name), T_HEREDOC);
+			heredoc = list_new_files(ft_strdup(file_name), T_HEREDOC, 0);
 			list_addback_infiles(&(c_tockens->files), heredoc);
 			free(file_name);
 		}
 		if (control == 4)
 		{
 			if (ft_strncmp(comands[i], "null\0", 5) != 0)
-				list_addback_infiles(&(c_tockens->files), list_new_files(ft_strdup(comands[i]), T_OUTFILE));
+				list_addback_infiles(&(c_tockens->files), list_new_files(ft_strdup(comands[i]), T_OUTFILE, 0));
 			control = -1;
 		}
 		control++;
