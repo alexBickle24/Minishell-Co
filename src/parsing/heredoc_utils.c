@@ -1,17 +1,5 @@
 #include "../../inc/minishell.h"
 
-void	ft_hwarningexit(char *delimiter)
-{
-	char *n_line_history;
-
-	n_line_history = ft_itoa(history_length);
-	ft_putstr_fd("minishell: warning: here document at line ", 2);
-	ft_putstr_fd(n_line_history, 2);
-	free(n_line_history);
-	ft_putstr_fd(" delimited by end-of-file (wanted '", 2);
-	ft_putstr_fd(delimiter, 2);
-	ft_putstr_fd("')", 2);
-}
 
 char	*new_file_name(char *path)
 {
@@ -36,7 +24,30 @@ char	*new_file_name(char *path)
 	return (name_str);
 }
 
+void	set_heredocs_modes(char *modes, char *delimiter, char sangria)
+{
+	if (have_quotes(delimiter))
+		modes[0] = 1;
+	else
+		modes[0] = 0;
+	if (sangria == 1)
+		modes[1] = 1;
+	else
+		modes[1] = 0;
+}
 
+void	ft_hwarningexit(char *delimiter)
+{
+	char *n_line_history;
+
+	n_line_history = ft_itoa(history_length);
+	ft_putstr_fd("minishell: warning: here document at line ", 2);
+	ft_putstr_fd(n_line_history, 2);
+	free(n_line_history);
+	ft_putstr_fd(" delimited by end-of-file (wanted '", 2);
+	ft_putstr_fd(delimiter, 2);
+	ft_putstr_fd("')", 2);
+}
 
 unsigned int	write_env(char *line, int fd, unsigned int count, t_msl *msl)
 {

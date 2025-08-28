@@ -1,15 +1,50 @@
 
 
-
-#include "../inc/minishell.h"
-/*
- * env: Es lo mismo que extern char **environ
-  *         env[i] = "PATH=/usr/bin" (ejemplo)
-  *         env[N] == NULL
- */
-
+#include "../../inc/minishell.h"
 
 int g_signal = S_INIT;
+
+void	lexer_parser(t_msl *msl, unsigned char *line)
+{
+	t_parsing *parser;
+	int i;
+	int err;
+
+	if (g_signal != S_INIT)
+		return ;
+	i = 0;
+	err = 0;
+	parser = msl->parsing_utils;
+	while (line[i])
+	{
+		err = parser->lex[parser->sep_op[line[i]]](msl, &i, line, parser);
+		if (err)
+			break;
+	}
+	print_lex(msl->lexer, parser);
+	if (err)
+		free_lexer(msl, 1);
+	else
+		manage_last_state(msl, parser);
+	set_parsdefaultvals(msl);
+}
+
+void	manage_last_state(t_msl *msl, t_parsing *parser)
+{
+	if (parser->infstat == REDIR)
+			msl->pars_err = 1;
+	else if(parser->infstat == OPERATOR)
+	{
+		ft_putstr_fd(MIPIPE_ERR, 2);
+		free_lexer(msl, 1);
+	}
+	else if (parser->lexstat != NO_QUOTES)
+	{
+		ft_putstr_fd(MIQUOTE_ERR, 2);
+		free_lexer(msl, 1);
+	}
+}
+
 
 int main(int argc, char **argv, char **env)
 {
@@ -49,5 +84,13 @@ int main(int argc, char **argv, char **env)
 	return (0);
 }
 
-
-
+void interpreter_mode2(t_msl *msl, unsigned char *clean_line)
+{
+	lexer_parser(msl, clean_line);
+	clean_expand_add_toexecuter(msl);//siq uitas este tienes que meter un free_lexer(msl, 1)
+	// free_lexer(msl, 1);
+	print_tockens(msl);
+	free_tockens(msl);//Cuanndo no tengo el ejecutor
+	// executer(msl);
+	g_signal = S_INIT;
+}

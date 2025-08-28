@@ -30,7 +30,6 @@ void    executer(t_msl *msl)
 		else 
 			execute_orders(msl);
 	}
-	//Funcion para el caso de señal activad aantes de ejecucion (evalua la vairable global)
 	g_signal = S_INIT;
 	msl->pars_err = 0;
 	//Funcion de liberacion de memeria y cierre de fds de p_tockens

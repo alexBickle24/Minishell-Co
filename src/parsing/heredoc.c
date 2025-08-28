@@ -11,7 +11,6 @@ char *create_heredoc(t_msl *msl, char *delimiter, char sangria)
 	char *file_name;
 	char *tmp;
 
-	printf("entra en heredoc\n");
 	if (g_signal == SIGINT)
 		return (NULL);
 	file_name = new_file_name("/tmp/");
@@ -19,21 +18,13 @@ char *create_heredoc(t_msl *msl, char *delimiter, char sangria)
 	if (fd < 0)
 		return (NULL);
 	tmp = delimiter;
-	printf("el valor del delimitador es %s\n", delimiter);
 	while((*delimiter))
 	{
 		if (check_clean_quotes(msl, delimiter, 1))
 			delimiter++;
 	}
 	delimiter = tmp;
-	if (have_quotes(delimiter))
-		modes[0] = 1;
-	else
-		modes[0] = 0;
-	if (sangria == 1)
-		modes[1] = 1;
-	else
-		modes[1] = 0;
+	set_heredocs_modes(modes, delimiter, sangria);
 	heredoc_child_process(msl, fd, delimiter, modes);
 	return (close(fd), file_name);
 }
@@ -127,25 +118,3 @@ int write_dollar_cases(char *t_line, t_msl *msl, int fd, int i)
 		i = write_env(&t_line[i], fd, i, msl);
 	return (i);
 }
-
-// mod parseo, msl->env / fd->newbuffer / i -> &i return -> newstr
-//  int	write_dollar_cases(char *t_line, t_msl *msl, int fd, int i)
-//  {
-//  	if (t_line[i + 1] == '$')
-//  	{
-//  		ft_putnbr_fd(msl->msl_pid, fd);//pid minishell
-//  		i++;
-//  	}
-//  	else if (t_line[i + 1] == '?')
-//  	{
-//  		ft_putnbr_fd(msl->exit_status, fd);//exit_status
-//  		i++;
-//  	}
-//  	else if (ft_isdigit(t_line[i + 1]))//si es un numero se lo salta
-//  		i++;
-//  	else if (ft_isalpha(t_line[i+1]))
-//  		i = write_env(&t_line[i], fd, i, ft_env_to_table(msl->own_env));
-//  	else
-//  		ft_putchar_fd(t_line[i], fd);
-//  	return (i);
-//  }
