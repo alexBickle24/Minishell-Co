@@ -78,6 +78,7 @@ void    signal_init_childs(void)
 
 void    signal_init_heredoc(void)
 {
+	// signal(SIGINT, SIG_DFL);
     struct sigaction sa_int;
     struct sigaction sa_quit;
 
@@ -98,12 +99,30 @@ void sig_handler(int signal)
 {
     (void)signal;
 
-    g_signal = S_SIGINT;
-    write(1, "\n", 1);//para que lo que pinter readline, es decir elprompt sea en la siguiente linea de STDIN file
-    rl_replace_line("", 0);//para que loque hayamos escrito se sustituya por un caracteer vcacio
-    rl_on_new_line();//no cmabia nada a efectos practicos creoque es solo para el conteo de lineas en el historial
-    rl_redisplay();//hace un redisplay del propmpt
-    // g_signal = S_INIT; // Reset the signal state after handling
+	if (g_signal == S_EXECUTION)
+	{
+		g_signal = S_SIGINT;
+    	write(1, "\n", 1);//para que lo que pinter readline, es decir elprompt sea en la siguiente linea de STDIN file
+    	rl_replace_line("", 0);//para que loque hayamos escrito se sustituya por un caracteer vcacio
+		rl_on_new_line();//no cmabia nada a efectos practicos creoque es solo para el conteo de lineas en el historial
+	}
+	if (g_signal == S_INIT)
+	{
+		g_signal = S_SIGINT;
+		write(1, "\n", 1);//para que lo que pinter readline, es decir elprompt sea en la siguiente linea de STDIN file
+		rl_replace_line("", 0);//para que loque hayamos escrito se sustituya por un caracteer vcacio
+		rl_on_new_line();//no cmabia nada a efectos practicos creoque es solo para el conteo de lineas en el historial
+		rl_redisplay();//hace un redisplay del propmpt
+		g_signal = S_INIT;
+	}
+	if (g_signal == S_HEREDOC)
+	{
+		g_signal = S_SIGINT;
+    	write(1, "C^", 2);//para que lo que pinter readline, es decir elprompt sea en la siguiente linea de STDIN file
+    	write(1, "\n", 1);//para que lo que pinter readline, es decir elprompt sea en la siguiente linea de STDIN file
+    	rl_replace_line("", 0);//para que loque hayamos escrito se sustituya por un caracteer vcacio
+		rl_on_new_line();//no cmabia nada a efectos practicos creoque es solo para el conteo de lineas en el historial
+	}
 }
 
 //se peuede hacer con signal o exit o kill. En al practica el manejador que
@@ -117,14 +136,13 @@ void sig_child_handler(int signals)
 
 //se puede hacer con kill (SIGKILL), con exit o con signal(sigDFL) ya que le codigo de salida nos da igual
 //en este caso solo queremos libera la memeria reservada y cualquiera de las opciones vale.
-void    sig_heredoc_handler(int signal)
+void    sig_heredoc_handler(int signals)
 {
 	int i;
 
-	(void)signal;
 	i = -1;
 	while (close(++i) == 0)
 		close (i);
-    kill((pid_t)ft_getpid(), SIGKILL);
+	exit (signals);
 }
 

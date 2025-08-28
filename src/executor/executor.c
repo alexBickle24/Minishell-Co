@@ -23,8 +23,9 @@
 
 void    executer(t_msl *msl)
 {
-	if (msl && g_signal == S_INIT)//temer que la lista de tockens exista o msl errro (probar a ver como se comporta waitchild)
+	if (msl && g_signal == S_INIT && msl->tocken != NULL)//temer que la lista de tockens exista o msl errro (probar a ver como se comporta waitchild)
 	{
+		g_signal = S_EXECUTION;
 		if (msl->total_tockens == 1 && is_builtin(msl->tocken))
 			only_builtin(msl);
 		else 

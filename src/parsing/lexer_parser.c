@@ -21,7 +21,7 @@ void	lexer_parser(t_msl *msl, unsigned char *line)
 		if (err)
 			break;
 	}
-	print_lex(msl->lexer, parser);
+	// print_lex(msl->lexer, parser);
 	if (err)
 		free_lexer(msl, 1);
 	else
@@ -86,11 +86,14 @@ int main(int argc, char **argv, char **env)
 
 void interpreter_mode2(t_msl *msl, unsigned char *clean_line)
 {
+	// g_signal = S_INIT;
 	lexer_parser(msl, clean_line);
 	clean_expand_add_toexecuter(msl);//siq uitas este tienes que meter un free_lexer(msl, 1)
 	// free_lexer(msl, 1);
-	print_tockens(msl);
-	free_tockens(msl);//Cuanndo no tengo el ejecutor
+	// print_tockens(msl);
+	// sleep(4);
+	executer(msl);
+	// free_tockens(msl);//Cuanndo no tengo el ejecutor
 	// executer(msl);
-	g_signal = S_INIT;
+	// g_signal = S_INIT;
 }

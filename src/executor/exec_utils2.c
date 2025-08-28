@@ -83,9 +83,6 @@ void create_pipes(t_tocken *c_tocken)
 {
 	if (pipe(c_tocken->pipe_fds) == -1)
         ft_errerrno();
-	else
-		printf("Pipe created successfully\n");
-
 }
 
 // void evaluate_local_variable(t_tocken *c_tocken)

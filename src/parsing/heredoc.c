@@ -11,7 +11,6 @@ char *create_heredoc(t_msl *msl, char *delimiter, char sangria)
 	char *file_name;
 	char *tmp;
 
-	printf("entra en heredoc\n");
 	if (g_signal == SIGINT)
 		return (NULL);
 	file_name = new_file_name("/tmp/");
@@ -34,6 +33,7 @@ void	heredoc_child_process(t_msl *msl, int fd, char *delimiter, char *modes)
 {
 	pid_t pid;
 
+	g_signal = S_HEREDOC;
 	pid = fork();
 	if (pid < 0)
 	{
@@ -42,7 +42,8 @@ void	heredoc_child_process(t_msl *msl, int fd, char *delimiter, char *modes)
 	}
 	if (pid == 0)
 		heredoc_loop(msl, delimiter, fd, modes);
-	wait_heredoc();
+	if (pid > 0)
+		wait_childs4(msl, pid);
 }
 
 void heredoc_loop(t_msl *msl, char *delimiter, int fd, char *modes)

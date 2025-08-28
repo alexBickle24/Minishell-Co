@@ -17,7 +17,7 @@ void check_create_redirs(t_tocken *c_tocken, t_files *files_list)
 		return ;
 	while (current_f)
 	{
-		if (current_f->type == T_HEREDOC || current_f->type == T_INFILE)
+		if (current_f->type == T_HEREDOC || current_f->type == T_INFILE || current_f->type == T_HEREDOC_S)
 		{
 			c_tocken->redir_in = current_f;
 			if (access(current_f->file_name, F_OK | R_OK) == -1 || current_f->ambiguos)
@@ -26,6 +26,8 @@ void check_create_redirs(t_tocken *c_tocken, t_files *files_list)
 		if (current_f->type == T_OUTFILE || current_f->type == T_APPEND)
 		{
 			c_tocken->redir_out = current_f;
+			if (current_f->ambiguos)
+				break ;
 			if (current_f->type == T_OUTFILE)
 				fd = open(current_f->file_name, O_WRONLY | O_CREAT | O_TRUNC, 0664);
 			else

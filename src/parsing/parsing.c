@@ -16,7 +16,7 @@ void	clean_expand_add_toexecuter(t_msl *msl)
 	msl->tocken = list_new_tocken(1);
 	current = msl->tocken;
 	msl->total_tockens = 1;
-	while (lexer)
+	while (lexer)//sepodria meter optimizacion para que deje de lexerizas si señal de sigint en heredoc
 	{	
 		tmp = lexer->next;
 		if (lexer->type == T_PIPE)

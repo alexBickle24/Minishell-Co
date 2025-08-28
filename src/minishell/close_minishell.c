@@ -36,8 +36,8 @@ void free_msl(t_msl **msl)
 		free((*msl)->clean_line);
 	if ((*msl)->parsing_utils)
 		free((*msl)->parsing_utils);
-	// if ((*msl)->lexer)
-	// 	free_lexer((*msl)->lexer);
+	if ((*msl)->lexer)
+		free_lexer(*msl, 1);
 	free(*msl);
 	*msl = NULL;
 }

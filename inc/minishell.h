@@ -45,6 +45,8 @@ typedef enum e_states
 	S_INIT,	   // Señal de inicio
 	S_SIGINT,  // Señal Ctrl + C
 	S_SIGQUIT, // Señal inicio
+	S_EXECUTION,
+	S_HEREDOC,
 } t_states;
 
 // esrdos de parseo de tokens
@@ -336,6 +338,7 @@ void ft_errerrno(void);
 void wait_childs1(t_msl *msl);
 void wait_childs2(t_msl *msl);
 void wait_childs3(t_msl *msl);
+void wait_childs4(t_msl *msl, pid_t pid_heredoc);
 void wait_heredoc(void);
 int ft_getpid(void);
 
