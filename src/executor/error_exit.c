@@ -40,7 +40,7 @@ void ft_exterrno(void)
 	ft_putstr_fd("Minishell: ", 2);
 	ft_putstr_fd(strerror(errno), 2);
 	ft_putstr_fd("\n", 2);
-	exit(1);
+	exit(127);
 }
 
 void ft_error_redirs(char *file, char ambiguos)

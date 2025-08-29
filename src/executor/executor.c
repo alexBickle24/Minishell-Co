@@ -91,7 +91,7 @@ void execute_childs(t_tocken *c_tocken, t_msl *msl)
 	if (pid < 0)
 		ft_errerrno();
 	if (pid == 0)
-	{   
+	{
 		fordward_in(c_tocken);//Se cierran los fds de la pipe de lectura (la anterior), esta en el tock
 		fordward_out(c_tocken);//se cierran fds de la pipe de escritura (la siguiente)
 		signal_init_childs();//sepone despues porque sino no se liberan los fds
