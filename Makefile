@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-FLAGS = -Wall -Wextra -Werror 
+FLAGS = -Wall -Wextra -Werror -fsanitize=address
 RM = rm -rf
 LIBS = -lreadline
 MKDIR = mkdir -p # Si ya existe no da problemas
