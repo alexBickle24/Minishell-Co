@@ -154,8 +154,20 @@ typedef struct s_lex_tockens
     struct s_lex_tockens *next;
 } t_lex;
 
+//Esta estrcutura tiene informacion relevante de la maquina
+//sirve para un funcionamiento correcto del interprete cuando
+//nos conectamos ssh a la tty y o para ejecutar la minishell en local
+typedef struct s_system_info
+{
+	char *user;
+	char *host;
+	char *ps1;
+	char *home;
+}	t_system;
+
 typedef struct s_msl
 {
+	t_system *sys;
 	t_env *own_env;
 	// t_env	*local_vars; habria que añadirlos a init y a free
 	int exit_status;
@@ -341,6 +353,7 @@ void wait_childs1(t_msl *msl);
 void wait_childs2(t_msl *msl);
 void wait_childs3(t_msl *msl);
 void wait_childs4(t_msl *msl, pid_t pid_heredoc);
+int wait_childs5(pid_t pid_child);
 void wait_heredoc(void);
 int ft_getpid(void);
 

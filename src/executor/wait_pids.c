@@ -105,3 +105,30 @@ void wait_childs4(t_msl *msl, pid_t pid_heredoc)
 			break ;
 	}
 }
+
+
+int wait_childs5(pid_t pid_child)
+{
+	pid_t pid;
+	int status;
+	int ret;
+
+	ret = 0;
+	while(1)
+	{
+		pid = waitpid(pid_child, &status, 0);
+		if (pid == pid_child)
+		{
+			if (WIFEXITED(status))
+			{
+				if (WEXITSTATUS(status) != 0)
+					ret = 1;
+				else
+					ret = 0;
+			}
+		}
+		if (pid < 0 && errno != EINTR)
+			break ;
+	}
+	return (ret);
+}
