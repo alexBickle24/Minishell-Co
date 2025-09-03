@@ -54,5 +54,4 @@ char	check_clean_dquotes(t_msl *msl, char *str, char clean)
 		return(0);
 	}
 	return(1);
-
 }

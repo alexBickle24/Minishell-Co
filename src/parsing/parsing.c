@@ -44,6 +44,12 @@ void	adding_cmds(t_msl *msl, t_tocken *current, t_lex *lex)//FUNCOINA
 	vars_interpolation(&(lex->str), msl, (&lex->len));
 	str = lex->str;
 	start = str;
+	if (*str == '\0')//para manejo de argumento vacio sin comillas
+	{
+		free(lex->raw);
+		free(lex->str);
+		return ;
+	}
 	while(*str)
 	{
 		jump = check_clean_quotes(msl, str, 1);
@@ -63,6 +69,7 @@ void	adding_cmds(t_msl *msl, t_tocken *current, t_lex *lex)//FUNCOINA
 	free(lex->str);
 }
 
+
 void	adding_tocken(t_msl *msl, t_tocken **current, t_lex *lexer)
 {
 	msl->total_tockens++;
@@ -72,17 +79,19 @@ void	adding_tocken(t_msl *msl, t_tocken **current, t_lex *lexer)
 	free(lexer->str);
 }	
 
-
-void	adding_files(t_msl *msl, t_tocken *current, t_lex *lex)
+void	adding_files(t_msl *msl, t_tocken *current, t_lex *lex)//
 {
 	char ambiguos;
 	char *str;
 	char jump;
 
 	vars_interpolation(&(lex->str), msl, (&lex->len));
-	ambiguos = 0;
 	str = lex->str;
-	while(*str)
+	if (*str == '\0')//para manejo de redicreccion vacia sin comillas
+		ambiguos = 1;
+	else
+		ambiguos = 0;
+	while(*str && ambiguos == 0)
 	{
 		jump = check_clean_quotes(msl, str, 1);
 		if (is_space(*str) && msl->parsing_utils->lexstat == NO_QUOTES)

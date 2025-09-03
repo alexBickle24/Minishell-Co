@@ -22,7 +22,6 @@ char	check_nwl_error(t_msl *msl)
 	return (0);
 }
 
-
 //esto es para mostrar el mensaje de newline error en caso de que queramos imitar 
 //el funcionamientos de los errores de nweline de bash en  fase deparse o despues de 
 //crear el heredoc

@@ -45,15 +45,11 @@ void evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl)
 		c_tocken->cmd_tb = ft_pcmds_to_table(c_tocken->pcmds);
 	if (!c_tocken->env_tb)
 		c_tocken->env_tb = ft_env_to_table(msl->own_env);
-	// if (!ft_strncmp(c_tocken->cmd_tb[0], "./", 2) || !ft_strncmp(c_tocken->cmd_tb[0], "/", 1) || !ft_strncmp(c_tocken->cmd_tb[0], "../", 2))//1
-	// {
-	// 	if (access(c_tocken->cmd_tb[0], F_OK | X_OK) == -1)
-	// 		c_tocken->error_cmd = 1;
-	// 	return ;
-	// }
 	if (ft_strchr(c_tocken->cmd_tb[0], '/') != 0)//1
 	{
-		if (access(c_tocken->cmd_tb[0], F_OK | X_OK) == -1)
+		if (!ft_strncmp(c_tocken->cmd_tb[0], "./\0", 3))
+			c_tocken->error_cmd = 3;//
+		else if (access(c_tocken->cmd_tb[0], F_OK | X_OK) == -1)
 			c_tocken->error_cmd = 1;
 		return ;
 	}
@@ -65,8 +61,8 @@ void evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl)
 			c_tocken->error_cmd = 2;
 			return ;
 		}
-		free(c_tocken->cmd_tb[0]);
-		c_tocken->cmd_tb[0] = path;
+		free(c_tocken->pcmds->cmd);
+		c_tocken->pcmds->cmd = path;
 		if (access(path, X_OK) == -1)//3
 			c_tocken->error_cmd = 1;
 	}
@@ -79,7 +75,7 @@ char *check_path(char *x_file, char **env)
 	char	*absolute_paths;
 	char	*path;
 
-	if (!x_file || !env)
+	if (!x_file || x_file[0] == '\0' || !env)
 		return (NULL);
 	absolute_paths = get_env_value("PATH", env);
 	if (!absolute_paths)
@@ -151,6 +147,42 @@ char	*find_exe_file(char **posible_paths, char *x_file)
 	return (NULL);
 }
 
+
+// void	lstremove_if_empty(t_tocken *c_tocken)
+// {
+// 	t_pcmds	*current_cmd;
+// 	t_pcmds	*last;
+// 	t_pcmds	*tmp;
+
+// 	if (c_tocken->pcmds == NULL)
+// 		return ;
+// 	current_cmd = c_tocken->pcmds;
+// 	last = current_cmd;
+// 	while(current_cmd)
+// 	{
+// 		if (current_cmd->empty == 1 && current_cmd == c_tocken->pcmds)
+// 		{
+// 			tmp = current_cmd->next;
+// 			free(current_cmd->cmd);
+// 			free(current_cmd);
+// 			current_cmd = tmp;
+// 			c_tocken->pcmds = current_cmd;
+// 		}
+// 		else if (current_cmd->empty == 1)
+// 		{
+// 			tmp = current_cmd->next;
+// 			free(current_cmd->cmd);
+// 			free(current_cmd);
+// 			current_cmd = tmp;
+// 			last->next = current_cmd;
+// 		}
+// 		else
+// 		{
+// 			last = current_cmd;
+// 			current_cmd = current_cmd->next;
+// 		}
+// 	}
+// }
 
 
 ///FUNCION DE ANTES DE SABER QUE NO PUEDO RESERVAR MEMERIA EN PROCESO HIJO POR LAS SEÑALES

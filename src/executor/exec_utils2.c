@@ -14,12 +14,14 @@ void exec_cmd(t_tocken *c_tocken)
 	
 	error = c_tocken->error_cmd;
 	if (error == 1)
-		ft_exterror_exes(c_tocken->cmd_tb[0]);
+		ft_exterror_exes(c_tocken->cmd_tb[0], 0);
 	else if (error == 2)
 		ft_exterror_cmd(c_tocken->cmd_tb[0]);
+	else if (error == 3)
+		ft_exterror_exes(c_tocken->cmd_tb[0], 1);
 	else if (error == 0)
 	{
-		if (execve(c_tocken->cmd_tb[0], c_tocken->cmd_tb, c_tocken->env_tb) == -1)
+		if (execve(c_tocken->pcmds->cmd, c_tocken->cmd_tb, c_tocken->env_tb) == -1)
 			ft_exterrno();
 	}
 }

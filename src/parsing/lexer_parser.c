@@ -57,7 +57,7 @@ int main(int argc, char **argv, char **env)
     minishell_init(&msl, env, argv);//inicamos la estrcutura de minishell y el manejados
 	while (1)
 	{
-		line = readline(PROMPT);
+		line = readline(PROMPT);//leo la linea
 		add_history(line);//exit tambien se mete al historial
 		msl->clean_line = ft_strtrim(line, " \t\n\v\f\r");//por el mod literal de bash con control+V
 		if (!msl->clean_line || ft_strncmp(msl->clean_line, "exit\0", 5) == 0)

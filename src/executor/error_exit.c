@@ -4,7 +4,7 @@
 
 
 //FUNCoines de erro y codigo de salida para capturar con waitstatus ejecucion
-void	ft_exterror_exes(char *file)//error cmd = 1
+void	ft_exterror_exes(char *file, char is_directory)//error cmd = 1
 {
 	int error_code;
 
@@ -17,6 +17,11 @@ void	ft_exterror_exes(char *file)//error cmd = 1
 	ft_putstr_fd("Minishell: ", 2);
 	ft_putstr_fd(file, 2);
 	ft_putstr_fd(": ", 2);
+	if (is_directory)
+	{
+		ft_putstr_fd("Is a directory\n", 2);
+		exit (126);
+	}
 	ft_putstr_fd(strerror(errno), 2);
 	ft_putstr_fd("\n", 2);
 	exit(error_code);

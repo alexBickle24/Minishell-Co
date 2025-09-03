@@ -32,6 +32,7 @@
 
 #define MLEN_INT 12
 #define PROMPT "\001\033[0;32m\002minishell\001\033[0m\002$"
+#define PROMPT1 "\033[1;37;43mminishell\033[0m"
 #define INTERPRETER_NAME "minishell"
 #define NEWLINE_ERR "minishell: syntax error near unexpected token `newline'\n"
 #define MIQUOTE_ERR "minishell: syntax error: unclosen quotes\n"
@@ -111,7 +112,7 @@ typedef struct s_tocken_subshells
 	t_pcmds *pcmds; // lista de comandos, si es NULL no hay comando
 	char **cmd_tb;	// tabla de comandos para execve
 	int error_file; // flag para manejar el exit desde el proceso hijo
-	int error_cmd;	// Puede ser 0, 1 o 2 manej los mensajes de error
+	int error_cmd;	// Puede ser 0, 1, 2  o 3 manej los mensajes de error
 	// int	local_var;
 	char **env_tb;	 // esto no es lo mas eficiente porque la guardao en cada tocken pero es comodo
 	int pipe_fds[2]; // con las bonus tendria que ser tocken operands
@@ -342,7 +343,7 @@ void fordward_in(t_tocken *c_tocken);
 void fordward_out(t_tocken *c_tocken);
 
 // error_messages and exit
-void ft_exterror_exes(char *file);
+void ft_exterror_exes(char *file, char is_directory);
 void ft_exterror_cmd(char *file);
 void ft_exterrno(void);
 void ft_error_redirs(char *file, char ambiguos);
