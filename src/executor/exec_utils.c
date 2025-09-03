@@ -47,7 +47,7 @@ void evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl)
 		c_tocken->env_tb = ft_env_to_table(msl->own_env);
 	if (ft_strchr(c_tocken->cmd_tb[0], '/') != 0)//1
 	{
-		if (!ft_strncmp(c_tocken->cmd_tb[0], "./\0", 3))
+		if (!ft_strncmp(c_tocken->cmd_tb[0], "./\0", 3) || !ft_strncmp(c_tocken->cmd_tb[0], "/\0", 2))
 			c_tocken->error_cmd = 3;//
 		else if (access(c_tocken->cmd_tb[0], F_OK | X_OK) == -1)
 			c_tocken->error_cmd = 1;
