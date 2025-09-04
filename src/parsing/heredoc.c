@@ -11,7 +11,7 @@ char *create_heredoc(t_msl *msl, char *delimiter, char sangria)
 	char *file_name;
 	char *tmp;
 
-	if (g_signal == SIGINT)
+	if (g_signal == S_SIGINT)
 		return (NULL);
 	file_name = new_file_name("/tmp/");
 	fd = open(file_name, O_CREAT | O_TRUNC | O_RDWR, 0664);

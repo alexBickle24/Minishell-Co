@@ -2,7 +2,7 @@
 
 #include "../../inc/minishell.h"
 
-//Para reservar memeria para ls key de una fila de la tabla (key=value)
+//Para reservar memeria para las key de una fila de la tabla (key=value)
 char *ft_get_env_id(char *env_line)
 {
     char *id;
@@ -31,6 +31,7 @@ char *ft_get_env_id(char *env_line)
  * ft_get_env(env, PATH)
  *     /usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin
  */
+
 char *ft_get_env_value(char **env, char *id)
 {
     int i;

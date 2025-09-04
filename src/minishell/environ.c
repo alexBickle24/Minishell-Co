@@ -1,8 +1,6 @@
+
+
 #include "minishell.h"
-
-
-
-
 
 void env_init(t_msl *msl, char **inherid_env, char **argv)
 {
@@ -38,6 +36,8 @@ void ft_env_table_to_list(t_msl *msl, char **env_tb)
             tmp = list_new_ownenv(id, value);
             if (!tmp)
             {
+				free(id);
+                free(value);
                 free_own_env(msl);
                 return ;
             }
@@ -62,20 +62,20 @@ void ft_env_table_to_list(t_msl *msl, char **env_tb)
     //El resto de valores creo que no son obligatorios...
 */
 
-void set_env_default_values(t_msl *msl, char **argv)
-{
-    if (!msl || !argv[0])
-        return ;
-    list_add_back_env(list_new_ownenv("SHELL", get_minipath(argv)), &msl->own_env);
-    if (!search_id_node(msl, "PWD"))
-        list_add_back_env(list_new_ownenv("PWD", getcwd(NULL, 0)), &msl->own_env);
-    if (!search_id_node(msl, "PATH"))
-    {
+// void set_env_default_values(t_msl *msl, char **argv)
+// {
+//     if (!msl || !argv[0])
+//         return ;
+//     list_add_back_env(list_new_ownenv("SHELL", get_minipath(argv)), &msl->own_env);
+//     if (!search_id_node(msl, "PWD"))
+//         list_add_back_env(list_new_ownenv("PWD", getcwd(NULL, 0)), &msl->own_env);
+//     if (!search_id_node(msl, "PATH"))
+//     {
         
-    }
+//     }
     
     
-}
+// }
 
 //Aumenta el valor de SHLVL
 void set_shlvl(t_msl *msl)
@@ -102,22 +102,22 @@ void set_shlvl(t_msl *msl)
 }
 
 //cambiar argv por trimname
-char *get_minipath(char **argv)
-{
-    char *cwd;
-    char *tmp;
-    char *shell_path;
+// char *get_minipath(char **argv)
+// {
+//     char *cwd;
+//     char *tmp;
+//     char *shell_path;
 
-    if (!argv || argv[0] == NULL)
-        return (NULL);
-    cwd = getcwd(NULL, 0);
-    if (!cwd)
-        return (NULL);
-    tmp = ft_strjoin(cwd, "/");
-    if (!tmp)
-        return (free(cwd), NULL);
-    shell_path = ft_strjoin(tmp, argv[0]);
-    if (!shell_path)
-        return (free(cwd), free(tmp), NULL);
-    return (shell_path);
-}
+//     if (!argv || argv[0] == NULL)
+//         return (NULL);
+//     cwd = getcwd(NULL, 0);
+//     if (!cwd)
+//         return (NULL);
+//     tmp = ft_strjoin(cwd, "/");
+//     if (!tmp)
+//         return (free(cwd), NULL);
+//     shell_path = ft_strjoin(tmp, argv[0]);
+//     if (!shell_path)
+//         return (free(cwd), free(tmp), NULL);
+//     return (shell_path);
+// }

@@ -22,7 +22,12 @@ int main(int argc, char **argv, char **env)
     minishell_init(&msl, env, argv);//inicamos la estrcutura de minishell y el manejados
 	while (1)
 	{
-		line = readline(PROMPT);
+		line = readline(PROMPT);//leo la linea
+		if (g_signal == S_SIGINT)//esto puede ir en interpreter
+		{
+			msl->exit_status = SIGINT + 128;
+			g_signal = S_INIT;
+		}
 		add_history(line);//exit tambien se mete al historial
 		msl->clean_line = ft_strtrim(line, " \t\n\v\f\r");//por el mod literal de bash con control+V
 		if (!msl->clean_line || ft_strncmp(msl->clean_line, "exit\0", 5) == 0)
@@ -47,6 +52,22 @@ int main(int argc, char **argv, char **env)
 	}
 	free_msl(&msl);
 	return (0);
+}
+
+void interpreter_mode2(t_msl *msl, unsigned char *clean_line)
+{
+	if (g_signal == S_SIGINT)
+	{
+		msl->exit_status = SIGINT + 128;
+		g_signal = S_INIT;
+	}
+	lexer_parser(msl, clean_line);
+	// print_lex(msl->lexer, parser);//para ver el lexer
+	clean_expand_add_toexecuter(msl);//siq uitas este tienes que meter un free_lexer(msl, 1)
+	// free_lexer(msl, 1);//liberar el lexer
+	// print_tockens(msl);//para ver los tockens
+	executer(msl);
+	// free_tockens(msl);//Para liberar los tockens cunado no tengo executer
 }
 
 

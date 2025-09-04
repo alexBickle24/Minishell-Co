@@ -44,7 +44,7 @@ extern int g_signal;
 typedef enum e_states
 {
 	S_INIT,	   // Señal de inicio
-	S_SIGINT,  // Señal Ctrl + C
+	S_SIGINT = 2,  // Señal Ctrl + C
 	S_SIGQUIT, // Señal inicio
 	S_EXECUTION,
 	S_HEREDOC,

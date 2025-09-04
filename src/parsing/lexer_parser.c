@@ -21,7 +21,6 @@ void	lexer_parser(t_msl *msl, unsigned char *line)
 		if (err)
 			break;
 	}
-	// print_lex(msl->lexer, parser);
 	if (err)
 		free_lexer(msl, 1);
 	else
@@ -58,6 +57,11 @@ int main(int argc, char **argv, char **env)
 	while (1)
 	{
 		line = readline(PROMPT);//leo la linea
+		if (g_signal == S_SIGINT)//esto puede ir en interpreter
+		{
+			msl->exit_status = SIGINT + 128;
+			g_signal = S_INIT;
+		}
 		add_history(line);//exit tambien se mete al historial
 		msl->clean_line = ft_strtrim(line, " \t\n\v\f\r");//por el mod literal de bash con control+V
 		if (!msl->clean_line || ft_strncmp(msl->clean_line, "exit\0", 5) == 0)
@@ -86,14 +90,16 @@ int main(int argc, char **argv, char **env)
 
 void interpreter_mode2(t_msl *msl, unsigned char *clean_line)
 {
-	// g_signal = S_INIT;
+	if (g_signal == S_SIGINT)
+	{
+		msl->exit_status = SIGINT + 128;
+		g_signal = S_INIT;
+	}
 	lexer_parser(msl, clean_line);
+	// print_lex(msl->lexer, parser);//para ver el lexer
 	clean_expand_add_toexecuter(msl);//siq uitas este tienes que meter un free_lexer(msl, 1)
-	// free_lexer(msl, 1);
-	// print_tockens(msl);
-	// sleep(4);
+	// free_lexer(msl, 1);//liberar el lexer
+	// print_tockens(msl);//para ver los tockens
 	executer(msl);
-	// free_tockens(msl);//Cuanndo no tengo el ejecutor
-	// executer(msl);
-	// g_signal = S_INIT;
+	// free_tockens(msl);//Para liberar los tockens cunado no tengo executer
 }

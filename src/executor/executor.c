@@ -31,6 +31,8 @@ void    executer(t_msl *msl)
 		else 
 			execute_orders(msl);
 	}
+	if (g_signal == S_SIGINT)
+		msl->exit_status = 130;
 	g_signal = S_INIT;
 	msl->pars_err = 0;
 	//Funcion de liberacion de memeria y cierre de fds de p_tockens
@@ -58,7 +60,7 @@ void    only_builtin(t_msl *msl)
 		c_tocken->error_file = 1;
 	}
 	if (c_tocken->error_file != 1)
-		exec_builtin(msl, msl->tocken, is_builtin(msl->tocken));
+		exec_builtin(msl, msl->tocken, is_builtin(msl->tocken));//poner el exit status de minishell cuando hay building
 	else
 		msl->exit_status = 1;
 }

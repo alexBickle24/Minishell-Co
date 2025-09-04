@@ -46,7 +46,7 @@ void	ft_hwarningexit(char *delimiter)
 	free(n_line_history);
 	ft_putstr_fd(" delimited by end-of-file (wanted '", 2);
 	ft_putstr_fd(delimiter, 2);
-	ft_putstr_fd("')", 2);
+	ft_putstr_fd("')\n", 2);
 }
 
 unsigned int	write_env(char *line, int fd, unsigned int count, t_msl *msl)

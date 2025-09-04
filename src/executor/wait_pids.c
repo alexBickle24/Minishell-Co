@@ -92,14 +92,17 @@ void wait_childs4(t_msl *msl, pid_t pid_heredoc)
 	pid_t pid;
 	int status;
 	
-	(void)msl;
 	while(1)
 	{
 		pid = waitpid(pid_heredoc, &status, 0);
 		if (pid == pid_heredoc)
 		{
 			if (WIFEXITED(status))
+			{
 				g_signal = WEXITSTATUS(status);
+				if (WEXITSTATUS(status) == 2)
+					msl->exit_status = WEXITSTATUS(status) + 128;
+			}
 		}
 		if (pid < 0 && errno != EINTR)
 			break ;
