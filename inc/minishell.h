@@ -204,6 +204,7 @@ void interpreter_mode2(t_msl *msl, unsigned char *clean_line);
 
 // minishell close
 void free_own_env(t_msl *msl);
+void	free_sys(t_system *sys);
 void free_msl(t_msl **msl);
 
 // environ

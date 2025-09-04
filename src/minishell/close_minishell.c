@@ -5,7 +5,6 @@
 //Funcion para borrar la estrcutura de control de la minishell en caso de que hagamos 
 //exit o control+D. (Se tiene que manejar el caso de que cerremos la ventana??)
 
-void	free_sys(t_system *sys);
 
 void free_own_env(t_msl *msl)
 {
