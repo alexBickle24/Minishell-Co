@@ -136,10 +136,10 @@ typedef struct s_parsing_utils
 	// sirve para el control de errores de operadores y tambine valdria para corchetes, llaves y parentesis abiertos
 	int infstat;
 
-
+	//fucniones de jumo table
 	int	(*lex[6])(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
-	// Caracteres de separacion  (code 1)y operadores (code 2)
-	unsigned char sep_op[255];//unsigned 
+	// Caracteres de separacion  (code 1)y operadores (code 2, 3, 4) y comillas (code 5)
+	unsigned char sep_op[255];
 	unsigned char *ptr;
 	// Para la expansion de variables-
 	char dollar_lim[255];
@@ -200,7 +200,7 @@ void print_parser_state(t_parsing *parser, unsigned char c, int i);
 // minishell init
 void minishell_init(t_msl **msl, char **env, char **argv);
 void interpreter_mode(t_msl *msl);
-void interpreter_mode2(t_msl *msl, unsigned char *clean_line);
+// void interpreter_mode2(t_msl *msl, unsigned char *clean_line);
 
 // minishell close
 void free_own_env(t_msl *msl);

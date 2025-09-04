@@ -8,9 +8,12 @@
  */
 
 int g_signal = S_INIT;
+void	interpreter_mode_builds(t_msl *msl, unsigned char *clean_line);
 
-void interpreter_mode2(t_msl *msl, unsigned char *clean_line);;
-
+/*
+	El prompt que puedes usar es el siguiente;
+	<nombre del building> <argumento> <arguemnto1> .... 
+*/
 int main(int argc, char **argv, char **env)
 {
 	t_msl *msl;
@@ -33,7 +36,7 @@ int main(int argc, char **argv, char **env)
 			free(line);
 			break ;
 		}
-		interpreter_mode2(msl, (unsigned char *) msl->clean_line);
+		interpreter_mode_builds(msl, (unsigned char *)msl->clean_line);
 		free(line);
 		free(msl->clean_line);
 		msl->clean_line = NULL;
@@ -42,21 +45,30 @@ int main(int argc, char **argv, char **env)
 	return (0);
 }
 
-void interpreter_mode2(t_msl *msl, unsigned char *clean_line)
+
+/*
+	El prompt que puedes usar es el siguiente;
+	<nombre del building> <argumento> <arguemnto1> .... 
+*/
+
+void	interpreter_mode_builds(t_msl *msl, unsigned char *clean_line)
 {
+	//a esto no le hagas caso
 	if (g_signal == S_SIGINT)
 	{
 		msl->exit_status = SIGINT + 128;
 		g_signal = S_INIT;
 	}
+
+	//estas dos funciones van a parsear tu linea->la que escribes por readline:
 	lexer_parser(msl, clean_line);
-	// print_lex(msl->lexer, parser);//para ver el lexer
-	// free_lexer(msl, 1);//liberar el lexer
-	clean_expand_add_toexecuter(msl);//siq uitas este tienes que meter un free_lexer(msl, 1)
-	// print_tockens(msl);//para ver los tockens
-	executer(msl);//si quitas este tienes que meter el free_tockens(msl)
-	// free_tockens(msl);//Para liberar los tockens cunado no tengo executer
+	clean_expand_add_toexecuter(msl);
+
+	print_tockens(msl);//para ver los tockens (la puedes comentar)
+
+	//aqui iria tu funcion building (ej): ft_echo(msl, msl->tocken->pcmds)
+	//msl:la cabecera (contiene el env y la variable sys)
+	//tocken->pcmds; los argumentos es decir lo que vas a parsear. Ej: linea-> echo palabra1 palabra2 palabra3
+
+	free_tockens(msl);//Para liberar los tockens cunado no tengo executer
 }
-
-
-

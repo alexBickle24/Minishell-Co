@@ -21,9 +21,9 @@ void minishell_init(t_msl **msl, char **env, char **argv)
 		if (msl[0]->sys == NULL)
 			return ;
 		user_fallbacks(*msl);
-		printf("el valor de user es %s\n", msl[0]->sys->user);//
+		// printf("el valor de user es %s\n", msl[0]->sys->user);//
 		hostname_fallbacks(*msl, &(msl[0]->sys->host));
-		printf("el valor del hostname A es %s\n", msl[0]->sys->host);
+		// printf("el valor del hostname A es %s\n", msl[0]->sys->host);
 		// create_ps1(*msl);
 		msl[0]->parsing_utils = init_parsing(*msl);//la utils de parseo
 		msl[0]->msl_pid = (pid_t)ft_getpid();//el pid del procesos
@@ -60,7 +60,7 @@ void	hostname_fallbacks(t_msl *msl, char **target)
 	if (fallback == 0)
 	{
 		fallback =+ get_hostnamedir(&(msl->sys->host));
-		printf("el valor del hostname A es %s\n", msl->sys->host);
+		// printf("el valor del hostname A es %s\n", msl->sys->host);
 	}
 	if (fallback == 1)
 	{
