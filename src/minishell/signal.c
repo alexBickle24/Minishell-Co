@@ -106,7 +106,7 @@ void sig_handler(int signal)
     	rl_replace_line("", 0);//para que loque hayamos escrito se sustituya por un caracteer vcacio
 		rl_on_new_line();//no cmabia nada a efectos practicos creoque es solo para el conteo de lineas en el historial
 	}
-	if (g_signal == S_INIT || g_signal == S_SIGINT)
+	else if (g_signal == S_INIT || g_signal == S_SIGINT)
 	{
 		g_signal = S_SIGINT;
 		write(1, "\n", 1);//para que lo que pinter readline, es decir elprompt sea en la siguiente linea de STDIN file
@@ -114,7 +114,7 @@ void sig_handler(int signal)
 		rl_on_new_line();//no cmabia nada a efectos practicos creoque es solo para el conteo de lineas en el historial
 		rl_redisplay();//hace un redisplay del propmpt
 	}
-	if (g_signal == S_HEREDOC)
+	else if (g_signal == S_HEREDOC)
 	{
 		g_signal = S_SIGINT;
     	write(1, "^C", 2);//para que lo que pinter readline, es decir elprompt sea en la siguiente linea de STDIN file

@@ -1,6 +1,5 @@
 #include "../../inc/minishell.h"
 
-
 char	*new_file_name(char *path)
 {
 	int		name;

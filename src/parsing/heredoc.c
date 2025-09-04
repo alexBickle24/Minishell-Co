@@ -2,8 +2,6 @@
 
 #include "../../inc/minishell.h"
 
-extern int g_signal;
-
 char *create_heredoc(t_msl *msl, char *delimiter, char sangria)
 {
 	char modes[2];

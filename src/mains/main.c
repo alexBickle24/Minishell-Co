@@ -8,7 +8,6 @@
   *         env[N] == NULL
  */
 
-
 int g_signal = S_INIT;
 
 int main(int argc, char **argv, char **env)
