@@ -37,8 +37,28 @@
 #define NEWLINE_ERR "minishell: syntax error near unexpected token `newline'\n"
 #define MIQUOTE_ERR "minishell: syntax error: unclosen quotes\n"
 #define MIPIPE_ERR "minishell: syntax error: orfant pipe\n"
+
+
+//define de colors
+#define C_RESET "\033[0m"
+#define C_RED "\033[1;31m"
+#define C_GREEN "\033[1;32m"
+#define C_YELLOW "\033[1;33m"
+#define C_BLUE "\033[1;34m"
+#define C_MAGENTA "\033[1;35m"
+#define C_CYAN "\033[1;36m"
+#define C_WHITE "\033[1;37m"
+
+//define booster
+#define BOOSTER "\xF0\x9F\x9A\x80 "
+
 // Para el manejo de señales
 extern int g_signal;
+
+
+/*
+	ENUMS:
+*/
 
 // estado de señales
 typedef enum e_states
@@ -71,7 +91,7 @@ typedef enum e_lex_states
 	D_QUOTES,
 } t_quote;
 
-//para laa deteccion de errores de operadores (ESTADO DE LA INFORMACION)
+//para la deteccion de errores de operadores (ESTADO DE LA INFORMACION)
 typedef enum e_lastinfo
 {
 	INIT,
@@ -88,12 +108,14 @@ typedef struct s_parsing_utils t_parsing;
 typedef struct s_msl t_msl;
 typedef struct s_lex_tockens t_lex;
 
+/////////////////////////////////////////////////////////// ESTRCUTURAS DE EJECUCION //////////////////////////////////////
+
 
 typedef struct s_tocken_files
 {
-	int type;		 // HEREDOC, INFILE, APPEND, OUTFILE
-	char *file_name; // NOMBRE DEL ARCHIVO
-	char ambiguos;			 //*FD DEL ARCHIVO (opcional)
+	int type;
+	char *file_name;
+	char ambiguos;
 	struct s_tocken_files *next;
 } t_files;
 
@@ -120,137 +142,169 @@ typedef struct s_tocken_subshells
 	struct s_tocken_subshells *next;
 } t_tocken;
 
-typedef struct s_env
-{
-	char *id;
-	char *value;
-	struct s_env *next;
-} t_env;
+////////////////////////////////////////////////////// ESTRCUTURAS DE PARSEO ///////////////////////////////////////////////////
+
 
 typedef struct s_parsing_utils
 {
-	// el tipo de tocken que stamos creando (por deecto es cmd)
-	int parstat;
-	// Para saber si estamos dentro de comillas o no (sirve para el movimiento de los putnteros y par ael control de errires de comillas abiertas)
-	int lexstat;
-	// sirve para el control de errores de operadores y tambine valdria para corchetes, llaves y parentesis abiertos
-	int infstat;
-
-	//fucniones de jumo table
+	int	parstat;
+	int	lexstat;
+	int	infstat;
 	int	(*lex[6])(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
-	// Caracteres de separacion  (code 1)y operadores (code 2, 3, 4) y comillas (code 5)
-	unsigned char sep_op[255];
-	unsigned char *ptr;
-	// Para la expansion de variables-
-	char dollar_lim[255];
-
+	unsigned char	sep_op[255];
+	unsigned char	*ptr;
+	char	dollar_lim[255];
 }	t_parsing;
 
 typedef struct s_lex_tockens
 {
-    int type;
-    char *raw;//esta la creo para el caso de ambiguos redirect
-	char *str;
-    size_t len;
-    struct s_lex_tockens *next;
+    int	type;
+    char	*raw;
+	char	*str;
+    size_t	len;
+    struct s_lex_tockens	*next;
 } t_lex;
+
+///////////////////////////////////////////////////////////////// ESTRCUTURAS DE SISTEMA Y CABEZERA ///////////////////////////////////////////
 
 //Esta estrcutura tiene informacion relevante de la maquina
 //sirve para un funcionamiento correcto del interprete cuando
 //nos conectamos ssh a la tty y o para ejecutar la minishell en local
 typedef struct s_system_info
 {
-	char *user;
-	char *host;
-	char *ps1;
-	char *home;
+	char	*user;
+	char	*host;
+	char	*home;
+	char	*g_path;
+	char	*ps1_hostuser;
+	char	*ps1_path;
+	char	*ps1;
 }	t_system;
+
+typedef struct s_env
+{
+	char	*id;
+	char	*value;
+	struct s_env	*next;
+} t_env;
+
+typedef struct s_builts
+{
+	bool	unst_oldpwd;
+}	t_builts;
 
 typedef struct s_msl
 {
-	t_system *sys;
-	t_env *own_env;
+	t_system	*sys;
+	t_env	*own_env;
+	t_builts	*builts;
 	// t_env	*local_vars; habria que añadirlos a init y a free
-	int exit_status;
-	char *clean_line;
-	pid_t msl_pid;
-	pid_t last_process;
-	int total_tockens;
-	t_tocken *tocken;
-	t_parsing *parsing_utils;
-	t_lex *lexer;
-	char pars_err;
+	int		exit_status;
+	char	*clean_line;
+	pid_t	msl_pid;
+	pid_t	last_process;
+	int		total_tockens;
+	t_tocken	*tocken;
+	t_parsing	*parsing_utils;
+	t_lex	*lexer;
+	char	pars_err;
 } t_msl;
 
 /*
- * /////////////////////////////////FUNCIONES////////////////////////////////
+ * PROTOTIPOS
  */
 
+
+///////////////// INIT Y CREACION DE ENTRONO DE SISTEMA///////////////////
+
 // debugin
-void print_tockens(t_msl *msl);
-void print_files(t_files *files);
-void print_pcmds(t_pcmds *pcmds);
-void print_tockens_info(t_tocken *tockens);
-void print_own_env(t_env *env);
-void print_parsing_info(t_parsing *parsing);
-void print_lex(t_lex *lexer, t_parsing *parser);
-void print_msl(t_msl *msl); //
-void print_parser_state(t_parsing *parser, unsigned char c, int i);
+void	print_tockens(t_msl *msl);
+void	print_files(t_files *files);
+void	print_pcmds(t_pcmds *pcmds);
+void	print_tockens_info(t_tocken *tockens);
+void	print_own_env(t_env *env);
+void	print_parsing_info(t_parsing *parsing);
+void	print_lex(t_lex *lexer, t_parsing *parser);
+void	print_msl(t_msl *msl); //
+void	print_parser_state(t_parsing *parser, unsigned char c, int i);
 
 // minishell init
-void minishell_init(t_msl **msl, char **env, char **argv);
-void interpreter_mode(t_msl *msl);
+void	minishell_init(t_msl **msl, char **env);
+void	init_system(t_msl *msl);
+void	set_env_default_values(t_msl *msl);
+void	init_builts(t_msl *msl);
+void	interpreter_mode(t_msl *msl);
 // void interpreter_mode2(t_msl *msl, unsigned char *clean_line);
 
 // minishell close
-void free_own_env(t_msl *msl);
-void	free_sys(t_system *sys);
-void free_msl(t_msl **msl);
+void	free_own_env(t_msl *msl);
+void	free_sys(t_system **sys);
+void	free_msl(t_msl **msl);
+
+//sytem_info
+void	execute_cmd(char *command, char *option, int *pipes, char **env);
+char	**create_args(char *command, char *option);
+int		get_infcmds(t_msl *msl, char **target, char *command, char *args);
+char	*which_cmd(t_msl *msl, char *command, char *args);
+void	user_fallbacks(t_msl *msl);
+void	user_fallbacks2(t_msl *msl, int fallback);
+void	hostname_fallbacks(t_msl *msl, char **target);
+int		get_hostnamedir(char **target);
+void	get_home(t_msl *msl, char **target);
+char	*find_home(char *line);
+void	get_global_path(char **target);
+char	put_global_path(char **target, int fd);
+void	set_ps1(t_msl *msl, t_system *sys);
+char	*set_ps1_hostuser(t_system *sys);
+char	*set_ps1_path(t_msl *msl);
+char	*get_display_path(t_msl *msl, char *cwd);
 
 // environ
-void env_init(t_msl *msl, char **inherid_env, char **argv);
-void ft_env_table_to_list(t_msl *msl, char **env_tb);
-void set_env_default_values(t_msl *msl, char **argv);
-void set_shlvl(t_msl *msl);
+void	ft_env_table_to_list(t_msl *msl, char **env_tb);
+t_env	*search_creat_envnode(t_msl *msl, char **env_tb);
+void	set_shlvl(t_msl *msl);
+void	check_home_message(t_msl *msl);
+void	set_pwd(t_msl *msl);
+void	set_path(t_msl *msl);
 
 // environ utils
-char *ft_get_env_id(char *env_line);
-char *ft_get_env_value(char **env, char *id);
-t_env *search_id_node(t_msl *msl, char *id);
-t_env *list_new_ownenv(char *id, char *value);
-void list_add_back_env(t_env *node, t_env **env);
-char *get_minipath(char **argv);
+char	*ft_get_env_id(char *env_line);
+char	*ft_get_env_value(char **env, char *id);
+t_env	*search_id_node(t_msl *msl, char *id);
+t_env	*list_new_ownenv(char *id, char *value);
+void	list_addback_env(t_env *node, t_env **env);
 
 // signals
-void signal_init(void);
-void signal_init_childs(void);
-void signal_init_heredoc(void);
-void sig_handler(int signals);
-void sig_child_handler(int signal);
-void sig_heredoc_handler(int signal);
+void	signal_init(void);
+void	signal_init_childs(void);
+void	signal_init_heredoc(void);
+void	sig_handler(int signals);
+void	sig_child_handler(int signal);
+void	sig_heredoc_handler(int signal);
 
 // general utils;
-char **ft_pcmds_to_table(t_pcmds *pcmds);
-char **ft_env_to_table(t_env *env);
+char	**ft_pcmds_to_table(t_pcmds *pcmds);
+char	**ft_env_to_table(t_env *env);
 
 // warnings and errors
-void ft_shlvl_warning(char *str);
+void	ft_shlvl_warning(int	str);
+void	ft_error_home(void);
 
 /////////////////////////LEXER AND PARSING////////////////////////
 
 // init parsing
-t_parsing *init_parsing(t_msl *msl);
-void init_sep_op(unsigned char *sep_op);
-void init_dollar_lim(char *dollar_limits, unsigned char *sep_op);
+t_parsing	*init_parsing(t_msl *msl);
+void	init_sep_op(unsigned char *sep_op);
+void	init_dollar_lim(char *dollar_limits, unsigned char *sep_op);
 void	init_jump_table(int (**f)(t_msl *, int *, unsigned char *, t_parsing *));
 
 // Create_tockens
-t_tocken *list_new_tocken(int position);
-t_files *list_new_files(char *file, int type, char ambiguos);
-t_pcmds *list_new_pcmds(char *cmd);
-void list_addback_tocken(t_tocken **list, t_tocken *new_node);
-void list_addback_infiles(t_files **list, t_files *new_node);
-void list_addback_pcmds(t_pcmds **list, t_pcmds *new_node);
+t_tocken	*list_new_tocken(int position);
+t_files		*list_new_files(char *file, int type, char ambiguos);
+t_pcmds		*list_new_pcmds(char *cmd);
+void	list_addback_tocken(t_tocken **list, t_tocken *new_node);
+void	list_addback_infiles(t_files **list, t_files *new_node);
+void	list_addback_pcmds(t_pcmds **list, t_pcmds *new_node);
 
 //Lexer (momentaneo)
 void	set_parsdefaultvals(t_msl *msl);
@@ -259,23 +313,23 @@ void	lexer_parser(t_msl *msl, unsigned char *line);
 void	addback_lex(t_msl *msl, t_lex *node);
 t_lex	*lex_newnode(int type, char *raw);
 void	ft_error_unexpect(char *simbol);
-int	get_unexpexted_errors1(int type, int infstat);
-int	redir_out(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
-int	redir_in(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
-int	pipe_op(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
-int	spaces(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
-int	info(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
-int	d_quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
-int	s_quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
-int	quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
+int		get_unexpexted_errors1(int type, int infstat);
+int		redir_out(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
+int		redir_in(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
+int		pipe_op(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
+int		spaces(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
+int		info(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
+int		d_quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
+int		s_quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
+int		quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
 void	create_new_lex( t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
 void	manage_last_state(t_msl *msl, t_parsing *parser);
 
 // parsing_utils
-int have_quotes(char *str);
-char *clean_quotes(char *str);
+int		have_quotes(char *str);
+char	*clean_quotes(char *str);
 char	*jump_caracter(char *str, char caracter);
-int	is_space(char c);
+int		is_space(char c);
 void	jump_separator(char **str);
 char	check_clean_quotes(t_msl *msl, char *str, char clean);
 char	check_clean_squotes(t_msl *msl, char *str, char clean);
@@ -298,72 +352,72 @@ char	check_nwl_error(t_msl *msl);
 //dollar expansion
 void	vars_interpolation(char **str, t_msl *msl, size_t *len);
 void	dollar_expansion(char **str, int *i, size_t *len, t_msl *msl);
-void dollar_expansion2(char **str, int *i, size_t *len, t_msl *msl);
+void	dollar_expansion2(char **str, int *i, size_t *len, t_msl *msl);
 void	replace_dollar(char **str, int *i, size_t *len, t_msl *msl);
 void	concatenate_strings(char **str, int *i, size_t *len, char *replace);
 void	concatenate_strings2(char **str, int *i, size_t *len, char *replace);
 void	expand_vars(char **str, int *i, size_t *len, t_msl *msl);
 
 // heredoc
-char *create_heredoc(t_msl *msl, char *delimiter, char mode);
-char *new_file_name(char *path);
+char	*create_heredoc(t_msl *msl, char *delimiter, char mode);
+char	*new_file_name(char *path);
 void	set_heredocs_modes(char *modes, char *delimiter, char sangria);
-void heredoc_child_process(t_msl *msl, int fd, char *delimiter, char *modes);
-void heredoc_loop(t_msl *msl, char *delimiter, int fd, char *modes);
-void write_line_in_heredoc(char *line, int fd, t_msl *msl, char *modes);
-int write_dollar_cases(char *t_line, t_msl *msl, int fd, int i);
-unsigned int write_env(char *line, int fd, unsigned int count, t_msl *msl);
-void ft_hwarningexit(char *delimiter);
+void	heredoc_child_process(t_msl *msl, int fd, char *delimiter, char *modes);
+void	heredoc_loop(t_msl *msl, char *delimiter, int fd, char *modes);
+void	write_line_in_heredoc(char *line, int fd, t_msl *msl, char *modes);
+int		write_dollar_cases(char *t_line, t_msl *msl, int fd, int i);
+unsigned int	write_env(char *line, int fd, unsigned int count, t_msl *msl);
+void	ft_hwarningexit(char *delimiter);
 char	*create_here_str(char *line);
 
 ///////////////////////////EXECUTION//////////////////////////////////
 
 // exec
-void executer(t_msl *msl);
-void only_builtin(t_msl *msl);
-void execute_orders(t_msl *msl);
-void execute_childs(t_tocken *c_tocken, t_msl *msl);
-void cmd_vs_builtin(t_tocken *c_tocken, int building);
+void	executer(t_msl *msl);
+void	only_builtin(t_msl *msl);
+void	execute_orders(t_msl *msl);
+void	execute_childs(t_tocken *c_tocken, t_msl *msl);
+void	cmd_vs_builtin(t_tocken *c_tocken, int building);
 
 // exec_utils
-void evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl);
-char *check_path(char *x_file, char **env);
-char *find_exe_file(char **posible_paths, char *x_file);
-char *get_env_value(const char *key_value, char **env);
-int is_builtin(t_tocken *tocken);
-void exec_cmd(t_tocken *c_tocken);
-void exec_builtin(t_msl *msl, t_tocken *c_tocken, int building);
-void create_pipes(t_tocken *c_tocken);
+void	evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl);
+char	*check_path(char *x_file, char **env);
+char	*find_exe_file(char **posible_paths, char *x_file);
+char	*get_env_value(const char *key_value, char **env);
+int		is_builtin(t_tocken *tocken);
+void	exec_cmd(t_tocken *c_tocken);
+void	exec_builtin(t_msl *msl, t_tocken *c_tocken, int building);
+void	create_pipes(t_tocken *c_tocken);
 
 // redirs utils
-void check_create_redirs(t_tocken *c_tocken, t_files *files_list);
-int tunel_in_file(char *file);
-int tunel_out_file(char *file, char append); // hay que cambiarla para el modo appends
-int pipe_forward(int *pipe_reference, int pipe_port, int fd);
-void fordward_in(t_tocken *c_tocken);
-void fordward_out(t_tocken *c_tocken);
+void	check_create_redirs(t_tocken *c_tocken, t_files *files_list);
+int	tunel_in_file(char *file);
+int	tunel_out_file(char *file, char append); // hay que cambiarla para el modo appends
+int	pipe_forward(int *pipe_reference, int pipe_port, int fd);
+void	fordward_in(t_tocken *c_tocken);
+void	fordward_out(t_tocken *c_tocken);
 
 // error_messages and exit
-void ft_exterror_exes(char *file, char is_directory);
-void ft_exterror_cmd(char *file);
-void ft_exterrno(void);
-void ft_error_redirs(char *file, char ambiguos);
-void ft_errerrno(void);
+void	ft_exterror_exes(char *file, char is_directory);
+void	ft_exterror_cmd(char *file);
+void	ft_exterrno(void);
+void	ft_error_redirs(char *file, char ambiguos);
+void	ft_errerrno(void);
 
 // wait, pids
-void wait_childs1(t_msl *msl);
-void wait_childs2(t_msl *msl);
-void wait_childs3(t_msl *msl);
-void wait_childs4(t_msl *msl, pid_t pid_heredoc);
-int wait_childs5(pid_t pid_child);
-void wait_heredoc(void);
-int ft_getpid(void);
+void	wait_childs1(t_msl *msl);
+void	wait_childs2(t_msl *msl);
+void	wait_childs3(t_msl *msl);
+void	wait_childs4(t_msl *msl, pid_t pid_heredoc);
+int		wait_childs5(pid_t pid_child);
+void	wait_heredoc(void);
+int		ft_getpid(void);
 
 // free_and_close
-void free_tocken_files(t_tocken *tocken);
-void free_tocken_cmds(t_tocken *tocken);
-void free_tockens(t_msl *msl);
-void close_fds(int *pipe_ports);
-void ft_free_table(char **ptr);
+void	free_tocken_files(t_tocken *tocken);
+void	free_tocken_cmds(t_tocken *tocken);
+void	free_tockens(t_msl *msl);
+void	close_fds(int *pipe_ports);
+void	ft_free_table(char **ptr);
 
 #endif

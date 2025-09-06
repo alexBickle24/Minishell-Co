@@ -4,8 +4,6 @@
 
 //Funcion para borrar la estrcutura de control de la minishell en caso de que hagamos 
 //exit o control+D. (Se tiene que manejar el caso de que cerremos la ventana??)
-
-
 void free_own_env(t_msl *msl)
 {
 	t_env *env;
@@ -40,22 +38,31 @@ void free_msl(t_msl **msl)
 	if ((*msl)->lexer)
 		free_lexer(*msl, 1);
 	if ((*msl)->sys)
-		free_sys((*msl)->sys);
+		free_sys(&((*msl)->sys));
+	if ((*msl)->builts)
+		free((*msl)->builts);
 	free(*msl);
 	*msl = NULL;
 }
 
-void	free_sys(t_system *sys)
+void	free_sys(t_system **sys)
 {
-	if (!sys)
+	if (!sys || !*sys)
 		return ;
-	if (sys->host)
-		free(sys->host);
-	if (sys->user)
-		free(sys->user);
-	if (sys->home)
-		free(sys->home);
-	if (sys->ps1)
-		free(sys->ps1);
-	free(sys);
+	if ((*sys)->host)
+		free((*sys)->host);
+	if ((*sys)->user)
+		free((*sys)->user);
+	if ((*sys)->home)
+		free((*sys)->home);
+	if ((*sys)->g_path)
+		free((*sys)->g_path);
+	if ((*sys)->ps1_hostuser)
+		free((*sys)->ps1_hostuser);
+	if ((*sys)->ps1_path)
+		free((*sys)->ps1_path);
+	if ((*sys)->ps1)
+		free((*sys)->ps1);
+	free(*sys);
+	*sys = NULL;
 }

@@ -19,10 +19,11 @@ int main(int argc, char **argv, char **env)
 	(void)argv;//para que no se queje el compilador
     if (argc != 1)
 		return (1);//si no hacemos el modo literal
-    minishell_init(&msl, env, argv);//inicamos la estrcutura de minishell y el manejados
+    minishell_init(&msl, env);//inicamos la estrcutura de minishell y el manejados
 	while (1)
 	{
-		line = readline(PROMPT);//leo la linea
+		set_ps1(msl, msl->sys);
+		line = readline(msl->sys->ps1);//leo la linea
 		add_history(line);//exit tambien se mete al historial
 		msl->clean_line = ft_strtrim(line, " \t\n\v\f\r");//por el mod literal de bash con control+V
 		if (!msl->clean_line || ft_strncmp(msl->clean_line, "exit\0", 5) == 0)
