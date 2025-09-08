@@ -198,6 +198,7 @@ typedef struct s_msl
 	t_system	*sys;
 	t_env	*own_env;
 	t_builts	*builts;
+	int			mode;
 	// t_env	*local_vars; habria que añadirlos a init y a free
 	int		exit_status;
 	char	*clean_line;
@@ -233,8 +234,8 @@ void	minishell_init(t_msl **msl, char **env);
 void	init_system(t_msl *msl);
 void	set_env_default_values(t_msl *msl);
 void	init_builts(t_msl *msl);
-void	interpreter_mode(t_msl *msl);
-// void interpreter_mode2(t_msl *msl, unsigned char *clean_line);
+void	interactive_mode(t_msl *msl);
+void	evaluate_line(t_msl *msl, unsigned char *clean_line);
 
 // minishell close
 void	free_own_env(t_msl *msl);
@@ -289,6 +290,8 @@ char	**ft_env_to_table(t_env *env);
 // warnings and errors
 void	ft_shlvl_warning(int	str);
 void	ft_error_home(void);
+void	ft_errorargs(char *arg);
+void	ft_errormini(void);
 
 /////////////////////////LEXER AND PARSING////////////////////////
 
@@ -391,9 +394,9 @@ void	create_pipes(t_tocken *c_tocken);
 
 // redirs utils
 void	check_create_redirs(t_tocken *c_tocken, t_files *files_list);
-int	tunel_in_file(char *file);
-int	tunel_out_file(char *file, char append); // hay que cambiarla para el modo appends
-int	pipe_forward(int *pipe_reference, int pipe_port, int fd);
+int		tunel_in_file(char *file);
+int		tunel_out_file(char *file, char append); // hay que cambiarla para el modo appends
+int		pipe_forward(int *pipe_reference, int pipe_port, int fd);
 void	fordward_in(t_tocken *c_tocken);
 void	fordward_out(t_tocken *c_tocken);
 

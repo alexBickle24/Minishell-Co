@@ -65,6 +65,15 @@ void	create_new_lex( t_msl *msl, int *i, unsigned char *line, t_parsing *pars)
 	char	tmp;
 	t_lex	*new_node;
 
+	if (msl->mode == 1)
+	{
+		if (pars->parstat == T_HEREDOC || pars->parstat == T_HEREDOC_S)
+		{
+			free_msl(&msl);
+			ft_hwarningexit("EOF");
+			exit (0);
+		}
+	}
 	tmp = line[*i + 1];
 	line[*i + 1] = '\0';
 	new_node = lex_newnode(pars->parstat, ft_strdup((const char *)pars->ptr));

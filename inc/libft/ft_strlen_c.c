@@ -1,14 +1,23 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_strlen_c.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/08 18:38:13 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/08 18:38:45 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-
-//falta el header y norminette
 #include "libft.h"
 
-int ft_strlen_c(char *str)
+int	ft_strlen_c(char *str)
 {
-    int i;
-    
-    i = 0;
-    while (str[i])
-        i++;
-    return (i);
+	int	i;
+
+	i = 0;
+	while (str[i])
+		i++;
+	return (i);
 }

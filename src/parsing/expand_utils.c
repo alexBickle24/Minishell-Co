@@ -1,10 +1,18 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/07 23:04:03 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/07 23:04:47 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-//No hace falta proteger los itoa porque loa malloc no fallan nunca 
-//ademas los valores que sustituyen estan inicilaizados al principio
-void	concatenate_strings(char **str, int *i, size_t *len, char *replace)//FUCNIONA
+void	concatenate_strings(char **str, int *i, size_t *len, char *replace)
 {
 	size_t	replace_len;
 	char	*tmp;

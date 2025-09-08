@@ -70,6 +70,7 @@ void	adding_cmds(t_msl *msl, t_tocken *current, t_lex *lex)//FUNCOINA
 }
 
 
+
 void	adding_tocken(t_msl *msl, t_tocken **current, t_lex *lexer)
 {
 	msl->total_tockens++;

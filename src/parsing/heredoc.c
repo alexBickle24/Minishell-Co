@@ -1,13 +1,23 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/07 23:53:04 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/08 19:02:09 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-char *create_heredoc(t_msl *msl, char *delimiter, char sangria)
+char	*create_heredoc(t_msl *msl, char *delimiter, char sangria)
 {
-	char modes[2];
-	int fd;
-	char *file_name;
-	char *tmp;
+	char	modes[2];
+	int		fd;
+	char	*file_name;
+	char	*tmp;
 
 	if (g_signal == S_SIGINT)
 		return (NULL);
@@ -16,7 +26,7 @@ char *create_heredoc(t_msl *msl, char *delimiter, char sangria)
 	if (fd < 0)
 		return (NULL);
 	tmp = delimiter;
-	while((*delimiter))
+	while (*delimiter)
 	{
 		if (check_clean_quotes(msl, delimiter, 1))
 			delimiter++;
@@ -29,14 +39,14 @@ char *create_heredoc(t_msl *msl, char *delimiter, char sangria)
 
 void	heredoc_child_process(t_msl *msl, int fd, char *delimiter, char *modes)
 {
-	pid_t pid;
+	pid_t	pid;
 
 	g_signal = S_HEREDOC;
 	pid = fork();
 	if (pid < 0)
 	{
 		ft_errerrno();
-		return;
+		return ;
 	}
 	if (pid == 0)
 		heredoc_loop(msl, delimiter, fd, modes);
@@ -44,9 +54,9 @@ void	heredoc_child_process(t_msl *msl, int fd, char *delimiter, char *modes)
 		wait_childs4(msl, pid);
 }
 
-void heredoc_loop(t_msl *msl, char *delimiter, int fd, char *modes)
+void	heredoc_loop(t_msl *msl, char *delimiter, int fd, char *modes)
 {
-	char *line;
+	char	*line;
 
 	signal_init_heredoc();
 	while (1)
@@ -66,21 +76,21 @@ void heredoc_loop(t_msl *msl, char *delimiter, int fd, char *modes)
 	exit (0);
 }
 
-void write_line_in_heredoc(char *line, int fd, t_msl *msl, char *modes)
+void	write_line_in_heredoc(char *line, int fd, t_msl *msl, char *modes)
 {
-	unsigned int i;
-	char *t_line; // trimed line
+	unsigned int	i;
+	char			*t_line;
 
 	if (!line)
-		return;
-	if (modes[1] == 1) // modo de sangria desactivado
+		return ;
+	if (modes[1] == 1)
 		t_line = jump_caracter(line, '\t');
 	else
 		t_line = line;
 	i = -1;
 	while (t_line[++i] != '\0')
 	{
-		if (t_line[i] == '$' && modes[0] == 0) // que le modo literal este desactivado
+		if (t_line[i] == '$' && modes[0] == 0)
 			i = write_dollar_cases(t_line, msl, fd, i);
 		else
 		{
@@ -90,11 +100,10 @@ void write_line_in_heredoc(char *line, int fd, t_msl *msl, char *modes)
 	write(fd, "\n", 1);
 }
 
-// mod parseo, msl->env / fd->newbuffer / i -> &i return -> newstr
-int write_dollar_cases(char *t_line, t_msl *msl, int fd, int i)
+int	write_dollar_cases(char *t_line, t_msl *msl, int fd, int i)
 {
-	char *dolim;
-	unsigned char idx;
+	char			*dolim;
+	unsigned char	idx;
 
 	dolim = msl->parsing_utils->dollar_lim;
 	idx = (unsigned char)t_line[i + 1];
@@ -103,18 +112,18 @@ int write_dollar_cases(char *t_line, t_msl *msl, int fd, int i)
 	else if (dolim[idx] <= 8)
 	{
 		if (t_line[i + 1] == '$')
-			ft_putnbr_fd(msl->msl_pid, fd); // pid minishell
+			ft_putnbr_fd(msl->msl_pid, fd);
 		else if (t_line[i + 1] == '!')
-			ft_putnbr_fd(msl->last_process, fd); // pid del ultimo proceso (opcional)
+			ft_putnbr_fd(msl->last_process, fd);
 		else if (t_line[i + 1] == '?')
-			ft_putnbr_fd(msl->exit_status, fd); // exit_status
+			ft_putnbr_fd(msl->exit_status, fd);
 		else if (t_line[i + 1] == '0')
 			ft_putstr_fd(INTERPRETER_NAME, fd);
 		i++;
 	}
 	else if (dolim[idx] == 9)
 		i++;
-	else if (dolim[idx] == 10)//vamos a cambiarlo por 10 o añdir isascii
+	else if (dolim[idx] == 10)
 		i = write_env(&t_line[i], fd, i, msl);
 	return (i);
 }

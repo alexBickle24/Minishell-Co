@@ -22,7 +22,7 @@ int main(int argc, char **argv, char **env)
 	(void)argv;//para que no se queje el compilador
     if (argc != 1)
 		return (1);//si no hacemos el modo literal
-    minishell_init(&msl, env, argv);//inicamos la estrcutura de minishell y el manejados
+    minishell_init(&msl, env);//inicamos la estrcutura de minishell y el manejados
 	while (1)
 	{
 		line = readline(PROMPT);//leo la linea

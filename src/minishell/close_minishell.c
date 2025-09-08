@@ -33,10 +33,10 @@ void free_msl(t_msl **msl)
 	free_tockens(*msl);
 	if ((*msl)->clean_line)
 		free((*msl)->clean_line);
-	if ((*msl)->parsing_utils)
-		free((*msl)->parsing_utils);
 	if ((*msl)->lexer)
 		free_lexer(*msl, 1);
+	if ((*msl)->parsing_utils)
+		free((*msl)->parsing_utils);
 	if ((*msl)->sys)
 		free_sys(&((*msl)->sys));
 	if ((*msl)->builts)

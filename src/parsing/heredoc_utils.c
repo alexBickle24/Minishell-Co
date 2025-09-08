@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   heredoc_utils.c                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/07 23:51:44 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/07 23:52:44 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../inc/minishell.h"
 
 char	*new_file_name(char *path)
@@ -37,7 +49,7 @@ void	set_heredocs_modes(char *modes, char *delimiter, char sangria)
 
 void	ft_hwarningexit(char *delimiter)
 {
-	char *n_line_history;
+	char	*n_line_history;
 
 	n_line_history = ft_itoa(history_length);
 	ft_putstr_fd("minishell: warning: here document at line ", 2);
@@ -50,11 +62,11 @@ void	ft_hwarningexit(char *delimiter)
 
 unsigned int	write_env(char *line, int fd, unsigned int count, t_msl *msl)
 {
-	char	*env_value;
-	char	*env_name;
-	char	**env;
+	char			*env_value;
+	char			*env_name;
+	char			**env;
 	unsigned char	*linei;
-	int		i;
+	int				i;
 
 	env = ft_env_to_table(msl->own_env);
 	linei = (unsigned char *)line;
@@ -74,8 +86,8 @@ unsigned int	write_env(char *line, int fd, unsigned int count, t_msl *msl)
 
 char	*create_here_str(char *line)
 {
-	int	fd;
-	char *file_name;
+	int		fd;
+	char	*file_name;
 
 	if (line == NULL || g_signal != S_INIT)
 		return (NULL);

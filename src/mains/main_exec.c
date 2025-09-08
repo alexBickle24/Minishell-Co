@@ -5,6 +5,7 @@
 
 void parser1(t_msl *msl);//
 int g_signal = S_INIT;
+void	interpreter_mode3(t_msl *msl);;
 
 int main(int argc, char **argv, char **env)
 {
@@ -14,7 +15,7 @@ int main(int argc, char **argv, char **env)
 	(void)argv;//para que no se queje el compilador
     if (argc != 1)
 		return (1);//si no hacemos el modo literal
-    minishell_init(&msl, env, argv);//inicamos la estrcutura de minishell y el manejados
+    minishell_init(&msl, env);//inicamos la estrcutura de minishell y el manejados
 	while (1)
 	{
 		line = readline(PROMPT);
@@ -29,7 +30,7 @@ int main(int argc, char **argv, char **env)
 			break ;
 		}
 		// meter la linea en minishell (lexerizaciion y parseo)
-		interpreter_mode(msl);//esto deberia llamarse process_line
+		interpreter_mode3(msl);//esto deberia llamarse process_line
 		free(line);
 		free(msl->clean_line);
 		msl->clean_line = NULL;//Esta linea es solo para poder printear los valores de la minishell
@@ -42,7 +43,7 @@ int main(int argc, char **argv, char **env)
 
 
 //Funciones de parseo y ejecucion
-void	interpreter_mode(t_msl *msl)
+void	interpreter_mode3(t_msl *msl)
 {
 	//Funcion de parseo 1.0 para probar ejecutador (comentar, es solo para testear la ejecucion)
 	parser1(msl);
