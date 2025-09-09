@@ -14,6 +14,93 @@ void	interpreter_mode_builds(t_msl *msl, unsigned char *clean_line);
 	El prompt que puedes usar es el siguiente;
 	<nombre del building> <argumento> <arguemnto1> .... 
 */
+
+/*
+	Para consultar el nuemro de argumentos dentro de cada funcion,
+	dentro de cada nodo cmds estara la primera. por defecto el primero sera
+	el nombre del building. Es decir cuando escribo por la minishell:
+
+	prompt: cd /etc/pssword
+	La lista de cmds se llenara despues del parseo con ;
+	<cmds->file = cd> NEXT <cmds->file = /etc/pssword> NEXT <cmds == NULL>
+
+	Ejemplo de env: NO ADMITE ARGUMENTOS
+	int	ft_env(t_msl *msl, t_pcmds *cmds)
+	{
+		t_pmcds *current;
+		int control;
+
+		control = 0;
+		current = cmds;
+		while (current != NULL)
+		{
+			if (control => 1)
+			{
+				//imprimir mensaje de error
+				//return (1); //calor de error
+			}
+			control++;
+			current = current->next; //para ir a siguiente nodod
+		}
+	}
+
+	Ejemplo de cd: ADMITE ARGUMNETOS PERO SOLO UNO
+	int	ft_cd(t_msl *msl, t_pcmds *cmds)
+	{
+		t_pmcds *current;
+		char	*ruta;
+		int control;
+		
+		control = 0;
+		ruta = NULL;
+		current = cmds;
+		while (current != NULL)
+		{
+			if (control = 1)
+				ruta = current->file;
+			if (control > 1)
+			{
+				//imprimir mensaje de error
+				//return (1); //calor de error
+			}
+			control++;
+			current = current->next; //para ir a siguiente nodod
+		}
+		//aqui ya podrias trabajar con el valor de la ruta: si ruta == NULL (cd sin argumentos), si ruta != NULL (ese es el valor de la ruta)
+	}
+
+	Ejemplo de export: ADMITE X ARGUMENTOS
+	int	ft_export(t_msl *msl, t_pcmds *cmds)
+	{
+		t_pmcds *current;
+		char	*ruta;
+		int control;
+		
+		control = 0;
+		ruta = NULL;
+		current = cmds;
+		while (current != NULL)
+		{
+			if (control = 0 && current->next = NULL)
+			{
+				//funcoin de imprimir lista de env de manera ordenada 
+				//return ;
+			}
+			if (control > 1)
+			{
+				ft_funcion_add_env(current->file);
+			}
+			control++;
+			current = current->next; //para ir a siguiente nodod
+		}
+		return (0);
+	}
+
+	EN AMBOS CASOS CUANDO ESTAS EN CONTROL = 0, ESTAS EN EL PRIMER NODOD DE LA LISTA PCMDS
+	QUE ES EL QUE CONTITNE EL NOMBRE DEL PROPIO BUILTING, NO LONECESITAS, PORQUE ENTRAR O NO ENTRAR
+	EN LA FUNCION DEL BUILTING DEPENDE DE LA EJECUCION.
+*/
+
 int main(int argc, char **argv, char **env)
 {
 	t_msl *msl;
