@@ -423,4 +423,10 @@ void	free_tockens(t_msl *msl);
 void	close_fds(int *pipe_ports);
 void	ft_free_table(char **ptr);
 
+///////////////////////////BUILTINS///////////////////////////////////
+void	ft_pwd(void);
+void	ft_env(t_msl *msl);
+// Utils
+void	ft_freeptr(void *ptr);
+
 #endif

@@ -1,14 +1,24 @@
-#include <stdio.h>
-#include <unistd.h>
-#include <stdlib.h>
+#include "../inc/minishell.h"
 
-
-int main()
+/*
+Test: pwd
+ getcwd devuelve el directorio actual
+ getcwd(buff, size) para reservar momoria pero si haces (NULL, 0)
+ reserva memoria dinamica
+*/
+void	ft_freeptr(void *ptr)
 {
-    char *pwd;
+	if (!ptr)
+		return ;
+	free(ptr);
+	ptr = NULL;
+}
 
-    pwd = getcwd(NULL, 0);
-    printf("%s\n", pwd);
-    free(pwd);
-    return (0);
+void	ft_pwd(void)
+{
+	char *pwd;
+
+	pwd = getcwd(NULL, 0);
+	ft_putendl_fd(pwd, 1);
+	ft_freeptr(pwd);
 }

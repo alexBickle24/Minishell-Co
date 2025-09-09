@@ -1,26 +1,28 @@
-#include <stdio.h>
-#include <string.h>
+#include "../inc/minishell.h"
 
-void    ft_env(char **env)
+/*
+    env:
+    Primero vemos cuantos argumentos hay
+    Si tod es correcto entonces vamos recorriendo los argumentos
+    Cuando encontremos uno con _ lo hardcodeamos
+    Ya que es el ultimo codigo escrito
+*/
+void	ft_env(t_msl *msl)
 {
-    int i;
+	t_env	*tmp;
 
-    i = 0;
-    while(env[i])
-    {
-        if (!strncmp(env[i], "_=./a.out", 9)) // Unica diferencia
-            printf("_=/usr/bin/env\n");
-        else
-            printf("%s\n", env[i]);
-        ++i;
-    }
-    (void)env;
-}
-
-int main(int argc, char **argv, char **env)
-{
-    if (argc == 1)
-        ft_env(env);
-    (void)argv;
-    return (0);
+	// Si hay mas de un argumento lo rechazamos
+	tmp = msl->own_env;
+	while (tmp)
+	{
+		if (!ft_strncmp(tmp->id, "_\0", 2))
+			ft_putendl_fd("_=/usr/bin/env", 1);
+		else
+		{
+			ft_putstr_fd(tmp->id, 1);
+			ft_putchar_fd('=', 1);
+			ft_putendl_fd(tmp->value, 1);
+		}
+		tmp = tmp->next;
+	}
 }
