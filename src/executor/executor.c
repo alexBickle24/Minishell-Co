@@ -41,26 +41,14 @@ void    executer(t_msl *msl)
 
 void    only_builtin(t_msl *msl)
 {
-	t_tocken    *c_tocken;
-	char        append_mode;
+	t_tocken	*c_tocken;
 
-	append_mode = 0;
 	c_tocken = msl->tocken;
-	if (c_tocken->redir_out && c_tocken->redir_out->type == T_APPEND)
-		append_mode = 1;
 	check_create_redirs(c_tocken, c_tocken->files);
-	if(c_tocken->redir_in->ambiguos || tunel_in_file(c_tocken->redir_in->file_name) != 0)
-	{
-		ft_error_redirs(c_tocken->redir_in->file_name, c_tocken->redir_in->ambiguos);
-		c_tocken->error_file = 1;
-	}
-	if(c_tocken->redir_out->ambiguos || tunel_out_file(c_tocken->redir_out->file_name, append_mode) != 0)
-	{
-		ft_error_redirs(c_tocken->redir_out->file_name, c_tocken->redir_out->ambiguos);
-		c_tocken->error_file = 1;
-	}
+	fordward_in(c_tocken);
+	fordward_out(c_tocken);
 	if (c_tocken->error_file != 1)
-		exec_builtin(msl, msl->tocken, is_builtin(msl->tocken));//poner el exit status de minishell cuando hay building
+		msl->exit_status = exec_builtin(msl, msl->tocken, is_builtin(msl->tocken));//poner el exit status de minishell cuando hay building
 	else
 		msl->exit_status = 1;
 }
@@ -100,7 +88,7 @@ void execute_childs(t_tocken *c_tocken, t_msl *msl)
 		if (c_tocken->error_file != 0)//error de exitencia o permisos de archivos (corta ejecuion)
 			exit (1);//podriao liberar tambien toda la memeri ade copy on write
 		if (c_tocken->pcmds)//di hay cmd o building y no se ha cortado la ejecucion por fallo (file)
-			cmd_vs_builtin(c_tocken, s_builtin);
+			cmd_vs_builtin(msl, c_tocken, s_builtin);
 		else//en caso de que no haya cmd
 			exit(0);//podriamo liberar la memeria tambien de copy on write
 	}
@@ -109,35 +97,34 @@ void execute_childs(t_tocken *c_tocken, t_msl *msl)
 	c_tocken->pid = pid;
 }
 
-void cmd_vs_builtin(t_tocken *c_tocken, int builtin)
+//Esta fucnion es para ejecutar el building o el cmd. Los building se meten dentro
+//del exit para que su valor de retorno sea el valor del estado de salida del proceso
+//hijo cuando acabe y lo pueda recoger waitpid para poner el msl->exit status.
+void	cmd_vs_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
 {
 	if (builtin == 1)
 	{
-		// ft_echo(c_tocken->cmds, msl->own_env);
+		// exit(ft_echo(c_tocken->cmds, msl->own_env));
 	}
 	else if (builtin == 2)//#
 	{
-		// ft_cd(c_tocken->cmds, msl->own_env);
+		// exit(ft_cd(c_tocken->cmds, msl->own_env));
 	}
 	else if (builtin == 3)
-	{
-		// ft_pwd();
-	}
+		exit(ft_pwd());
 	else if (builtin == 4)//#
 	{
-		// ft_export(c_tocken->cmds, msl->own_env);
+		// exit(ft_export(c_tocken->cmds, msl->own_env));
 	}
 	else if (builtin == 5)//
 	{
-		// ft_unset(c_tocken->cmds, msl->own_env);
+		// exit(ft_unset(c_tocken->cmds, msl->own_env));
 	}
 	else if (builtin == 6)
-	{
-		// ft_env(msl->own_env);
-	}
+		exit(ft_env(msl, c_tocken->pcmds));
 	else if (builtin == 7)//#
 	{
-		// ft_exit(c_tocken->cmds, msl);
+		// exit(ft_exit(c_tocken->cmds, msl));
 	}
 	else
 	{

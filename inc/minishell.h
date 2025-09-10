@@ -213,7 +213,7 @@ typedef struct s_msl
 
 /*
  * PROTOTIPOS
- */
+*/
 
 
 ///////////////// INIT Y CREACION DE ENTRONO DE SISTEMA///////////////////
@@ -267,6 +267,8 @@ void	set_shlvl(t_msl *msl);
 void	check_home_message(t_msl *msl);
 void	set_pwd(t_msl *msl);
 void	set_path(t_msl *msl);
+void	set_lessopen(t_msl *msl);
+void	set_lessclose(t_msl *msl);
 
 // environ utils
 char	*ft_get_env_id(char *env_line);
@@ -380,7 +382,7 @@ void	executer(t_msl *msl);
 void	only_builtin(t_msl *msl);
 void	execute_orders(t_msl *msl);
 void	execute_childs(t_tocken *c_tocken, t_msl *msl);
-void	cmd_vs_builtin(t_tocken *c_tocken, int building);
+void	cmd_vs_builtin(t_msl *msl, t_tocken *c_tocken, int building);
 
 // exec_utils
 void	evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl);
@@ -389,7 +391,7 @@ char	*find_exe_file(char **posible_paths, char *x_file);
 char	*get_env_value(const char *key_value, char **env);
 int		is_builtin(t_tocken *tocken);
 void	exec_cmd(t_tocken *c_tocken);
-void	exec_builtin(t_msl *msl, t_tocken *c_tocken, int building);
+int		exec_builtin(t_msl *msl, t_tocken *c_tocken, int building);
 void	create_pipes(t_tocken *c_tocken);
 
 // redirs utils
@@ -424,8 +426,8 @@ void	close_fds(int *pipe_ports);
 void	ft_free_table(char **ptr);
 
 ///////////////////////////BUILTINS///////////////////////////////////
-void	ft_pwd(void);
-void	ft_env(t_msl *msl);
+int	ft_pwd(void);
+int	ft_env(t_msl *msl, t_pcmds *pcmds);
 // Utils
 void	ft_freeptr(void *ptr);
 

@@ -47,38 +47,40 @@ int is_builtin(t_tocken *tocken)
 	return(0);
 }
 
-void exec_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
+//esta funcion es para la ejecucion de los buildings en el proceso padre
+//retorna un valor int. Ese valor se le va a dar directamente al minishell exit status
+//ya que aqui no lo recoge waitpid,, no hacemos exit porque estamos en elproceso padre.
+int exec_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
 {
 	(void )msl;
 	(void )c_tocken;
 	if (builtin == 1)
 	{
-		// ft_echo(c_tocken->cmds, msl->own_env);
+		// return(ft_echo(c_tocken->cmds, msl->own_env));
 	}
 	else if (builtin == 2)
 	{
-		// ft_cd(c_tocken->cmds, msl->own_env);
+		// return(ft_cd(c_tocken->cmds, msl->own_env));
 	}
 	else if (builtin == 3)
 	{
-		// ft_pwd();
+		return(ft_pwd());
 	}
 	else if (builtin == 4)
 	{
-		// ft_export(c_tocken->cmds, msl->own_env);
+		// return(ft_export(c_tocken->cmds, msl->own_env));
 	}
 	else if (builtin == 5)
 	{
-		// ft_unset(c_tocken->cmds, msl->own_env);
+		// return(ft_unset(c_tocken->cmds, msl->own_env));
 	}
 	else if (builtin == 6)
-	{
-		// ft_env(msl->own_env);
-	}
+		return(ft_env(msl, c_tocken->pcmds));
 	else if (builtin == 7)
 	{
-		// ft_exit(c_tocken->cmds, msl);
+		// return(ft_exit(c_tocken->cmds, msl));
 	}
+	return(0);
 }
 
 void create_pipes(t_tocken *c_tocken)

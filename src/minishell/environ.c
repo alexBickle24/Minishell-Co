@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 22:09:19 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/06 01:14:16 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/10 01:35:34 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	set_shlvl(t_msl *msl)
 	t_env	*shlvl_node;
 	int		shlvl_num;
 
-	if (!msl || !msl->own_env)
+	if (!msl)
 		return ;
 	shlvl_node = search_id_node(msl, "SHLVL");
 	if (shlvl_node == NULL)
@@ -131,5 +131,47 @@ void	set_pwd(t_msl *msl)
 			return ;
 		}
 		list_addback_env(env_node, &(msl->own_env));
+	}
+}
+
+void	set_lessopen(t_msl *msl)
+{
+	t_env	*l_open;
+	char	*l_open_val;
+
+	if (!msl)
+		return ;
+	l_open = search_id_node(msl, "LESSOPEN");
+	if (l_open == NULL)
+	{
+		l_open_val = ft_strdup("| /usr/bin/lesspipe %s");
+		l_open = list_new_ownenv(ft_strdup("LESSOPEN"), l_open_val);
+		if (!l_open)
+		{
+			free(l_open_val);
+			return ;
+		}
+		list_addback_env(l_open, &(msl->own_env));
+	}
+}
+
+void	set_lessclose(t_msl *msl)
+{
+	t_env	*l_close;
+	char	*l_close_val;
+
+	if (!msl)
+		return ;
+	l_close = search_id_node(msl, "LESSCLOSE");
+	if (l_close == NULL)
+	{
+		l_close_val = ft_strdup("/usr/bin/lesspipe %s %s");
+		l_close = list_new_ownenv(ft_strdup("LESSCLOSE"), l_close_val);
+		if (!l_close)
+		{
+			free(l_close_val);
+			return ;
+		}
+		list_addback_env(l_close, &(msl->own_env));
 	}
 }
