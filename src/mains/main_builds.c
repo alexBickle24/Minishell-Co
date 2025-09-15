@@ -151,66 +151,7 @@ int main(int argc, char **argv, char **env)
 // 	ptr = NULL;
 // }
 
-void	ft_edit_env(t_msl *msl, char *id, char *value)
-{
-	t_env	*tmp;
 
-	tmp = msl->own_env;
-	while (tmp)
-	{
-		if (ft_strncmp(tmp->id, id, ft_strlen(id)) == 0)
-		{
-			ft_freeptr(tmp->value);
-			tmp->value = ft_strdup(value);
-			return ;
-		}
-		tmp = tmp->next;
-	}
-}
-
-/*
-	Cambiar de directorio
-	Podemos recibir una ruta o cambiar a HOME 
-*/
-void	ft_cd(t_msl *msl)
-{
-	char	*oldpwd;
-	char	*home;
-	char	*newpwd;
-
-	printf("_______________________\n\nTest ft_cd:\n");
-	ft_pwd(); // control
-	// Si tenemos mas de 2 argumentos fuera
-	oldpwd = getcwd(NULL, 0);
-	if (!oldpwd)
-	{
-		perror("getcwd");
-		return ;
-	}
-	ft_edit_env(msl, "OLDPWD", oldpwd);
-	ft_freeptr(oldpwd);
-	// estudiar argumentos 1 o 0
-	home = getenv("HOME");
-	if (!home)
-	{
-		perror("home");
-		return ;
-	}
-	if (chdir(home) == -1)
-	{
-		perror("cd");
-		return ;
-	}
-	newpwd = getcwd(NULL, 0);
-	if (!newpwd)
-	{
-		perror("getcwd");
-		return ;
-	}
-	ft_edit_env(msl, "PWD", newpwd);
-	ft_freeptr(newpwd);
-	ft_pwd(); // control
-}
 
 
 /*
@@ -237,7 +178,7 @@ void	interpreter_mode_builds(t_msl *msl, unsigned char *clean_line)
 	//msl:la cabecera (contiene el env y la variable sys)
 	//tocken->pcmds; los argumentos es decir lo que vas a parsear. Ej: linea-> echo palabra1 palabra2 palabra3
 
-	ft_cd(msl);
+	ft_unset(msl);
 
 	free_tockens(msl);//Para liberar los tockens cunado no tengo executer
 }

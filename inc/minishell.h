@@ -428,7 +428,13 @@ void	ft_free_table(char **ptr);
 ///////////////////////////BUILTINS///////////////////////////////////
 int	ft_pwd(void);
 int	ft_env(t_msl *msl, t_pcmds *pcmds);
+void	ft_cd(t_msl *msl);
+void	ft_unset(t_msl *msl);
 // Utils
 void	ft_freeptr(void *ptr);
+char *ft_cdpath(t_msl *msl);
+int	ft_tokencounter(t_msl *msl);
+void	ft_edit_env(t_msl *msl, char *id, char *value);
+void	ft_delete_env(t_msl *msl, char *id);
 
 #endif

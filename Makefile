@@ -17,6 +17,8 @@ SRC_DIR = src/
 SRC_FILES=  mains/main.c\
 			builtins/ft_pwd.c\
 			builtins/ft_env.c\
+			builtins/ft_cd.c\
+			builtins(ft_unset.c)\
 			debugin/print.c\
 			minishell/init.c\
 			minishell/close_minishell.c\
