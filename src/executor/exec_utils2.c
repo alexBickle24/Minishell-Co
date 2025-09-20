@@ -1,13 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils2.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/20 19:48:27 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/20 20:05:30 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
 /*
-
 	**BRIEF: Para los builtins hay que selecionas que builtin es el nuestro
 	y ejecutarlo. Esta fucnion vale para la funcion exec order y para la funcion
 	exec builtin
 */
-
 void exec_cmd(t_tocken *c_tocken)
 {
 	int error;
@@ -52,7 +61,7 @@ int is_builtin(t_tocken *tocken)
 //esta funcion es para la ejecucion de los buildings en el proceso padre
 //retorna un valor int. Ese valor se le va a dar directamente al minishell exit status
 //ya que aqui no lo recoge waitpid,, no hacemos exit porque estamos en elproceso padre.
-int exec_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
+int father_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
 {
 	(void )msl;
 	(void )c_tocken;
@@ -88,32 +97,5 @@ int exec_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
 void create_pipes(t_tocken *c_tocken)
 {
 	if (pipe(c_tocken->pipe_fds) == -1)
-        ft_errerrno();
+		ft_errerrno();
 }
-
-// void evaluate_local_variable(t_tocken *c_tocken)
-// {
-// 	int	i;
-// 	t_pcmds *aux;
-// 	char *tmp;
-
-// 	i = 0;
-// 	aux = c_tocken->pcmds;
-// 	while (aux->cmd[i])
-// 	{
-// 		if (ft_strchr(aux->cmd, '=') == 1 && aux->next != NULL)
-// 		{
-// 			tmp = c_tocken->cmd_tb[i];
-// 			while(c_tocken->cmd_tb[i] != NULL)
-// 			{
-// 				c_tocken->cmd_tb[i] = c_tocken->cmd_tb[i+1];
-// 				i++;
-// 			}
-// 			free(tmp);
-// 		}
-// 		else
-// 			//crear variable
-// 		i = 0;
-// 	}
-// }
-

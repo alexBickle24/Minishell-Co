@@ -213,7 +213,6 @@ typedef struct s_msl
  * PROTOTIPOS
 */
 
-
 ///////////////// INIT Y CREACION DE ENTRONO DE SISTEMA///////////////////
 
 // debugin
@@ -286,7 +285,8 @@ void	sig_heredoc_handler(int signal);
 // general utils;
 char	**ft_pcmds_to_table(t_pcmds *pcmds);
 char	**ft_env_to_table(t_env *env);
-char	**create_table(void *list, int type);
+char	**create_table(t_pcmds *list);
+char	**create_table1(t_env *list);
 
 // warnings and errors
 void	ft_shlvl_warning(int	str);
@@ -350,7 +350,7 @@ void	adding_tocken(t_msl *msl, t_tocken **current, t_lex *lexer);
 
 //adding_extra->->_>_->->->
 void	loop_cmd_split(char **str, char **start, t_msl *msl, t_tocken *cur);
-char check_ambiguos_file(char *str, t_msl *msl);
+char	check_ambiguos_file(char *str, t_msl *msl);
 
 //fix error
 char	new_line_err(t_msl *msl);
@@ -390,12 +390,13 @@ void	cmd_vs_builtin(t_msl *msl, t_tocken *c_tocken, int building);
 
 // exec_utils
 void	evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl);
+int		handle_direct_path(t_tocken *c_tocken);
 char	*check_path(char *x_file, char **env);
 char	*find_exe_file(char **posible_paths, char *x_file);
 char	*get_env_value(const char *key_value, char **env);
 int		is_builtin(t_tocken *tocken);
 void	exec_cmd(t_tocken *c_tocken);
-int		exec_builtin(t_msl *msl, t_tocken *c_tocken, int building);
+int		father_builtin(t_msl *msl, t_tocken *c_tocken, int builtin);
 void	create_pipes(t_tocken *c_tocken);
 
 // redirs utils

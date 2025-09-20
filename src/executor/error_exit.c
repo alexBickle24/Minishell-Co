@@ -1,11 +1,22 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   error_exit.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/20 19:29:37 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/20 19:30:57 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
 //FUNCoines de erro y codigo de salida para capturar con waitstatus ejecucion
-void	ft_exterror_exes(char *file, char is_directory)//error cmd = 1
+//error cmd = 1
+void	ft_exterror_exes(char *file, char is_directory)
 {
-	int error_code;
+	int	error_code;
 
 	if (!file)
 		return ;
@@ -26,7 +37,8 @@ void	ft_exterror_exes(char *file, char is_directory)//error cmd = 1
 	exit(error_code);
 }
 
-void ft_exterror_cmd(char *file)//error cmd == 2
+//error cmd == 2
+void	ft_exterror_cmd(char *file)
 {
 	if (!file)
 		return ;
@@ -39,7 +51,7 @@ void ft_exterror_cmd(char *file)//error cmd == 2
 }
 
 //error sin salida
-void ft_exterrno(void)
+void	ft_exterrno(void)
 {
 	ft_putstr_fd("Minishell: ", 2);
 	ft_putstr_fd(strerror(errno), 2);
@@ -47,7 +59,7 @@ void ft_exterrno(void)
 	exit(127);
 }
 
-void ft_error_redirs(char *file, char ambiguos)
+void	ft_error_redirs(char *file, char ambiguos)
 {
 	if (!file)
 		return ;
@@ -70,9 +82,9 @@ void ft_error_redirs(char *file, char ambiguos)
 }
 
 //error generico con salida
-void ft_errerrno(void)
+void	ft_errerrno(void)
 {
-    ft_putstr_fd("Minishell: ", 2);
-    ft_putstr_fd(strerror(errno), 2);
-    ft_putstr_fd("\n", 2);
+	ft_putstr_fd("Minishell: ", 2);
+	ft_putstr_fd(strerror(errno), 2);
+	ft_putstr_fd("\n", 2);
 }

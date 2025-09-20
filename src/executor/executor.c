@@ -1,3 +1,14 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   executor.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/20 19:49:44 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/20 20:10:33 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
@@ -20,10 +31,9 @@
 		+Forma de hacerlo de frack;
 		
 */
-
-void    executer(t_msl *msl)
+void	executer(t_msl *msl)
 {
-	if (msl && g_signal == S_INIT && msl->tocken != NULL)//temer que la lista de tockens exista o msl errro (probar a ver como se comporta waitchild)
+	if (msl && g_signal == S_INIT && msl->tocken != NULL)
 	{
 		g_signal = S_EXECUTION;
 		if (msl->total_tockens == 1 && is_builtin(msl->tocken))
@@ -35,11 +45,10 @@ void    executer(t_msl *msl)
 		msl->exit_status = 130;
 	g_signal = S_INIT;
 	msl->pars_err = 0;
-	//Funcion de liberacion de memeria y cierre de fds de p_tockens
 	free_tockens(msl);
 }
 
-void    only_builtin(t_msl *msl)
+void	only_builtin(t_msl *msl)
 {
 	t_tocken	*c_tocken;
 
@@ -48,12 +57,12 @@ void    only_builtin(t_msl *msl)
 	fordward_in(c_tocken);
 	fordward_out(c_tocken);
 	if (c_tocken->error_file != 1)
-		msl->exit_status = exec_builtin(msl, msl->tocken, is_builtin(msl->tocken));//poner el exit status de minishell cuando hay building
+		msl->exit_status = father_builtin(msl, msl->tocken, is_builtin(msl->tocken));
 	else
 		msl->exit_status = 1;
 }
 
-void execute_orders(t_msl *msl)
+void	execute_orders(t_msl *msl)
 {
 	t_tocken *c_tocken;
 
@@ -66,7 +75,7 @@ void execute_orders(t_msl *msl)
 	wait_childs3(msl);
 }
 
-void execute_childs(t_tocken *c_tocken, t_msl *msl)
+void	execute_childs(t_tocken *c_tocken, t_msl *msl)
 {
 	pid_t pid;
 	int   s_builtin;

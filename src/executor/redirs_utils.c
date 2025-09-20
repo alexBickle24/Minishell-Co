@@ -1,8 +1,16 @@
-
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   redirs_utils.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/20 20:08:16 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/20 20:08:22 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
 
 ///Funcion para evaluar redirecciones: SE  LLAMA DESDE EL PADRE
 //poner los tres casoso y porque en ninguno de los tres se dejan fds abiertos en le hijo

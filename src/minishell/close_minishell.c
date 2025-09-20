@@ -1,9 +1,21 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   close_minishell.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/20 20:17:58 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/20 20:18:02 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-//Funcion para borrar la estrcutura de control de la minishell en caso de que hagamos 
-//exit o control+D. (Se tiene que manejar el caso de que cerremos la ventana??)
+//Funcion para borrar la estrcutura de control de la minishell
+//en caso de que hagamos 
+//exit o control+D. (Se tiene que manejar el caso de que 
+//cerremos la ventana??)
 void free_own_env(t_msl *msl)
 {
 	t_env *env;

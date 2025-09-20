@@ -30,7 +30,6 @@ void	ft_free_table(char **ptr)
 	ptr = NULL;
 }
 
-
 //Libera la lista enlazada de files
 void	free_tocken_files(t_tocken *tocken)
 {

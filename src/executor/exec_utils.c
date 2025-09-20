@@ -1,7 +1,16 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   exec_utils.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/20 19:46:29 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/20 19:47:49 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
-
 
 /*
 	Funcion para buscar y ejecutar el comando
@@ -32,10 +41,14 @@
 	Tema de los scripts: Los scripts se pueden ejecutar de dos maneras.
 		- Si el archivo tiene permisos de ejecucion y elegimos y en la linea de shebang que nos dice
 		el interprete a usar por el sistema para ejecutarlos
+		- Mediante su interprete que es un programa (binario) que esta en la carpeta bin
 */
 
-
-void evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl)
+//caso 1: Es una ruta no hay que buscarla en el path
+//caso 2: Es el nomnre de un archivo se busca en el path
+//caso 3: El archico de biinarion compilado o el script esta en una
+//de las tutas del path se comprueban los permisos de ejecucion
+void	evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl)
 {
 	char	*path;
 
@@ -45,31 +58,35 @@ void evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl)
 		c_tocken->cmd_tb = ft_pcmds_to_table(c_tocken->pcmds);
 	if (!c_tocken->env_tb)
 		c_tocken->env_tb = ft_env_to_table(msl->own_env);
-	if (ft_strchr(c_tocken->cmd_tb[0], '/') != 0)//1
+	if (handle_direct_path(c_tocken))
+		return ;
+	path = check_path(c_tocken->cmd_tb[0], c_tocken->env_tb);
+	if (!path)
 	{
-		if (!ft_strncmp(c_tocken->cmd_tb[0], "./\0", 3) || !ft_strncmp(c_tocken->cmd_tb[0], "/\0", 2))
-			c_tocken->error_cmd = 3;//
-		else if (access(c_tocken->cmd_tb[0], F_OK | X_OK) == -1)
-			c_tocken->error_cmd = 1;
+		c_tocken->error_cmd = 2;
 		return ;
 	}
-	else
-	{
-		path = check_path(c_tocken->cmd_tb[0], c_tocken->env_tb);//2
-		if (!path)
-		{
-			c_tocken->error_cmd = 2;
-			return ;
-		}
-		free(c_tocken->pcmds->cmd);
-		c_tocken->pcmds->cmd = path;
-		if (access(path, X_OK) == -1)//3
-			c_tocken->error_cmd = 1;
-	}
+	free(c_tocken->pcmds->cmd);
+	c_tocken->pcmds->cmd = path;
+	if (access(path, X_OK) == -1)
+		c_tocken->error_cmd = 1;
 }
 
+int	handle_direct_path(t_tocken *c_tocken)
+{
+	if (ft_strchr(c_tocken->cmd_tb[0], '/') != 0)
+	{
+		if (!ft_strncmp(c_tocken->cmd_tb[0], "./\0", 3)
+			|| !ft_strncmp(c_tocken->cmd_tb[0], "/\0", 2))
+			c_tocken->error_cmd = 3;
+		else if (access(c_tocken->cmd_tb[0], F_OK | X_OK) == -1)
+			c_tocken->error_cmd = 1;
+		return (1);
+	}
+	return (0);
+}
 
-char *check_path(char *x_file, char **env)
+char	*check_path(char *x_file, char **env)
 {
 	char	**absolute_paths_table;
 	char	*absolute_paths;
@@ -146,68 +163,3 @@ char	*find_exe_file(char **posible_paths, char *x_file)
 	}
 	return (NULL);
 }
-
-
-// void	lstremove_if_empty(t_tocken *c_tocken)
-// {
-// 	t_pcmds	*current_cmd;
-// 	t_pcmds	*last;
-// 	t_pcmds	*tmp;
-
-// 	if (c_tocken->pcmds == NULL)
-// 		return ;
-// 	current_cmd = c_tocken->pcmds;
-// 	last = current_cmd;
-// 	while(current_cmd)
-// 	{
-// 		if (current_cmd->empty == 1 && current_cmd == c_tocken->pcmds)
-// 		{
-// 			tmp = current_cmd->next;
-// 			free(current_cmd->cmd);
-// 			free(current_cmd);
-// 			current_cmd = tmp;
-// 			c_tocken->pcmds = current_cmd;
-// 		}
-// 		else if (current_cmd->empty == 1)
-// 		{
-// 			tmp = current_cmd->next;
-// 			free(current_cmd->cmd);
-// 			free(current_cmd);
-// 			current_cmd = tmp;
-// 			last->next = current_cmd;
-// 		}
-// 		else
-// 		{
-// 			last = current_cmd;
-// 			current_cmd = current_cmd->next;
-// 		}
-// 	}
-// }
-
-
-///FUNCION DE ANTES DE SABER QUE NO PUEDO RESERVAR MEMERIA EN PROCESO HIJO POR LAS SEÑALES
-
-// void	check_exe(char *x_file, char **env, char **orders_list)
-// {
-// 	char	*path;
-
-// 	//compurebo si x_files es una ruta al directorio actual, o una ruta absoluta
-// 	if (!ft_strncmp(x_file, "./", 2) || !ft_strncmp(x_file, "/", 1) || !ft_strncmp(x_file, "..", 2))
-// 	{
-// 		if (access(x_file, F_OK | X_OK) == -1)
-// 			ft_error_exes(x_file);//126 o 127
-// 		else
-// 			execve(x_file, orders_list, env);
-// 	}
-// 	path = check_path(x_file, env);
-// 	if (!path)
-// 	{
-// 		if (access(x_file, F_OK) == 0)
-// 			ft_error_cmd(x_file);//127
-// 	}
-// 	if (access(path, X_OK) == -1)
-// 		ft_error_exes(path);//126 o 127
-// 	else
-// 		if (execve(path, orders_list, env) == -1)
-// 			ft_execve_error();
-// }

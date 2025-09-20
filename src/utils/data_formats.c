@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 18:47:10 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/20 19:22:24 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/20 20:14:43 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	**ft_env_to_table(t_env *env)
 	char	*tmp;
 	char	**table;
 
-	table = create_table((void *)env, 2);
+	table = create_table1(env);
 	if (table == NULL)
 		return (NULL);
 	current = env;
@@ -46,7 +46,7 @@ char	**ft_pcmds_to_table(t_pcmds *pcmds)
 	int		lines;
 	char	**table;
 
-	table = create_table((void *)pcmds, 1);
+	table = create_table(pcmds);
 	if (!table)
 		return (NULL);
 	current = pcmds;
@@ -63,19 +63,36 @@ char	**ft_pcmds_to_table(t_pcmds *pcmds)
 	return (table);
 }
 
-char	**create_table(void *list, int type)
+char	**create_table(t_pcmds *list)
 {
 	t_pcmds	*current;
-	t_env	*current1;
 	int		lines;
 	char	**table;
 
 	if (list == NULL)
 		return (NULL);
-	if (type == 1)
-		current = (t_pcmds *)list;
-	else if (type == 2)
-		current1 = (t_env *)list;
+	current = list;
+	lines = 0;
+	while (current)
+	{
+		current = current->next;
+		lines++;
+	}
+	table = (char **)malloc(sizeof(char *) * (lines + 1));
+	if (!table)
+		return (NULL);
+	return (table);
+}
+
+char	**create_table1(t_env *list)
+{
+	t_env	*current;
+	int		lines;
+	char	**table;
+
+	if (list == NULL)
+		return (NULL);
+	current = list;
 	lines = 0;
 	while (current)
 	{

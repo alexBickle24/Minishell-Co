@@ -1,7 +1,17 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   signal.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/20 20:34:47 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/20 20:36:19 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 
 #include "../../inc/minishell.h"
-
 
 /*
 	Manejo centrailizado: Pra estonecesitariamos un manejador que peuda recibir argumentos o
@@ -44,7 +54,16 @@
 		EXTRA: Meter el control+z [n] es el contador de veces que se ha llamado a esa señal Codigo de señal = 10
 */
 
-void    signal_init(void)
+
+// sa_int.sa_handler = sig_child_handler;
+// sigemptyset(&sa_int.sa_mask);//no bloquea señales
+// sa_int.sa_flags = 0;//no esta en ningun modo especial
+// siaction(SIGINT, &sa_int, NULL);//La fucnion que jeecuta la señal segun preparacion de estrcutura previa
+// sa_quit.sa_handler = sig_child_handler;//con esta opcion noestablecemos handler para este tipo de señal
+// sigemptyset(&sa_quit.sa_mask);
+// sa_quit.sa_flags = 0;
+// sigaction(SIGQUIT, &sa_quit, NULL);//la funcoin que espera y ejecuta la señal segun configuracion de estrucutra previa
+void	signal_init(void)
 {
 	struct sigaction sa_int;
 	struct sigaction sa_quit;
@@ -60,39 +79,42 @@ void    signal_init(void)
 	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
-void    signal_init_childs(void)
+void	signal_init_childs(void)
 {
 	struct sigaction sa_int;
 	struct sigaction sa_quit;
 
 	sa_int.sa_handler = sig_child_handler;
-	sigemptyset(&sa_int.sa_mask);//no bloquea señales
-	sa_int.sa_flags = 0;//no esta en ningun modo especial
-	sigaction(SIGINT, &sa_int, NULL);//La fucnion que jeecuta la señal segun preparacion de estrcutura previa
-	sa_quit.sa_handler = sig_child_handler;//con esta opcion noestablecemos handler para este tipo de señal
+	sigemptyset(&sa_int.sa_mask);
+	sa_int.sa_flags = 0;
+	sigaction(SIGINT, &sa_int, NULL);
+	sa_quit.sa_handler = sig_child_handler;
 	sigemptyset(&sa_quit.sa_mask);
 	sa_quit.sa_flags = 0;
-	sigaction(SIGQUIT, &sa_quit, NULL);//la funcoin que espera y ejecuta la señal segun configuracion de estrucutra previa
+	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
-void    signal_init_heredoc(void)
+void	signal_init_heredoc(void)
 {
 	struct sigaction sa_int;
 	struct sigaction sa_quit;
 
 	sa_int.sa_handler = sig_heredoc_handler;
-	sigemptyset(&sa_int.sa_mask);//no bloquea señales
-	sa_int.sa_flags = 0;//no esta en ningun modo especial
-	sigaction(SIGINT, &sa_int, NULL);//La fucnion que jeecuta la señal segun preparacion de estrcutura previa
-	sa_quit.sa_handler = SIG_IGN;//con esta opcion noestablecemos handler para este tipo de señal
+	sigemptyset(&sa_int.sa_mask);
+	sa_int.sa_flags = 0;
+	sigaction(SIGINT, &sa_int, NULL);
+	sa_quit.sa_handler = SIG_IGN;
 	sigemptyset(&sa_quit.sa_mask);
 	sa_quit.sa_flags = 0;
-	sigaction(SIGQUIT, &sa_quit, NULL);//la funcoin que espera y ejecuta la señal segun configuracion de estrucutra previa
+	sigaction(SIGQUIT, &sa_quit, NULL);
 }
 
 //por defecto readline que queda todolo que escribamos por pantalla y lo va filtrando y alñadiendo al historial de comandos
 //es como un get next line pero con estrcuturas internas (comola del hostoria) y mas funcones por eso hac elos still reachable
 //por qeu los guarda en variables estatuticas que apuntan a estrcuturas de datos 
+// rl_replace_line("", 0);//para que loque hayamos escrito se sustituya por un caracteer vcacio
+// rl_on_new_line();//no cmabia nada a efectos practicos creoque es solo para el conteo de lineas en el historial
+// rl_redisplay();//hace un redisplay del propmpt
 void sig_handler(int signal)
 {
 	(void)signal;
@@ -100,25 +122,25 @@ void sig_handler(int signal)
 	if (g_signal == S_EXECUTION)
 	{
 		g_signal = S_SIGINT;
-		write(1, "\n", 1);//para que lo que pinter readline, es decir elprompt sea en la siguiente linea de STDIN file
-		rl_replace_line("", 0);//para que loque hayamos escrito se sustituya por un caracteer vcacio
-		rl_on_new_line();//no cmabia nada a efectos practicos creoque es solo para el conteo de lineas en el historial
+		write(1, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
 	}
 	else if (g_signal == S_INIT || g_signal == S_SIGINT)
 	{
 		g_signal = S_SIGINT;
-		write(1, "\n", 1);//para que lo que pinter readline, es decir elprompt sea en la siguiente linea de STDIN file
-		rl_replace_line("", 0);//para que loque hayamos escrito se sustituya por un caracteer vcacio
-		rl_on_new_line();//no cmabia nada a efectos practicos creoque es solo para el conteo de lineas en el historial
-		rl_redisplay();//hace un redisplay del propmpt
+		write(1, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
+		rl_redisplay();
 	}
 	else if (g_signal == S_HEREDOC)
 	{
 		g_signal = S_SIGINT;
-		write(1, "^C", 2);//para que lo que pinter readline, es decir elprompt sea en la siguiente linea de STDIN file
-		write(1, "\n", 1);//para que lo que pinter readline, es decir elprompt sea en la siguiente linea de STDIN file
-		rl_replace_line("", 0);//para que loque hayamos escrito se sustituya por un caracteer vcacio
-		rl_on_new_line();//no cmabia nada a efectos practicos creoque es solo para el conteo de lineas en el historial
+		write(1, "^C", 2);
+		write(1, "\n", 1);
+		rl_replace_line("", 0);
+		rl_on_new_line();
 	}
 }
 
@@ -142,4 +164,3 @@ void    sig_heredoc_handler(int signals)
 		close (i);
 	exit (signals);
 }
-
