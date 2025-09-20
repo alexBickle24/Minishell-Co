@@ -1,14 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/20 17:29:58 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/20 18:46:23 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-
 //Funcion para recorrer la lista de lexer e ir añadiedno a la estrcutura de 
 //ejecucio las palabras segun su etiqueta (tipo sintactico).
+//sepodria meter optimizacion para que deje de lexerizas si señal de sigint
+// en heredoc
 void	clean_expand_add_toexecuter(t_msl *msl)
 {
-	t_lex *lexer;
-	t_lex	*tmp;
-	t_tocken *current;
+	t_lex		*lexer;
+	t_lex		*tmp;
+	t_tocken	*current;
 
 	lexer = msl->lexer;
 	if (g_signal != S_INIT || lexer == NULL || check_nwl_error(msl))
@@ -16,14 +28,14 @@ void	clean_expand_add_toexecuter(t_msl *msl)
 	msl->tocken = list_new_tocken(1);
 	current = msl->tocken;
 	msl->total_tockens = 1;
-	while (lexer)//sepodria meter optimizacion para que deje de lexerizas si señal de sigint en heredoc
-	{	
+	while (lexer)
+	{
 		tmp = lexer->next;
 		if (lexer->type == T_PIPE)
 			adding_tocken(msl, &current, lexer);
 		else if (lexer->type == T_CMD)
 			adding_cmds(msl, current, lexer);
-		else if (lexer->type == T_HEREDOC || lexer->type == T_HEREDOC_S || lexer->type == T_HERE_STR)
+		else if (lexer->type >= T_HEREDOC && lexer->type <= T_HERE_STR)
 			adding_here(msl, current, lexer);
 		else
 			adding_files(msl, current, lexer);
@@ -33,43 +45,25 @@ void	clean_expand_add_toexecuter(t_msl *msl)
 	msl->lexer = NULL;
 }
 
-//segundo recorrido, compuebo si despues de la expansion habia espacios
-//y ademas limpio comillas
-void	adding_cmds(t_msl *msl, t_tocken *current, t_lex *lex)//FUNCOINA
+void	adding_cmds(t_msl *msl, t_tocken *current, t_lex *lex)
 {
-	char  *start;
-	char *str;
-	char jump;
+	char	*start;
+	char	*str;
 
 	vars_interpolation(&(lex->str), msl, (&lex->len));
 	str = lex->str;
 	start = str;
-	if (*str == '\0')//para manejo de argumento vacio sin comillas
+	if (*str == '\0')
 	{
 		free(lex->raw);
 		free(lex->str);
 		return ;
 	}
-	while(*str)
-	{
-		jump = check_clean_quotes(msl, str, 1);
-		if (is_space(*str) && msl->parsing_utils->lexstat == NO_QUOTES)
-		{
-			*str = '\0';
-			list_addback_pcmds(&(current->pcmds), list_new_pcmds(ft_strdup(start)));
-			str++;
-			jump_separator(&str);
-			start = str;
-		}
-		else if (jump == 1)
-			str++;
-	}
+	loop_cmd_split(&str, &start, msl, current);
 	list_addback_pcmds(&(current->pcmds), list_new_pcmds(ft_strdup(start)));
 	free(lex->raw);
 	free(lex->str);
 }
-
-
 
 void	adding_tocken(t_msl *msl, t_tocken **current, t_lex *lexer)
 {
@@ -78,43 +72,31 @@ void	adding_tocken(t_msl *msl, t_tocken **current, t_lex *lexer)
 	(*current) = (*current)->next;
 	free(lexer->raw);
 	free(lexer->str);
-}	
+}
 
-void	adding_files(t_msl *msl, t_tocken *current, t_lex *lex)//
+void	adding_files(t_msl *msl, t_tocken *current, t_lex *lex)
 {
-	char ambiguos;
-	char *str;
-	char jump;
+	char	ambiguos;
 
 	vars_interpolation(&(lex->str), msl, (&lex->len));
-	str = lex->str;
-	if (*str == '\0')//para manejo de redicreccion vacia sin comillas
-		ambiguos = 1;
-	else
-		ambiguos = 0;
-	while(*str && ambiguos == 0)
-	{
-		jump = check_clean_quotes(msl, str, 1);
-		if (is_space(*str) && msl->parsing_utils->lexstat == NO_QUOTES)
-			ambiguos = 1;
-		if (jump == 1)
-			str++;
-	}
+	ambiguos = check_ambiguos_file(lex->str, msl);
 	if (ambiguos == 1)
 	{
-		list_addback_infiles(&(current->files), list_new_files(lex->raw, lex->type, ambiguos));
+		list_addback_infiles(&(current->files),
+			list_new_files(lex->raw, lex->type, ambiguos));
 		free(lex->str);
 	}
 	else
 	{
-		list_addback_infiles(&(current->files), list_new_files(lex->str, lex->type, ambiguos));
+		list_addback_infiles(&(current->files),
+			list_new_files(lex->str, lex->type, ambiguos));
 		free(lex->raw);
 	}
 }
 
 void	adding_here(t_msl *msl, t_tocken *current, t_lex *lex)
 {
-	t_files *node;
+	t_files	*node;
 
 	free(lex->str);
 	if (lex->type == T_HEREDOC)

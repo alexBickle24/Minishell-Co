@@ -2,7 +2,6 @@
 
 #include "../../inc/minishell.h"
 
-
 //FUNCoines de erro y codigo de salida para capturar con waitstatus ejecucion
 void	ft_exterror_exes(char *file, char is_directory)//error cmd = 1
 {

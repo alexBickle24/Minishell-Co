@@ -135,7 +135,6 @@ typedef struct s_tocken_subshells
 	char **cmd_tb;	// tabla de comandos para execve
 	int error_file; // flag para manejar el exit desde el proceso hijo
 	int error_cmd;	// Puede ser 0, 1, 2  o 3 manej los mensajes de error
-	// int	local_var;
 	char **env_tb;	 // esto no es lo mas eficiente porque la guardao en cada tocken pero es comodo
 	int pipe_fds[2]; // con las bonus tendria que ser tocken operands
 	pid_t pid;
@@ -158,11 +157,11 @@ typedef struct s_parsing_utils
 
 typedef struct s_lex_tockens
 {
-    int	type;
-    char	*raw;
-	char	*str;
-    size_t	len;
-    struct s_lex_tockens	*next;
+	int						type;
+	char					*raw;
+	char					*str;
+	size_t					len;
+	struct s_lex_tockens	*next;
 } t_lex;
 
 ///////////////////////////////////////////////////////////////// ESTRCUTURAS DE SISTEMA Y CABEZERA ///////////////////////////////////////////
@@ -183,8 +182,8 @@ typedef struct s_system_info
 
 typedef struct s_env
 {
-	char	*id;
-	char	*value;
+	char			*id;
+	char			*value;
 	struct s_env	*next;
 } t_env;
 
@@ -196,19 +195,18 @@ typedef struct s_builts
 typedef struct s_msl
 {
 	t_system	*sys;
-	t_env	*own_env;
+	t_env		*own_env;
 	t_builts	*builts;
 	int			mode;
-	// t_env	*local_vars; habria que añadirlos a init y a free
-	int		exit_status;
-	char	*clean_line;
-	pid_t	msl_pid;
-	pid_t	last_process;
-	int		total_tockens;
+	int			exit_status;
+	char		*clean_line;
+	pid_t		msl_pid;
+	pid_t		last_process;
+	int			total_tockens;
 	t_tocken	*tocken;
 	t_parsing	*parsing_utils;
-	t_lex	*lexer;
-	char	pars_err;
+	t_lex		*lexer;
+	char		pars_err;
 } t_msl;
 
 /*
@@ -288,6 +286,7 @@ void	sig_heredoc_handler(int signal);
 // general utils;
 char	**ft_pcmds_to_table(t_pcmds *pcmds);
 char	**ft_env_to_table(t_env *env);
+char	**create_table(void *list, int type);
 
 // warnings and errors
 void	ft_shlvl_warning(int	str);
@@ -321,13 +320,14 @@ void	ft_error_unexpect(char *simbol);
 int		get_unexpexted_errors1(int type, int infstat);
 int		redir_out(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
 int		redir_in(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
+void	redir_in_extracases(int *i, unsigned char *line, t_parsing *pars);
 int		pipe_op(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
 int		spaces(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
 int		info(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
 int		d_quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
 int		s_quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
 int		quotes(t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
-void	create_new_lex( t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
+void	create_newlex( t_msl *msl, int *i, unsigned char *line, t_parsing *pars);
 void	manage_last_state(t_msl *msl, t_parsing *parser);
 
 // parsing_utils
@@ -347,6 +347,10 @@ void	adding_cmds(t_msl *msl, t_tocken *current, t_lex *lex);
 void	adding_files(t_msl *msl, t_tocken *current, t_lex *lex);
 void	adding_here(t_msl *msl, t_tocken *current, t_lex *lex);
 void	adding_tocken(t_msl *msl, t_tocken **current, t_lex *lexer);
+
+//adding_extra->->_>_->->->
+void	loop_cmd_split(char **str, char **start, t_msl *msl, t_tocken *cur);
+char check_ambiguos_file(char *str, t_msl *msl);
 
 //fix error
 char	new_line_err(t_msl *msl);

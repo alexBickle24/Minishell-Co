@@ -1,10 +1,20 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_utils2.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/20 16:55:50 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/20 17:29:37 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-int have_quotes(char *str)
+int	have_quotes(char *str)
 {
-	int i;
+	int	i;
 
 	i = 0;
 	while (str[i])
@@ -16,18 +26,18 @@ int have_quotes(char *str)
 	return (0);
 }
 
-char *clean_quotes(char *str)
+char	*clean_quotes(char *str)
 {
-	char *tmp;
-	int lensrc;
-	int i;
+	char	*tmp;
+	int		lensrc;
+	int		i;
 
 	tmp = str;
 	if (!tmp)
 		return (NULL);
 	lensrc = (int)ft_strlen(str);
 	i = 0;
-	while(tmp[i])
+	while (tmp[i])
 	{
 		if (tmp[i] == '\'' || tmp[i] == '\"')
 		{
@@ -36,14 +46,14 @@ char *clean_quotes(char *str)
 		}
 		i++;
 	}
-	return(str);
+	return (str);
 }
 
 char	*jump_caracter(char *str, char caracter)
 {
 	while (str && *str && *str == caracter)
 		str++;
-	return(str);
+	return (str);
 }
 
 void	jump_separator(char **str)
@@ -52,7 +62,7 @@ void	jump_separator(char **str)
 		(*str)++;
 }
 
-int is_space(char c)
+int	is_space(char c)
 {
 	if ((c >= '\t' && c <= '\r') || c == ' ')
 		return (1);

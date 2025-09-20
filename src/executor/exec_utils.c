@@ -25,7 +25,7 @@
 	en el path. Si no esta retornamos el error de comand not found. Si no esta no retornamos el error de comando not found
 	u si esta pasamos a //3 que comprobaria la rutas para saber si tiene los permisos, ya sabemos que existe por descarte
 
-	Tener en cuenta: Shell no deja crear archivos con .. ni ./ no / de nombre asiq ue con eso no hay problema. Realemete si
+	Tener en cuenta: Shell no deja crear archivos con  / de nombre asiq ue con eso no hay problema. Realemete si
 	 se pueden usar los . y .. para crear archivos lo que pasa es que los crea en modo oculto, asi que 
 	sabiendo eso se podria cambiar los ft_strncmp pot un ft_strchar(strn "/")
 

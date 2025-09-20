@@ -23,6 +23,8 @@ void exec_cmd(t_tocken *c_tocken)
 	{
 		if (execve(c_tocken->pcmds->cmd, c_tocken->cmd_tb, c_tocken->env_tb) == -1)
 			ft_exterrno();
+		else
+			exit(0);
 	}
 }
 

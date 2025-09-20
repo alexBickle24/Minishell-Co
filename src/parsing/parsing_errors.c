@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parsing_errors.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/20 16:55:34 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/20 17:27:08 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
@@ -9,7 +19,7 @@ char	check_nwl_error(t_msl *msl)
 	if (msl->pars_err == 1)
 	{
 		lexer = msl->lexer;
-		while(lexer)
+		while (lexer)
 		{
 			if (lexer->type == T_HEREDOC || lexer->type == T_HEREDOC_S)
 				create_heredoc_nwlerr(msl, lexer);
@@ -22,9 +32,6 @@ char	check_nwl_error(t_msl *msl)
 	return (0);
 }
 
-//esto es para mostrar el mensaje de newline error en caso de que queramos imitar 
-//el funcionamientos de los errores de nweline de bash en  fase deparse o despues de 
-//crear el heredoc
 char	new_line_err(t_msl *msl)
 {
 	char	error;
@@ -34,13 +41,12 @@ char	new_line_err(t_msl *msl)
 	{
 		error = 1;
 		ft_putstr_fd(NEWLINE_ERR, 2);
-		free_lexer(msl, 1);//
-		free_tockens(msl);// esta es por si creamos los tockens y manejamos el error especial
+		free_lexer(msl, 1);
+		free_tockens(msl);
 	}
 	return (error);
 }
 
-//esto para el caso que tengamos que 
 void	create_heredoc_nwlerr(t_msl *msl, t_lex *lex)
 {
 	free(lex->str);
@@ -48,4 +54,21 @@ void	create_heredoc_nwlerr(t_msl *msl, t_lex *lex)
 		lex->str = create_heredoc(msl, lex->raw, 0);
 	else if (lex->type == T_HEREDOC_S)
 		lex->str = create_heredoc(msl, lex->raw, 1);
+}
+
+void	list_addback_tocken(t_tocken **list, t_tocken *new_node)
+{
+	t_tocken	*current;
+
+	if (!new_node)
+		return ;
+	current = *list;
+	if (!*list)
+		*list = new_node;
+	else
+	{
+		while (current->next)
+			current = current->next;
+		current->next = new_node;
+	}
 }
