@@ -46,6 +46,7 @@ char	*find_home(char *line)
 	if (!user_data)
 		return (free(line), NULL);
 	i = 0;
+	home = NULL;
 	while (user_data[i] != NULL)
 	{
 		if (!ft_strncmp(user_data[i], "/home", ft_strlen("/home")))
