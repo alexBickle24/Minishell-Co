@@ -152,7 +152,95 @@ int main(int argc, char **argv, char **env)
 // }
 
 
+/*
+ * ft_printexport() 
+ * La diferencia con env es que export imprime las variables no declaradas y ordenada
+ * Falta ordenarlo!!!!!!!!!!
+ */
+void	ft_printexport(t_msl *msl)
+{
+	t_env	*tmp;
 
+	printf("Start ft_printexport\n");
+	tmp = msl->own_env;
+	while(tmp)
+	{
+		printf("id: %s -> ", tmp->id);
+		printf("value: %s\n", tmp->value);
+		tmp = tmp->next;
+	}
+}
+
+/*
+ * Chequea si el argumento es valido para export
+*/
+int	ft_checkexport(char *str)
+{
+	char	*id;
+	int	i;
+
+	printf("Start ft_checkexport!\n");
+	// extraemos el nombre antes del '='
+	id = ft_get_env_id(str);
+	i = 0;
+	if (ft_isdigit(id[i]))
+	{
+		free(id);
+		return (0);
+	}
+	while (id[i])
+	{
+		if (!ft_isalnum(id[i]) && id[i] != '_')
+		{
+			free(id);
+			return (0);
+		}
+		i++;
+	}
+	printf("Ok\n");
+	free(id);
+	return (1);
+}
+
+/*
+ * 
+ */
+void	ft_addexport(t_msl *msl, char *str)
+{
+	char	*id;
+	char	*value;
+
+	if (!ft_strrchr(str, '='))
+		return ;
+	id = ft_get_env_id(str);
+	//value = ft_get_env_value(str);      ------> next
+	free(id);
+	free(value);
+}
+
+/*
+ * Exportar variables de entorno, si no hay variables las mostramos
+ */
+void	ft_export(t_msl *msl)
+{
+	t_pcmds	*tmp;
+
+	printf("Strat ft_export\n");
+	printf("counter token: %d\n", ft_tokencounter(msl));
+	if (ft_tokencounter(msl) == 1)
+		ft_printexport(msl);
+	else
+	{
+		tmp = msl->tocken->pcmds;
+		tmp = tmp->next;
+		while(tmp)
+		{
+			ft_checkexport(tmp->cmd);
+			printf("add tocken: %s\n", tmp->cmd);
+			tmp = tmp->next;
+		}
+	}
+}
 
 /*
 	El prompt que puedes usar es el siguiente;
