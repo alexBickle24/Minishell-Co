@@ -28,6 +28,7 @@ void	get_home(t_msl *msl, char **target)
 		if (!ft_strncmp(line, msl->sys->user, ft_strlen(msl->sys->user)))
 		{
 			*target = find_home(line);
+			//hard
 			if (*target == NULL)
 				break ;
 		}
@@ -46,6 +47,7 @@ char	*find_home(char *line)
 	if (!user_data)
 		return (free(line), NULL);
 	i = 0;
+	home = NULL;
 	while (user_data[i] != NULL)
 	{
 		if (!ft_strncmp(user_data[i], "/home", ft_strlen("/home")))

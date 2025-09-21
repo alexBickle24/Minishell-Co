@@ -68,4 +68,9 @@ Con env vamos a poder acceder a nuestro archivo con la variables de entorno. Una
 Es un archivo o IPC creado en plena ejecucion de las ordenes de bash. Se usa como imput de informacion para los comandos que ejecuta bash a traves de execve. Hemos optado por la opcion
 de usar un archivo como heredoc. Lo creamos en la carpeta "/tmp" dentro del àrbol de Linux, ya que esto es lo que hace bash.
 
-TEST USER
+Export "_":
+Si te encuentras como primer caracter argumento del export un _ hay dos opciones:
+ej1: _=hola -> clave: _ / valor: _=hola
+ej2: _algo=adios:
+ - ->clave1: _algo / valor1: adios
+ - ->clave2: _ / valor2 _algo=adios
