@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 22:09:19 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/10 01:35:34 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/22 23:04:11 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,5 +173,28 @@ void	set_lessclose(t_msl *msl)
 			return ;
 		}
 		list_addback_env(l_close, &(msl->own_env));
+	}
+}
+
+void	set_last_arg_init(t_msl *msl)
+{
+	t_env	*last;
+	t_env	*path;
+	
+	path = search_id_node(msl, "PATH");
+	if (!path)
+		return ;
+	last = search_id_node(msl, "_");
+	if (last)
+	{
+		free(last->value);
+		last->value = ft_strdup(path->value);
+	}
+	else
+	{
+		last = list_new_ownenv(ft_strdup("_"), ft_strdup(path->value));
+		if (!last)
+			return ;
+		list_addback_env(last, &(msl->own_env));
 	}
 }

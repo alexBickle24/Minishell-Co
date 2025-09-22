@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 23:56:46 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/07 23:57:25 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/22 22:14:05 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	init_dollar_lim(char *dollar_limits, unsigned char *sep_op)
 			dollar_limits[i] = sep_op[i];
 		if (i >= '1' && i <= '9')
 			dollar_limits[i] = 9;
-		if (ft_isalpha(i))
+		if (ft_isalpha(i) || i == '_')
 			dollar_limits[i] = 10;
 	}
 	dollar_limits['='] = 6;

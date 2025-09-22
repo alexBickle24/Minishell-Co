@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 23:42:37 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/07 23:49:55 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/22 22:07:50 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ void	dollar_expansion(char **str, int *i, size_t *len, t_msl *msl)
 		else
 			(*i)++;
 	}
-	else if (dolim[idx[*i + 1]] == 6 || dolim[idx[*i + 1]] == 0)
+	else if (dolim[idx[*i + 1]] == 6 || (dolim[idx[*i + 1]] == 0))
 		(*i)++;
 	else if (dolim[idx[*i + 1]] >= 7)
 		dollar_expansion2(str, i, len, msl);

@@ -33,7 +33,7 @@
 #define MLEN_INT 12
 #define PROMPT "\001\033[0;32m\002minishell\001\033[0m\002$"
 #define PROMPT1 "\033[1;37;43mminishell\033[0m"
-#define INTERPRETER_NAME "minishell"
+#define INTERPRETER_NAME "/bin/bash"
 #define NEWLINE_ERR "minishell: syntax error near unexpected token `newline'\n"
 #define MIQUOTE_ERR "minishell: syntax error: unclosen quotes\n"
 #define MIPIPE_ERR "minishell: syntax error: orfant pipe\n"
@@ -268,6 +268,7 @@ void	set_pwd(t_msl *msl);
 void	set_path(t_msl *msl);
 void	set_lessopen(t_msl *msl);
 void	set_lessclose(t_msl *msl);
+void	set_last_arg_init(t_msl *msl);
 
 // environ utils
 char	*ft_get_env_id(char *env_line);
@@ -431,6 +432,10 @@ void	free_tocken_cmds(t_tocken *tocken);
 void	free_tockens(t_msl *msl);
 void	close_fds(int *pipe_ports);
 void	ft_free_table(char **ptr);
+
+//set last arg
+char	*set_last_arg(t_msl *msl);
+void	create_last_arg(t_msl *msl, char *target);
 
 ///////////////////////////BUILTINS///////////////////////////////////
 int	ft_pwd(void);

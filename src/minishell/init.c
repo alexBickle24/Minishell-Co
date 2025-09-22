@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 20:23:48 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/20 20:24:56 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/22 23:10:04 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ void	set_env_default_values(t_msl *msl)
 	set_shlvl(msl);
 	set_pwd(msl);
 	set_path(msl);
+	set_last_arg_init(msl);
 	set_lessclose(msl);
 	set_lessopen(msl);
 }

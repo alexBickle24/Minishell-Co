@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:49:44 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/22 16:03:15 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/22 23:11:18 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,15 @@
 		+Forma de hacerlo de frack;
 		
 */
+
 void	executer(t_msl *msl)
 {
+	char	*last_arg;
+	
 	if (msl && g_signal == S_INIT && msl->tocken != NULL)
 	{
 		g_signal = S_EXECUTION;
+		last_arg = set_last_arg(msl);
 		if (msl->total_tockens == 1 && is_builtin(msl->tocken))
 			only_builtin(msl);
 		else 
@@ -43,6 +47,7 @@ void	executer(t_msl *msl)
 	}
 	if (g_signal != S_EXECUTION_S)
 		g_signal = S_INIT;
+	create_last_arg(msl, last_arg);
 	msl->pars_err = 0;
 	free_tockens(msl);
 }
@@ -140,27 +145,47 @@ void	cmd_vs_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
 	}
 }
 
+char	*set_last_arg(t_msl *msl)
+{
+	t_pcmds	*current;
+	char	*target;
 
+	target = NULL;
+	if (msl && msl->total_tockens == 1)
+	{
+		current = msl->tocken->pcmds;
+		while(current)
+		{
+			if (current->next == NULL)
+			{
+				target = ft_strdup(current->cmd);
+				break ;
+			}
+			current = current->next;
+		}
+	}
+	return (target);
+}
 
+void	create_last_arg(t_msl *msl, char *target)
+{
+	t_env	*node;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	if (target != NULL)
+	{
+		node = search_id_node(msl, "_");
+		if (!node)
+		{
+			node = list_new_ownenv(ft_strdup("_"), target);
+			list_addback_env(node, &(msl->own_env));
+		}
+		else
+		{
+			free(node->value);
+			node->value = target;
+		}
+	}
+}
 
 
 
