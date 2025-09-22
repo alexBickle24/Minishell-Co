@@ -247,18 +247,8 @@ int main(int argc, char **argv, char **env)
 	<nombre del building> <argumento> <arguemnto1> .... 
 */
 
-void	ft_echo(t_msl *msl)
-{
-	t_pcmds	*tmp;
 
-	printf("Start echo! . . .\n");
-	tmp = msl->tocken->pcmds;
-	if (ft_tokencounter(msl) == 1)
-	{
-		printf("\n");
-		return ;
-	}
-	printf("tocken -> %d", ft_tokencounter(msl));
+	// printf("tocken -> %d\n", ft_tokencounter(msl));
 	// if (!tmp->cmd)
 	// {
 	// 	printf("Vacio\n");
@@ -268,7 +258,9 @@ void	ft_echo(t_msl *msl)
 	// 	printf("%s\n", tmp->cmd);
 	// 	tmp = tmp->next;
 	// }
-}
+
+
+
 
 void	interpreter_mode_builds(t_msl *msl, unsigned char *clean_line)
 {
@@ -290,7 +282,7 @@ void	interpreter_mode_builds(t_msl *msl, unsigned char *clean_line)
 	//tocken->pcmds; los argumentos es decir lo que vas a parsear. Ej: linea-> echo palabra1 palabra2 palabra3
 
 	//ft_unset(msl);
-	ft_echo(msl);
+	ft_exit(msl);
 
 	free_tockens(msl);//Para liberar los tockens cunado no tengo executer
 }

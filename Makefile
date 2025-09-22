@@ -19,6 +19,8 @@ SRC_FILES=  mains/main_builds.c\
 			builtins/ft_env.c\
 			builtins/ft_cd.c\
 			builtins/ft_unset.c\
+			builtins/ft_echo.c\
+			builtins/ft_exit.c\
 			debugin/print.c\
 			minishell/init.c\
 			minishell/close_minishell.c\
