@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 20:34:47 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/20 20:36:19 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/22 15:22:49 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,14 +119,7 @@ void sig_handler(int signal)
 {
 	(void)signal;
 
-	if (g_signal == S_EXECUTION)
-	{
-		g_signal = S_SIGINT;
-		write(1, "\n", 1);
-		rl_replace_line("", 0);
-		rl_on_new_line();
-	}
-	else if (g_signal == S_INIT || g_signal == S_SIGINT)
+	if (g_signal == S_INIT || g_signal == S_SIGINT)
 	{
 		g_signal = S_SIGINT;
 		write(1, "\n", 1);
@@ -136,7 +129,6 @@ void sig_handler(int signal)
 	}
 	else if (g_signal == S_HEREDOC)
 	{
-		g_signal = S_SIGINT;
 		write(1, "^C", 2);
 		write(1, "\n", 1);
 		rl_replace_line("", 0);

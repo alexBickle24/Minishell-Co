@@ -30,7 +30,6 @@ int main(int argc, char **argv, char **env)
 			evaluate_line(msl, (unsigned char *)argv[2]);
 			interpreter_exit = msl->exit_status;
 			return (free_msl(&msl), interpreter_exit);
-
 		}
 		else
 		{
@@ -64,6 +63,11 @@ void	interactive_mode(t_msl *msl)
 	msl->mode = 0;
 	while (1)
 	{
+		if (g_signal == S_EXECUTION_S)//ajuste para el prompt de la linea 
+		{
+			g_signal = S_INIT;
+			write(1, "\n", 1);
+		}
 		set_ps1(msl, msl->sys);
 		line = readline(msl->sys->ps1);//leo la linea
 		add_history(line);//exit tambien se mete al historial

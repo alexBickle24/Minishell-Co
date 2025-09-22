@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 22:02:13 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/05 22:07:51 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/22 14:37:55 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,13 @@ void	get_home(t_msl *msl, char **target)
 		if (!ft_strncmp(line, msl->sys->user, ft_strlen(msl->sys->user)))
 		{
 			*target = find_home(line);
-			//hard
 			if (*target == NULL)
 				break ;
 		}
 		free (line);
 	}
+	if (*target == NULL)
+		hardcoding_home(msl, target);
 	close (fd);
 }
 
@@ -108,4 +109,11 @@ char	put_global_path(char **target, int fd)
 	}
 	free(line);
 	return (0);
+}
+
+void	hardcoding_home(t_msl	*msl, char	**target)
+{
+	*target = ft_strjoin("/home/", msl->sys->user);
+	if (*target)
+		return ;
 }

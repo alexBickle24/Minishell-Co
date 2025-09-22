@@ -68,6 +68,7 @@ typedef enum e_states
 	S_SIGQUIT, // Señal inicio
 	S_EXECUTION,
 	S_HEREDOC,
+	S_EXECUTION_S
 } t_states;
 
 // esrdos de parseo de tokens
@@ -250,6 +251,7 @@ void	hostname_fallbacks(t_msl *msl, char **target);
 int		get_hostnamedir(char **target);
 void	get_home(t_msl *msl, char **target);
 char	*find_home(char *line);
+void	hardcoding_home(t_msl	*msl, char	**target);
 void	get_global_path(char **target);
 char	put_global_path(char **target, int fd);
 void	set_ps1(t_msl *msl, t_system *sys);

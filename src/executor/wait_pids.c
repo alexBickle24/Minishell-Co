@@ -76,6 +76,8 @@ void wait_childs3(t_msl *msl)
 		if (pid < 0 && errno != EINTR)
 			break ;
 	}
+	if (WIFSIGNALED(status))
+		g_signal = S_EXECUTION_S;
 }
 
 void wait_heredoc(void)

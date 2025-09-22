@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:49:44 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/20 20:10:33 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/22 16:03:15 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,9 +41,8 @@ void	executer(t_msl *msl)
 		else 
 			execute_orders(msl);
 	}
-	if (g_signal == S_SIGINT)
-		msl->exit_status = 130;
-	g_signal = S_INIT;
+	if (g_signal != S_EXECUTION_S)
+		g_signal = S_INIT;
 	msl->pars_err = 0;
 	free_tockens(msl);
 }
