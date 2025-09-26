@@ -1,8 +1,17 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   free_and_close.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/26 21:42:24 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/26 21:44:13 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-//FUNCION PARA CERRAR PIPES
 void	close_fds(int *pipe_ports)
 {
 	if (pipe_ports)
@@ -12,7 +21,6 @@ void	close_fds(int *pipe_ports)
 	}
 }
 
-//FUNCION DE LIBERACION DE TABLAS
 void	ft_free_table(char **ptr)
 {
 	int	i;
@@ -30,18 +38,18 @@ void	ft_free_table(char **ptr)
 	ptr = NULL;
 }
 
-//Libera la lista enlazada de files
 void	free_tocken_files(t_tocken *tocken)
 {
-	t_files *files;
-	t_files *tmp;
+	t_files	*files;
+	t_files	*tmp;
 
 	files = tocken->files;
 	if (!files)
 		return ;
 	while (files)
 	{
-		if ((files->type == T_HEREDOC || files->type == T_HEREDOC_S || files->type == T_HERE_STR) && files->file_name)
+		if ((files->type == T_HEREDOC || files->type == T_HEREDOC_S
+				|| files->type == T_HERE_STR) && files->file_name)
 			unlink(files->file_name);
 		if (files->file_name)
 			free(files->file_name);
@@ -52,32 +60,27 @@ void	free_tocken_files(t_tocken *tocken)
 	tocken->files = NULL;
 }
 
-//libera la lista enlazada de cmds y hace que apunte a NULL
-void free_tocken_cmds(t_tocken *tocken)
+void	free_tocken_cmds(t_tocken *tocken)
 {
-    t_pcmds *pcmds;
-    t_pcmds *tmp;
+	t_pcmds	*pcmds;
+	t_pcmds	*tmp;
 
-    pcmds = tocken->pcmds;
-    while (pcmds)
-    {
-        tmp = pcmds->next;
-        if (pcmds->cmd)
-            free(pcmds->cmd);
-        free(pcmds);
-        pcmds = tmp;
-    }
-    tocken->pcmds = NULL;
+	pcmds = tocken->pcmds;
+	while (pcmds)
+	{
+		tmp = pcmds->next;
+		if (pcmds->cmd)
+			free(pcmds->cmd);
+		free(pcmds);
+		pcmds = tmp;
+	}
+	tocken->pcmds = NULL;
 }
 
-
-
-//Libera la lista enlazada de tockens y ahce que apunte a NULL
-//pone el numero de tockens a cero
-void free_tockens(t_msl *msl)
+void	free_tockens(t_msl *msl)
 {
-	t_tocken *c_tocken;
-	t_tocken *tmp;
+	t_tocken	*c_tocken;
+	t_tocken	*tmp;
 
 	if (!msl)
 		return ;
@@ -95,9 +98,7 @@ void free_tockens(t_msl *msl)
 		tmp = c_tocken;
 		c_tocken = c_tocken->next;
 		free(tmp);
-
 	}
 	msl->tocken = NULL;
 	msl->total_tockens = 0;
 }
-

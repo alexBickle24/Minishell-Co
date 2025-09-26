@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:49:44 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/25 01:42:08 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/26 21:52:15 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@
 			en vez de pipes (|), tengo (;).
 			- En una sola funcion
 			-En tres funciones
-		+Forma de hacerlo de frack;
+		+Forma de hacerlo de frack; Con esta forma se puede hacer 
 		
 */
 

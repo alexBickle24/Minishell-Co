@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_env.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/09/26 19:06:00 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/26 19:18:23 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../inc/minishell.h"
 
 /*
@@ -8,33 +20,18 @@
     Ya que es el ultimo codigo escrito
 */
 
-//Meto el cotejo de argumentos para que veas como seria y la pongo en tipo int
 int	ft_env(t_msl *msl, t_pcmds *pcmds)
 {
 	t_env	*tmp;
-	t_pcmds *current_arg;
-	int		control;
 
-	// Si hay mas de un argumento lo rechazamos
-	control = 0;
-	current_arg = pcmds;
-	while (current_arg)
-	{
-		if (control >= 1)
-		{
-			ft_putendl_fd("minishell: env: Too many Arguments", 2);
-			return (0);//lo pongo a 0 porque es un error de minishell (subject)
-		}
-		control++;
-		current_arg = current_arg->next;
-	}
+	if (ft_argscounter(pcmds) >= 2)
+		return (ft_putendl_fd("minishell: env: Too many Arguments", 2), 0);
 	tmp = msl->own_env;
 	if (tmp == NULL)
 	{
 		ft_putendl_fd("minishell: env: No such file or directory", 2);
 		return (127);
 	}
-	//impresion del env
 	while (tmp)
 	{
 		if (!ft_strncmp(tmp->id, "_\0", 2))

@@ -1,27 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_pwd.c                                           :+:      :+:    :+:   */
+/*   builts_utils.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/09/26 19:06:14 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/26 19:07:05 by alejandro        ###   ########.fr       */
+/*   Created: 2025/09/26 18:47:25 by alejandro         #+#    #+#             */
+/*   Updated: 2025/09/26 19:04:35 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/minishell.h"
 
-void	ft_freeptr(void *ptr)
+int	ft_argscounter(t_pcmds *pcmds)
 {
-	if (!ptr)
-		return ;
-	free(ptr);
-	ptr = NULL;
-}
+	t_pcmds	*tmp;
+	int		i;
 
-int	ft_pwd(t_msl *msl)
-{
-	ft_putendl_fd(msl->sys->pwd, 1);
-	return (0);
+	i = 0;
+	tmp = pcmds;
+	while (tmp)
+	{
+		i++;
+		tmp = tmp->next;
+	}
+	return (i);
 }

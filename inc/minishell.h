@@ -452,10 +452,10 @@ char *ft_cdpath(t_msl *msl);
 int	ft_tokencounter(t_msl *msl);//hay que editarla porque sino simepre cuneta el primero 
 void	ft_edit_env(t_msl *msl, char *id, char *value);
 void	ft_delete_env(t_msl *msl, char *id);
+int		ft_argscounter(t_pcmds *pcmds);
 
 //cd
-int	ft_cd(t_msl *msl, t_pcmds *pcmds);
-int		ft_argscounter(t_pcmds *pcmds);
+int		ft_cd(t_msl *msl, t_pcmds *pcmds);
 int		one_arg_cases(t_msl *msl, t_pcmds *pcmds);
 void	ft_cderrors(int value, char *path, char flag);
 int		search_first_parent(t_msl *msl);
@@ -468,6 +468,10 @@ void	set_pwd_oldpwd(t_msl *msl, char *oldpath);
 int		check_parent(t_msl *msl);
 void	unlink_message(void);
 int		is_broken_pwd(t_msl *msl);
+int		edit_pwd(t_msl *msl, char *path, char message);
+int		go_parent(t_msl *msl, char *path);
+int 	go_root(t_msl *msl, char *pwd);
+int		go_firstparent(t_msl *msl, char *pwd);
 
 
 #endif

@@ -16,9 +16,13 @@ SRC_DIR = src/
 #Cambiando el archivo de la carpeta main testeamos unas cosas u otras /mains/"archivo.c"
 SRC_FILES=  mains/main.c\
 			builtins/ft_pwd.c\
+			builtins/builts_utils.c\
 			builtins/ft_env.c\
 			builtins/ft_cd.c\
 			builtins/ft_cd_alex.c\
+			builtins/ft_cd_alex2.c\
+			builtins/ft_cd_alex3.c\
+			builtins/ft_cd_alex4.c\
 			builtins/ft_unset.c\
 			debugin/print.c\
 			minishell/init.c\
