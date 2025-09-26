@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 23:04:03 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/07 23:04:47 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/23 21:05:40 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,25 @@ void	concatenate_strings2(char **str, int *i, size_t *len, char *replace)
 	free(*str);
 	*str = new;
 	*len = *len + replace_len;
+}
+
+void	home_case(char **str, t_msl *msl)
+{
+	t_env	*env_node;
+	char	*home;
+
+	env_node = search_id_node(msl, "HOME");
+	if (!env_node)
+		home = ft_strdup(msl->sys->home);
+	else
+		home = ft_strdup(env_node->value);
+	if (!str || !*str)
+		return ;
+	if (str[0][0] == '~' && str[0][1] == '\0')
+	{
+		free(*str);
+		*str = home;
+	}
+	else
+		free(home);
 }

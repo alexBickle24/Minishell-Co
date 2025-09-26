@@ -1,6 +1,6 @@
 NAME = minishell
 CC = cc
-FLAGS = -Wall -Wextra -Werror
+FLAGS = -Wall -Wextra -Werror -fsanitize=address
 RM = rm -rf
 LIBS = -lreadline
 MKDIR = mkdir -p # Si ya existe no da problemas
@@ -18,6 +18,7 @@ SRC_FILES=  mains/main.c\
 			builtins/ft_pwd.c\
 			builtins/ft_env.c\
 			builtins/ft_cd.c\
+			builtins/ft_cd_alex.c\
 			builtins/ft_unset.c\
 			debugin/print.c\
 			minishell/init.c\

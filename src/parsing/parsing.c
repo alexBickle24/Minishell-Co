@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 17:29:58 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/20 18:46:23 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/23 20:55:16 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ void	adding_cmds(t_msl *msl, t_tocken *current, t_lex *lex)
 	char	*start;
 	char	*str;
 
+	home_case(&(lex->str), msl);
 	vars_interpolation(&(lex->str), msl, (&lex->len));
 	str = lex->str;
 	start = str;
@@ -78,6 +79,7 @@ void	adding_files(t_msl *msl, t_tocken *current, t_lex *lex)
 {
 	char	ambiguos;
 
+	home_case(&(lex->str), msl);
 	vars_interpolation(&(lex->str), msl, (&lex->len));
 	ambiguos = check_ambiguos_file(lex->str, msl);
 	if (ambiguos == 1)

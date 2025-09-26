@@ -15,12 +15,8 @@ void	ft_freeptr(void *ptr)
 	ptr = NULL;
 }
 
-int	ft_pwd(void)
+int	ft_pwd(t_msl *msl)
 {
-	char *pwd;
-
-	pwd = getcwd(NULL, 0);
-	ft_putendl_fd(pwd, 1);
-	ft_freeptr(pwd);
+	ft_putendl_fd(msl->sys->pwd, 1);
 	return(0);
 }

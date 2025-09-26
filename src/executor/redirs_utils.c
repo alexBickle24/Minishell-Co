@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 20:08:16 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/20 20:08:22 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/26 01:08:52 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,9 +15,11 @@
 ///Funcion para evaluar redirecciones: SE  LLAMA DESDE EL PADRE
 //poner los tres casoso y porque en ninguno de los tres se dejan fds abiertos en le hijo
 //y en el caso tres tendria que ser ina fucnion tipo int o char;
+//Meter el caso de is directory con stat
 void check_create_redirs(t_tocken *c_tocken, t_files *files_list)
 {
 	t_files *current_f;
+	// struct stat st;
 	int fd; 
 
 	current_f = files_list;
@@ -28,6 +30,8 @@ void check_create_redirs(t_tocken *c_tocken, t_files *files_list)
 		if (current_f->type == T_HEREDOC || current_f->type == T_INFILE || current_f->type == T_HEREDOC_S || current_f->type == T_HERE_STR)
 		{
 			c_tocken->redir_in = current_f;
+			// if (stat(current_f->file_name, &st) == -1 && S_ISDIR(st.st_mode))
+			// 	break ;
 			if (access(current_f->file_name, F_OK | R_OK) == -1 || current_f->ambiguos)
 				break ;
 		}

@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:48:27 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/20 20:05:30 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/25 00:16:52 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,9 @@ int father_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
 		// return(ft_echo(c_tocken->cmds, msl->own_env));
 	}
 	else if (builtin == 2)
-	{
-		// return(ft_cd(c_tocken->cmds, msl->own_env));
-	}
+		return(ft_cd(msl, c_tocken->pcmds));
 	else if (builtin == 3)
-	{
-		return(ft_pwd());
-	}
+		return(ft_pwd(msl));
 	else if (builtin == 4)
 	{
 		// return(ft_export(c_tocken->cmds, msl->own_env));

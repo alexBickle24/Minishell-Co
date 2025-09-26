@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:49:44 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/22 23:11:18 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/25 01:42:08 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,7 @@ void	executer(t_msl *msl)
 {
 	char	*last_arg;
 	
+	last_arg = NULL;
 	if (msl && g_signal == S_INIT && msl->tocken != NULL)
 	{
 		g_signal = S_EXECUTION;
@@ -120,11 +121,9 @@ void	cmd_vs_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
 		// exit(ft_echo(c_tocken->cmds, msl->own_env));
 	}
 	else if (builtin == 2)//#
-	{
-		// exit(ft_cd(c_tocken->cmds, msl->own_env));
-	}
+		exit(ft_cd(msl, c_tocken->pcmds));
 	else if (builtin == 3)
-		exit(ft_pwd());
+		exit(ft_pwd(msl));
 	else if (builtin == 4)//#
 	{
 		// exit(ft_export(c_tocken->cmds, msl->own_env));

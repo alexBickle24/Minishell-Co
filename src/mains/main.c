@@ -59,10 +59,16 @@ void evaluate_line(t_msl *msl, unsigned char *clean_line)
 void	interactive_mode(t_msl *msl)
 {
 	char *line;//la linea en bruto
+	static int count;
 
 	msl->mode = 0;
 	while (1)
 	{
+		if (count == 0)
+		{
+			char *tmp = readline("PRESS ENTER TO START MINISHELL MY FRIEND");
+			free(tmp);
+		}
 		if (g_signal == S_EXECUTION_S)//ajuste para el prompt de la linea 
 		{
 			g_signal = S_INIT;
@@ -84,5 +90,6 @@ void	interactive_mode(t_msl *msl)
 		free(line);
 		free(msl->clean_line);
 		msl->clean_line = NULL;
+		count++;
 	}
 }

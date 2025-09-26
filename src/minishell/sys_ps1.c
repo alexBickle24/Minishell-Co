@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 22:08:20 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/05 22:09:01 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/25 20:28:42 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ char	*set_ps1_hostuser(t_system *sys)
 	free(host_user);
 	if (!tmp)
 		return (NULL);
-	final = ft_strjoin(tmp, "\033[0m:");
+	final = ft_strjoin(tmp, C_RESET ":");
 	free(tmp);
 	return (final);
 }
@@ -43,15 +43,12 @@ char	*set_ps1_path(t_msl *msl)
 	char	*color_path;
 	t_env	*pwd_node;
 
-	cwd = getcwd(NULL, 0);
-	if (!cwd)
-		return (NULL);
+	cwd = msl->sys->pwd;
 	pwd_node = search_id_node(msl, "PWD");
 	if (!pwd_node || !ft_strncmp(pwd_node->value, cwd, ft_strlen(cwd) + 1))
 		display_path = get_display_path(msl, cwd);
 	else
 		display_path = ft_strdup(pwd_node->value);
-	free(cwd);
 	if (!display_path)
 		return (NULL);
 	color_path = ft_strjoin(C_BLUE, display_path);
@@ -69,7 +66,7 @@ char	*get_display_path(t_msl *msl, char *cwd)
 	char	control;
 	char	*find;
 	char	*display_path;
-
+	
 	home_node = search_id_node(msl, "HOME");
 	control = 0;
 	if (home_node)

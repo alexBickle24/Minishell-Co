@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 22:09:19 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/22 23:04:11 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/25 21:05:14 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -113,14 +113,16 @@ void	set_pwd(t_msl *msl)
 	char	*pwd;
 
 	pwd = getcwd(NULL, 0);
-	if (!pwd)
-		return ;
+	if (pwd == NULL)
+		pwd = ft_strdup(".");
 	env_node = search_id_node(msl, "PWD");
 	if (env_node)
 	{
 		if (env_node->value)
+		{
 			free(env_node->value);
-		env_node->value = pwd;
+			env_node->value = pwd;
+		}
 	}
 	else
 	{

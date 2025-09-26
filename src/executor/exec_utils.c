@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:46:29 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/20 19:47:49 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/25 23:57:45 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,11 @@ void	evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl)
 
 int	handle_direct_path(t_tocken *c_tocken)
 {
+	struct stat st;
+
 	if (ft_strchr(c_tocken->cmd_tb[0], '/') != 0)
 	{
-		if (!ft_strncmp(c_tocken->cmd_tb[0], "./\0", 3)
-			|| !ft_strncmp(c_tocken->cmd_tb[0], "/\0", 2))
+		if (stat(c_tocken->cmd_tb[0], &st) != -1 && S_ISDIR(st.st_mode))
 			c_tocken->error_cmd = 3;
 		else if (access(c_tocken->cmd_tb[0], F_OK | X_OK) == -1)
 			c_tocken->error_cmd = 1;

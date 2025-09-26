@@ -25,6 +25,7 @@
 #include <sys/types.h>
 // ficheros
 #include <fcntl.h>
+#include <sys/stat.h>
 
 /*
  * DEFINES
@@ -40,17 +41,18 @@
 
 
 //define de colors
-#define C_RESET "\033[0m"
-#define C_RED "\033[1;31m"
-#define C_GREEN "\033[1;32m"
-#define C_YELLOW "\033[1;33m"
-#define C_BLUE "\033[1;34m"
-#define C_MAGENTA "\033[1;35m"
-#define C_CYAN "\033[1;36m"
-#define C_WHITE "\033[1;37m"
+#define C_RESET  "\001\033[0m\002"
+#define C_RED    "\001\033[1;31m\002"
+#define C_GREEN  "\001\033[1;32m\002"
+#define C_YELLOW "\001\033[1;33m\002"
+#define C_BLUE   "\001\033[1;34m\002"
+#define C_MAGENTA "\001\033[1;35m\002"
+#define C_CYAN   "\001\033[1;36m\002"
+#define C_WHITE  "\001\033[1;37m\002"
 
 //define booster
 #define BOOSTER "\xF0\x9F\x9A\x80 "
+// #define BOOSTER "€ "
 
 // Para el manejo de señales
 extern int g_signal;
@@ -175,6 +177,7 @@ typedef struct s_system_info
 	char	*user;
 	char	*host;
 	char	*home;
+	char	*pwd;
 	char	*g_path;
 	char	*ps1_hostuser;
 	char	*ps1_path;
@@ -369,6 +372,7 @@ void	replace_dollar(char **str, int *i, size_t *len, t_msl *msl);
 void	concatenate_strings(char **str, int *i, size_t *len, char *replace);
 void	concatenate_strings2(char **str, int *i, size_t *len, char *replace);
 void	expand_vars(char **str, int *i, size_t *len, t_msl *msl);
+void	home_case(char **str, t_msl *msl);
 
 // heredoc
 char	*create_heredoc(t_msl *msl, char *delimiter, char mode);
@@ -438,15 +442,31 @@ char	*set_last_arg(t_msl *msl);
 void	create_last_arg(t_msl *msl, char *target);
 
 ///////////////////////////BUILTINS///////////////////////////////////
-int	ft_pwd(void);
+int	ft_pwd(t_msl *msl);
 int	ft_env(t_msl *msl, t_pcmds *pcmds);
-void	ft_cd(t_msl *msl);
 void	ft_unset(t_msl *msl);
 // Utils
 void	ft_freeptr(void *ptr);
 char *ft_cdpath(t_msl *msl);
-int	ft_tokencounter(t_msl *msl);
+int	ft_tokencounter(t_msl *msl);//hay que editarla porque sino simepre cuneta el primero 
 void	ft_edit_env(t_msl *msl, char *id, char *value);
 void	ft_delete_env(t_msl *msl, char *id);
+
+//cd
+int	ft_cd(t_msl *msl, t_pcmds *pcmds);
+int		ft_argscounter(t_pcmds *pcmds);
+int		one_arg_cases(t_msl *msl, t_pcmds *pcmds);
+void	ft_cderrors(int value, char *path, char flag);
+int		search_first_parent(t_msl *msl);
+int		go_home(t_msl *msl);
+int		stay_case(char *path, t_msl *msl);
+int		parent_case(char *path, t_msl *msl);
+int		go_oldpwd(t_msl *msl);
+void	set_olpwd(t_msl *msl, char *oldpath);
+void	set_pwd_oldpwd(t_msl *msl, char *oldpath);
+int		check_parent(t_msl *msl);
+void	unlink_message(void);
+int		is_broken_pwd(t_msl *msl);
+
 
 #endif

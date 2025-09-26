@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 20:17:58 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/20 20:18:02 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/24 19:52:09 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ void	free_sys(t_system **sys)
 		free((*sys)->home);
 	if ((*sys)->g_path)
 		free((*sys)->g_path);
+	if ((*sys)->pwd)
+		free((*sys)->pwd);
 	if ((*sys)->ps1_hostuser)
 		free((*sys)->ps1_hostuser);
 	if ((*sys)->ps1_path)

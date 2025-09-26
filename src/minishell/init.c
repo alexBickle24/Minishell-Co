@@ -6,13 +6,15 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 20:23:48 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/22 23:10:04 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/25 21:11:11 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void minishell_init(t_msl **msl, char **env)
+void	init_pwd(t_msl *msl);
+
+void	minishell_init(t_msl **msl, char **env)
 {
 	if (msl != NULL)
 	{
@@ -42,6 +44,7 @@ void	init_system(t_msl *msl)
 		hostname_fallbacks(msl, &(msl->sys->host));
 		get_home(msl, &(msl->sys->home));
 		get_global_path(&(msl->sys->g_path));
+		init_pwd(msl);
 		msl->sys->ps1_hostuser = set_ps1_hostuser(msl->sys);
 	}
 }
@@ -76,5 +79,30 @@ void	set_path(t_msl *msl)
 		if (!path_node)
 			return ;
 		list_addback_env(path_node, &(msl->own_env));
+	}
+}
+
+void	init_pwd(t_msl *msl)
+{
+	t_env	*node;
+	char	*actual_path;
+
+	printf("[DEBUG] Entering init_pwd\n");
+	node = search_id_node(msl, "PWD");
+	if (node)
+	{
+		actual_path = node->value;
+		printf("[DEBUG] Found PWD node: %s\n", actual_path);
+	}
+	else
+	{
+		printf("[DEBUG] PWD node not found\n");
+	}
+	msl->sys->pwd = getcwd(NULL, 0);
+	if (msl->sys->pwd == NULL)
+	{
+		ft_putstr_fd("shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory\n", 2);
+		msl->sys->pwd = ft_strdup(".");
+		printf("[DEBUG] Setting pwd to '.'\n");
 	}
 }
