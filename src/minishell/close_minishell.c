@@ -6,20 +6,16 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 20:17:58 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/24 19:52:09 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/26 23:18:27 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-//Funcion para borrar la estrcutura de control de la minishell
-//en caso de que hagamos 
-//exit o control+D. (Se tiene que manejar el caso de que 
-//cerremos la ventana??)
-void free_own_env(t_msl *msl)
+void	free_own_env(t_msl *msl)
 {
-	t_env *env;
-	t_env *tmp;
+	t_env	*env;
+	t_env	*tmp;
 
 	if (!msl || !msl->own_env)
 		return ;
@@ -37,7 +33,7 @@ void free_own_env(t_msl *msl)
 	msl->own_env = NULL;
 }
 
-void free_msl(t_msl **msl)
+void	free_msl(t_msl **msl)
 {
 	if (!msl || !*msl)
 		return ;

@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 22:02:13 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/22 14:37:55 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/26 23:25:51 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,9 +47,9 @@ char	*find_home(char *line)
 	user_data = ft_split(line, ':');
 	if (!user_data)
 		return (free(line), NULL);
-	i = 0;
+	i = -1;
 	home = NULL;
-	while (user_data[i] != NULL)
+	while (user_data[++i] != NULL)
 	{
 		if (!ft_strncmp(user_data[i], "/home", ft_strlen("/home")))
 		{
@@ -62,7 +62,6 @@ char	*find_home(char *line)
 			}
 			break ;
 		}
-		i++;
 	}
 	ft_free_table(user_data);
 	return (home);

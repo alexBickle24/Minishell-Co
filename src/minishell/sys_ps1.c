@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 22:08:20 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/25 20:28:42 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/26 23:26:21 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	*get_display_path(t_msl *msl, char *cwd)
 	char	control;
 	char	*find;
 	char	*display_path;
-	
+
 	home_node = search_id_node(msl, "HOME");
 	control = 0;
 	if (home_node)

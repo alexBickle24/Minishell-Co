@@ -28,8 +28,10 @@ SRC_FILES=  mains/main.c\
 			minishell/init.c\
 			minishell/close_minishell.c\
 			minishell/environ.c\
+			minishell/environ2.c\
 			minishell/environ_utils.c\
 			minishell/signal.c\
+			minishell/signal_handlers.c\
 			minishell/warnings.c\
 			minishell/sys_home_path.c\
 			minishell/sys_host_user.c\

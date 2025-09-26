@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 20:23:48 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/26 17:36:34 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/26 23:21:48 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,9 +86,3 @@ void	init_pwd(t_msl *msl)
 		msl->sys->pwd = ft_strdup(".");
 	}
 }
-
-// void	init_builts(t_msl *msl)
-// {
-// 	if (msl->builts == NULL)
-// 		msl->builts = (t_builts*)ft_calloc(sizeof(t_builts), 1);
-// }
