@@ -394,6 +394,7 @@ void	executer(t_msl *msl);
 void	only_builtin(t_msl *msl);
 void	execute_orders(t_msl *msl);
 void	execute_childs(t_tocken *c_tocken, t_msl *msl);
+void	child_process(int s_builtin, t_tocken *c_tocken, t_msl *msl);
 void	cmd_vs_builtin(t_msl *msl, t_tocken *c_tocken, int building);
 
 // exec_utils
@@ -409,6 +410,7 @@ void	create_pipes(t_tocken *c_tocken);
 
 // redirs utils
 void	check_create_redirs(t_tocken *c_tocken, t_files *files_list);
+int		check_out_redirs(t_tocken *c_tocken, t_files *cur_f);
 int		tunel_in_file(char *file);
 int		tunel_out_file(char *file, char append); // hay que cambiarla para el modo appends
 int		pipe_forward(int *pipe_reference, int pipe_port, int fd);

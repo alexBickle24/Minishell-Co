@@ -6,21 +6,18 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:48:27 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/25 00:16:52 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/26 22:56:11 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-/*
-	**BRIEF: Para los builtins hay que selecionas que builtin es el nuestro
-	y ejecutarlo. Esta fucnion vale para la funcion exec order y para la funcion
-	exec builtin
-*/
-void exec_cmd(t_tocken *c_tocken)
+void	exec_cmd(t_tocken *c_tocken)
 {
-	int error;
-	
+	int		error;
+	t_pcmds	*pcmds;
+
+	pcmds = c_tocken->pcmds;
 	error = c_tocken->error_cmd;
 	if (error == 1)
 		ft_exterror_exes(c_tocken->cmd_tb[0], 0);
@@ -30,49 +27,44 @@ void exec_cmd(t_tocken *c_tocken)
 		ft_exterror_exes(c_tocken->cmd_tb[0], 1);
 	else if (error == 0)
 	{
-		if (execve(c_tocken->pcmds->cmd, c_tocken->cmd_tb, c_tocken->env_tb) == -1)
+		if (execve(pcmds->cmd, c_tocken->cmd_tb, c_tocken->env_tb) == -1)
 			ft_exterrno();
 		else
 			exit(0);
 	}
 }
 
-int is_builtin(t_tocken *tocken)
+int	is_builtin(t_tocken *tocken)
 {
 	if (!tocken->pcmds)
 		return (0);
 	if (!ft_strncmp(tocken->pcmds->cmd, "echo\0", 5))
-		return(1);
+		return (1);
 	if (!ft_strncmp(tocken->pcmds->cmd, "cd\0", 3))
-		return(2);
+		return (2);
 	if (!ft_strncmp(tocken->pcmds->cmd, "pwd\0", 4))
-		return(3);
+		return (3);
 	if (!ft_strncmp(tocken->pcmds->cmd, "export\0", 7))
-		return(4);
+		return (4);
 	if (!ft_strncmp(tocken->pcmds->cmd, "unset\0", 6))
-		return(5);
+		return (5);
 	if (!ft_strncmp(tocken->pcmds->cmd, "env\0", 4))
-		return(6);
+		return (6);
 	if (!ft_strncmp(tocken->pcmds->cmd, "exit\0", 5))
-		return(7);
-	return(0);
+		return (7);
+	return (0);
 }
 
-//esta funcion es para la ejecucion de los buildings en el proceso padre
-//retorna un valor int. Ese valor se le va a dar directamente al minishell exit status
-//ya que aqui no lo recoge waitpid,, no hacemos exit porque estamos en elproceso padre.
-int father_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
+int	father_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
 {
-	(void )msl;
-	(void )c_tocken;
 	if (builtin == 1)
 	{
 		// return(ft_echo(c_tocken->cmds, msl->own_env));
 	}
 	else if (builtin == 2)
-		return(ft_cd(msl, c_tocken->pcmds));
+		return (ft_cd(msl, c_tocken->pcmds));
 	else if (builtin == 3)
-		return(ft_pwd(msl));
+		return (ft_pwd(msl));
 	else if (builtin == 4)
 	{
 		// return(ft_export(c_tocken->cmds, msl->own_env));
@@ -82,16 +74,46 @@ int father_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
 		// return(ft_unset(c_tocken->cmds, msl->own_env));
 	}
 	else if (builtin == 6)
-		return(ft_env(msl, c_tocken->pcmds));
+		return (ft_env(msl, c_tocken->pcmds));
 	else if (builtin == 7)
 	{
 		// return(ft_exit(c_tocken->cmds, msl));
 	}
-	return(0);
+	return (0);
 }
 
-void create_pipes(t_tocken *c_tocken)
+void	create_pipes(t_tocken *c_tocken)
 {
 	if (pipe(c_tocken->pipe_fds) == -1)
 		ft_errerrno();
+}
+
+void	cmd_vs_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
+{
+	if (builtin == 1)
+	{
+		// exit(ft_echo(c_tocken->cmds, msl->own_env));
+	}
+	else if (builtin == 2)//#
+		exit(ft_cd(msl, c_tocken->pcmds));
+	else if (builtin == 3)
+		exit(ft_pwd(msl));
+	else if (builtin == 4)//#
+	{
+		// exit(ft_export(c_tocken->cmds, msl->own_env));
+	}
+	else if (builtin == 5)//
+	{
+		// exit(ft_unset(c_tocken->cmds, msl->own_env));
+	}
+	else if (builtin == 6)
+		exit(ft_env(msl, c_tocken->pcmds));
+	else if (builtin == 7)//#
+	{
+		// exit(ft_exit(c_tocken->cmds, msl));
+	}
+	else
+	{
+		exec_cmd(c_tocken);
+	}
 }

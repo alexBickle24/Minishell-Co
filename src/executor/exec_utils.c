@@ -6,48 +6,12 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:46:29 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/25 23:57:45 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/26 22:36:37 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-/*
-	Funcion para buscar y ejecutar el comando
-	**Revisar: Casos de ./ -- .sh y scripts -- directorios (hechi)
-	**Revisar: Mensajes de error. (hecho)
-	**Aprender: Bases de los scripts y .sh (como crearlos e iniciarse->>AUTOMATIZACION DE TAREAS)
-	*Como porlas señales no puedo cancelar con kill no tengo reseravar memeria desde 
-	*los hujos por lo que se hace un evaluate_cmd y configuo el mensaje de error, hay tambie se
-	*pasa la lista enlazada a tabla.
-
-	**CONCLUSION: Al fianla por el tema de al memoria dentro de lso proceos y la imposibilidad
-	*de crear un job table y acceder a ella desde el manejador de señales centralizado
-	*para matarlos con la señales de Ctrl+C y Ctrl+\ nohay que reservar memeria dentro de los
-	*procesos hijos. Entonces solo queda generar una variable de error_cmd y checkearla desde el
-	*proceso hijo. Como errno estara configurado usamos las funciones de error para hacer el 
-	*tipo de error en caso de que lo haya y generar el exit_code o ejecutar el comando.
-
-	//1: Esto es el caso de que nos den un ruta de un binario o de un script con permisos de ejecucion del sistema
-	(cuidado con el shebang)->errores de permision denied o no suchfile or directory
-	//2: Esto es caso de que nos den un comando (binario) o script sin su ruta. Cunado nos lo dan asi busacsmos is esta
-	en el path. Si no esta retornamos el error de comand not found. Si no esta no retornamos el error de comando not found
-	u si esta pasamos a //3 que comprobaria la rutas para saber si tiene los permisos, ya sabemos que existe por descarte
-
-	Tener en cuenta: Shell no deja crear archivos con  / de nombre asiq ue con eso no hay problema. Realemete si
-	 se pueden usar los . y .. para crear archivos lo que pasa es que los crea en modo oculto, asi que 
-	sabiendo eso se podria cambiar los ft_strncmp pot un ft_strchar(strn "/")
-
-	Tema de los scripts: Los scripts se pueden ejecutar de dos maneras.
-		- Si el archivo tiene permisos de ejecucion y elegimos y en la linea de shebang que nos dice
-		el interprete a usar por el sistema para ejecutarlos
-		- Mediante su interprete que es un programa (binario) que esta en la carpeta bin
-*/
-
-//caso 1: Es una ruta no hay que buscarla en el path
-//caso 2: Es el nomnre de un archivo se busca en el path
-//caso 3: El archico de biinarion compilado o el script esta en una
-//de las tutas del path se comprueban los permisos de ejecucion
 void	evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl)
 {
 	char	*path;
@@ -74,7 +38,7 @@ void	evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl)
 
 int	handle_direct_path(t_tocken *c_tocken)
 {
-	struct stat st;
+	struct stat	st;
 
 	if (ft_strchr(c_tocken->cmd_tb[0], '/') != 0)
 	{

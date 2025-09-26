@@ -36,10 +36,12 @@ SRC_FILES=  mains/main.c\
 			minishell/sys_ps1.c\
 			minishell/sys_utils.c\
 			executor/executor.c\
+			executor/executor_utils.c\
 			executor/exec_utils.c\
 			executor/exec_utils2.c\
 			executor/error_exit.c\
 			executor/redirs_utils.c\
+			executor/redirs_utils2.c\
 			executor/free_and_close.c\
 			executor/wait_pids.c\
 			parsing/init_parsing.c\
