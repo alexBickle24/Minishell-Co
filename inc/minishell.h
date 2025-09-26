@@ -254,6 +254,7 @@ void	hostname_fallbacks(t_msl *msl, char **target);
 int		get_hostnamedir(char **target);
 void	get_home(t_msl *msl, char **target);
 char	*find_home(char *line);
+void	init_pwd(t_msl *msl);
 void	hardcoding_home(t_msl	*msl, char	**target);
 void	get_global_path(char **target);
 char	put_global_path(char **target, int fd);
