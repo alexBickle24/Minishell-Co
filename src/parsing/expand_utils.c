@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 23:04:03 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/27 14:14:13 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/27 15:26:33 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,13 +54,13 @@ void	home_case(char **str, t_msl *msl)
 	char	*home;
 	char	*tmp;
 
+	if (!str || !*str)
+		return ;
 	env_node = search_id_node(msl, "HOME");
 	if (!env_node)
 		home = ft_strdup(msl->sys->home);
 	else
 		home = ft_strdup(env_node->value);
-	if (!str || !*str)
-		return ;
 	if (str[0][0] == '~' && str[0][1] == '\0')
 	{
 		free(*str);
