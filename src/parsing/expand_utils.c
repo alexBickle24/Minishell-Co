@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 23:04:03 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/26 17:38:12 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/27 14:14:13 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void	home_case(char **str, t_msl *msl)
 		free(*str);
 		*str = home;
 	}
-	else if (str[0][1] == '/')
+	else if (str[0][0] == '~' && str[0][1] == '/')
 	{
 		tmp = ft_strjoin(home, &(str[0][1]));
 		free(*str);
