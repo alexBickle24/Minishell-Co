@@ -6,13 +6,13 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 20:23:48 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/26 23:21:48 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/27 15:47:51 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-void	minishell_init(t_msl **msl, char **env)
+void	minishell_init(t_msl **msl, char **env, char mode)
 {
 	if (msl != NULL)
 	{
@@ -20,6 +20,7 @@ void	minishell_init(t_msl **msl, char **env)
 		if (*msl == NULL)
 			return ;
 		ft_env_table_to_list(*msl, env);
+		(*msl)->mode = mode;
 		init_system(*msl);
 		set_env_default_values(*msl);
 		if ((*msl)->builts == NULL)

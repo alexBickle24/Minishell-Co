@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 22:09:19 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/26 23:20:35 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/09/27 15:48:07 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,8 @@ void	check_home_message(t_msl *msl)
 {
 	t_env	*node;
 
+	if (msl->mode == 1)
+		return ;
 	node = search_id_node(msl, "HOME");
 	if (node == NULL)
 	{

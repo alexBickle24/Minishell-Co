@@ -231,11 +231,10 @@ void	print_msl(t_msl *msl); //
 void	print_parser_state(t_parsing *parser, unsigned char c, int i);
 
 // minishell init
-void	minishell_init(t_msl **msl, char **env);
+void	minishell_init(t_msl **msl, char **env, char mode);
 void	init_system(t_msl *msl);
 void	set_env_default_values(t_msl *msl);
-void	init_builts(t_msl *msl);
-void	interactive_mode(t_msl *msl);
+void	interactive_mode(t_msl **msl, char **env);
 void	evaluate_line(t_msl *msl, unsigned char *clean_line);
 
 // minishell close

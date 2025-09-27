@@ -10,7 +10,7 @@
 int g_signal = S_INIT;
 
 void	evaluate_line(t_msl *msl, unsigned char *clean_line);
-void	interactive_mode(t_msl *msl);
+void	interactive_mode(t_msl **msl, char **env);
 
 int main(int argc, char **argv, char **env)
 {
@@ -19,14 +19,13 @@ int main(int argc, char **argv, char **env)
 
     if (argc > 3)
 		return (ft_errormini(), 1);
-	minishell_init(&msl, env);
 	if (argc == 1)
-		interactive_mode(msl);
+		interactive_mode(&msl, env);
 	else if (argc == 3)
 	{
 		if (!ft_strncmp(argv[1], "-c\0", 3))
 		{
-			msl->mode = 1;
+			minishell_init(&msl, env, 1);
 			evaluate_line(msl, (unsigned char *)argv[2]);
 			interpreter_exit = msl->exit_status;
 			return (free_msl(&msl), interpreter_exit);
@@ -56,40 +55,35 @@ void evaluate_line(t_msl *msl, unsigned char *clean_line)
 	// free_tockens(msl);//Para liberar los tockens cunado no tengo executer
 }
 
-void	interactive_mode(t_msl *msl)
+void	interactive_mode(t_msl **msl, char **env)
 {
 	char *line;//la linea en bruto
-	static int count;
 
-	msl->mode = 0;
+	char *tmp = readline("PRESS ENTER TO START MINISHELL ...");
+	free(tmp);
+	minishell_init(msl, env, 0);
 	while (1)
 	{
-		if (count == 0)
-		{
-			char *tmp = readline("PRESS ENTER TO START MINISHELL MY FRIEND");
-			free(tmp);
-		}
 		if (g_signal == S_EXECUTION_S)//ajuste para el prompt de la linea 
 		{
 			g_signal = S_INIT;
 			write(1, "\n", 1);
 		}
-		set_ps1(msl, msl->sys);
-		line = readline(msl->sys->ps1);//leo la linea
+		set_ps1((*msl), (*msl)->sys);
+		line = readline((*msl)->sys->ps1);//leo la linea
 		add_history(line);//exit tambien se mete al historial
-		msl->clean_line = ft_strtrim(line, " \t\n\v\f\r");//por el mod literal de bash con control+V
-		if (!msl->clean_line)
+		(*msl)->clean_line = ft_strtrim(line, " \t\n\v\f\r");//por el mod literal de bash con control+V
+		if (!(*msl)->clean_line)
 		{
 			ft_putstr_fd("exit\n", 2);
-			free(msl->clean_line);
-			msl->clean_line = NULL;
+			free((*msl)->clean_line);
+			(*msl)->clean_line = NULL;
 			free(line);
 			break ;
 		}
-		evaluate_line(msl, (unsigned char *) msl->clean_line);
+		evaluate_line((*msl), (unsigned char *) (*msl)->clean_line);
 		free(line);
-		free(msl->clean_line);
-		msl->clean_line = NULL;
-		count++;
+		free((*msl)->clean_line);
+		(*msl)->clean_line = NULL;
 	}
 }
