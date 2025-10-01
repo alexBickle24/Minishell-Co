@@ -357,22 +357,67 @@ int	ft_check_export(char *cmd)
 	ft_freeptr(id);
 	return (1);
 }
+void	*ft_get_one_env_value(char *env, char *id)
+{
+	int		i;
+	int		j;
+// 	int		k;
+	char	*value;
+
+	if (!env || !id)
+		return (NULL);
+	i = -1;
+	while (env[++i])
+	{
+		printf("check -> %c\n",env[i]);
+		if (env[i] == '=')
+			break;
+	}
+	value = malloc(sizeof(char) * (ft_strlen(env) - i + 1));
+	if (!value)
+		return (NULL);
+	j = 0;
+	while (env[++i])
+	{
+		value[j++] = env[i];
+	}
+	printf("%d\n", i);
+	printf("%ld\n", ft_strlen(env));
+// 	while (env[++i])
+// 	{
+// 		if (ft_strncmp(env[i], id, ft_strlen_c(id)) == 0
+// 			&& env[i][ft_strlen_c(id)] == '=')
+// 		{
+// 			j = ft_strlen_c(id) + 1;
+// 			value = malloc(sizeof(char) * (ft_strlen(env[i]) - j + 1));
+// 			if (!value)
+// 				return (NULL);
+// 			k = 0;
+// 			while (env[i][j])
+// 				value[k++] = env[i][j++];
+// 			value[k] = '\0';
+// 			return (value);
+// 		}
+// 	}
+	return (NULL);
+}
 
 void	ft_add_env(t_msl *msl, char *cmd)
 {
-	t_env	*tmp_env;
+	//t_env	*tmp_env;
 	char	*id;
-	char	*value;
+	// char	*value;
 
-	tmp_env = msl->own_env;
+	//tmp_env = msl->own_env;
+	printf("%d\n", ft_tokencounter(msl));
 	id = ft_get_env_id(cmd);
-	value = ft_get_env_value(tmp_env, id); //duda
-	printf("id: %s - value: %s\n", id, value);
+	ft_get_one_env_value(cmd, id); //duda
+	// printf("id: %s - value: %s\n", id, value);
 	// check value
 	// env = lst_new
 	// add back
 	ft_freeptr(id);
-	ft_freeptr(value);
+	// ft_freeptr(value);
 }
 
 /*
