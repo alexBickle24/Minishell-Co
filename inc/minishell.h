@@ -230,12 +230,18 @@ void	print_lex(t_lex *lexer, t_parsing *parser);
 void	print_msl(t_msl *msl); //
 void	print_parser_state(t_parsing *parser, unsigned char c, int i);
 
+//main
+void	evaluate_line(t_msl *msl, unsigned char *clean_line);
+void	interactive_mode(t_msl **msl, char **env);
+
 // minishell init
 void	minishell_init(t_msl **msl, char **env, char mode);
 void	init_system(t_msl *msl);
 void	set_env_default_values(t_msl *msl);
 void	interactive_mode(t_msl **msl, char **env);
 void	evaluate_line(t_msl *msl, unsigned char *clean_line);
+void	free_line(char *line, t_msl *msl);
+void	reset_readlineoff(void);
 
 // minishell close
 void	free_own_env(t_msl *msl);
@@ -444,15 +450,12 @@ char	*set_last_arg(t_msl *msl);
 void	create_last_arg(t_msl *msl, char *target);
 
 ///////////////////////////BUILTINS///////////////////////////////////
-int	ft_pwd(t_msl *msl);
-int	ft_env(t_msl *msl, t_pcmds *pcmds);
-void	ft_unset(t_msl *msl);
+
 // Utils
 void	ft_freeptr(void *ptr);
 char *ft_cdpath(t_msl *msl);
 int	ft_tokencounter(t_msl *msl);//hay que editarla porque sino simepre cuneta el primero 
 void	ft_edit_env(t_msl *msl, char *id, char *value);
-void	ft_delete_env(t_msl *msl, char *id);
 int		ft_argscounter(t_pcmds *pcmds);
 
 //cd
@@ -474,5 +477,22 @@ int		go_parent(t_msl *msl, char *path);
 int 	go_root(t_msl *msl, char *pwd);
 int		go_firstparent(t_msl *msl, char *pwd);
 
+//echo 
+int		ft_echo(t_tocken *tocken);
+void	print_args(t_pcmds *args);
+
+//exit
+void	ft_exit(t_msl *msl, t_tocken *tocken, char father);
+
+//unset
+int		ft_unset(t_msl *msl, t_tocken *tocken);
+void	remove_envnode(t_env *node, t_env **begin, t_env *prev_node);
+void	free_envnode(t_env *node);
+
+//pwd
+int	ft_pwd(t_msl *msl);
+
+//env
+int	ft_env(t_msl *msl, t_pcmds *pcmds);
 
 #endif

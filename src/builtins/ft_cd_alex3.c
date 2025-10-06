@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:30:08 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/26 19:03:50 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/06 16:06:08 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	check_parent(t_msl *msl)
 	if (bar == NULL)
 		return (3);
 	if (bar == msl->sys->pwd && bar[1] == 0)
-		return (2);
+		return (0);
 	else
 	{
 		if (bar != msl->sys->pwd)

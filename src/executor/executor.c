@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:49:44 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/26 22:51:40 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/02 20:32:01 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,8 +36,12 @@ void	executer(t_msl *msl)
 void	only_builtin(t_msl *msl)
 {
 	t_tocken	*c_tocken;
+	int			saved_stdin;
+	int			saved_stdout;
 
 	c_tocken = msl->tocken;
+	saved_stdin = dup(STDIN_FILENO);
+	saved_stdout = dup(STDOUT_FILENO);
 	check_create_redirs(c_tocken, c_tocken->files);
 	fordward_in(c_tocken);
 	fordward_out(c_tocken);
@@ -45,6 +49,10 @@ void	only_builtin(t_msl *msl)
 		msl->exit_status = father_builtin(msl, c_tocken, is_builtin(c_tocken));
 	else
 		msl->exit_status = 1;
+	dup2(saved_stdin, STDIN_FILENO);
+	dup2(saved_stdout, STDOUT_FILENO);
+	close(saved_stdin);
+	close(saved_stdout);
 }
 
 void	execute_orders(t_msl *msl)

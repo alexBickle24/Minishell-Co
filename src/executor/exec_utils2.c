@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:48:27 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/26 22:56:11 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/05 00:04:52 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,9 +58,7 @@ int	is_builtin(t_tocken *tocken)
 int	father_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
 {
 	if (builtin == 1)
-	{
-		// return(ft_echo(c_tocken->cmds, msl->own_env));
-	}
+		return (ft_echo(c_tocken));
 	else if (builtin == 2)
 		return (ft_cd(msl, c_tocken->pcmds));
 	else if (builtin == 3)
@@ -70,15 +68,11 @@ int	father_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
 		// return(ft_export(c_tocken->cmds, msl->own_env));
 	}
 	else if (builtin == 5)
-	{
-		// return(ft_unset(c_tocken->cmds, msl->own_env));
-	}
+		return (ft_unset(msl, c_tocken));
 	else if (builtin == 6)
 		return (ft_env(msl, c_tocken->pcmds));
 	else if (builtin == 7)
-	{
-		// return(ft_exit(c_tocken->cmds, msl));
-	}
+		ft_exit(msl, c_tocken, 1);
 	return (0);
 }
 
@@ -91,29 +85,21 @@ void	create_pipes(t_tocken *c_tocken)
 void	cmd_vs_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
 {
 	if (builtin == 1)
-	{
-		// exit(ft_echo(c_tocken->cmds, msl->own_env));
-	}
-	else if (builtin == 2)//#
-		exit(ft_cd(msl, c_tocken->pcmds));
+		exit (ft_echo(c_tocken));
+	else if (builtin == 2)
+		exit (ft_cd(msl, c_tocken->pcmds));
 	else if (builtin == 3)
-		exit(ft_pwd(msl));
-	else if (builtin == 4)//#
+		exit (ft_pwd(msl));
+	else if (builtin == 4)
 	{
 		// exit(ft_export(c_tocken->cmds, msl->own_env));
 	}
-	else if (builtin == 5)//
-	{
-		// exit(ft_unset(c_tocken->cmds, msl->own_env));
-	}
+	else if (builtin == 5)
+		exit (ft_unset(msl, c_tocken));
 	else if (builtin == 6)
-		exit(ft_env(msl, c_tocken->pcmds));
-	else if (builtin == 7)//#
-	{
-		// exit(ft_exit(c_tocken->cmds, msl));
-	}
+		exit (ft_env(msl, c_tocken->pcmds));
+	else if (builtin == 7)
+		ft_exit (msl, c_tocken, 0);
 	else
-	{
 		exec_cmd(c_tocken);
-	}
 }

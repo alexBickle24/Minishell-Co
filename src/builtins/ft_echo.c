@@ -1,55 +1,45 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_echo.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/04 20:22:09 by alejandro         #+#    #+#             */
+/*   Updated: 2025/10/04 23:21:25 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int	ft_strcmp(const char *s1, const char *s2)
+void	print_args(t_pcmds *args)
 {
-	size_t	i;
-
-	if (!s1 || !s2)
-		return (0);
-	i = 0;
-	while ((s1[i] != '\0' || s2[i] != '\0'))
+	while (args)
 	{
-		if (s1[i] != s2[i])
-			return ((const unsigned char) s1[i] - (const unsigned char) s2[i]);
-		i++;
+		ft_putstr_fd(args->cmd, 1);
+		if (args->next)
+			ft_putchar_fd(' ', 1);
+		args = args->next;
 	}
-	return (0);
 }
 
-void	ft_echo(t_msl *msl)
+int	ft_echo(t_tocken *tocken)
 {
 	t_pcmds	*tmp;
 
-	printf("Start echo! . . .\n");
-	tmp = msl->tocken->pcmds;
-	if (ft_tokencounter(msl) == 1)
+	tmp = tocken->pcmds;
+	if (ft_argscounter(tmp) == 1)
 	{
-		printf("\n");
-		return ;
+		ft_putstr_fd("\n", 1);
+		return (0);
 	}
 	tmp = tmp->next;
-	if (!ft_strcmp(tmp->cmd, "-n"))
-	{
-		printf("Caso -n\n");
-		tmp = tmp->next;
-		while (tmp)
-		{
-			ft_putstr_fd(tmp->cmd, 2);
-			if (tmp->next)
-				ft_putchar_fd(',', 1);
-			tmp = tmp ->next;
-		}
-	}
+	if (!ft_strncmp(tmp->cmd, "-n\0", 3))
+		print_args(tmp);
 	else
 	{
-		printf("Caso simple\n");
-		while (tmp)
-		{
-			ft_putstr_fd(tmp->cmd, 2);
-			if (tmp->next)
-				ft_putchar_fd(',', 1);
-			tmp = tmp ->next;
-		}
+		print_args(tmp);
 		ft_putchar_fd('\n', 1);
 	}
+	return (0);
 }

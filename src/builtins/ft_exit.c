@@ -1,43 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_exit.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/04 20:30:44 by alejandro         #+#    #+#             */
+/*   Updated: 2025/10/06 15:06:40 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell.h"
 
-int	ft_check_argc_exit(t_msl *msl)
+void	ft_exit(t_msl *msl, t_tocken *tocken, char father)
 {
-	int	i;
-	char	*flag;
+	t_pcmds	*pcmds;
 
-	printf("Start check exit! . . .\n");
-	if (ft_tokencounter(msl) > 3)
+	pcmds = tocken->pcmds;
+	if (ft_argscounter(pcmds) > 1)
 	{
-		printf("ft_tokencounter > 3\n");
-		return 1;
+		ft_putstr_fd("minishell: exit: Too much arguments\n", 2);
+		exit (1);
 	}
-	if (ft_tokencounter(msl) == 2)
+	if (father)
 	{
-		i = 0;
-		flag = ft_strdup(msl->tocken->pcmds->next->cmd);
-		while (flag[i])
-		{
-			if (!ft_isdigit(flag[i]))
-			{
-				printf("exit: %s: numeric argument required\n", flag); // corregir
-				free(flag);
-				return 1;
-			}
-			i++;
-		}
-		free(flag);
+		ft_putstr_fd("exit\n", 2);
+		free_msl(&msl);
 	}
-	return (0);
-}
-
-void	ft_exit(t_msl *msl)
-{
-	printf("Start exit! . . .\n");
-	ft_putendl_fd("exit!!", 2);
-	if (!ft_check_argc_exit(msl))
-		return ;
-		// ft_exit(msl);
-		// free_tockens(msl);
-	else
-		ft_putendl_fd("exit: too many arguments", 2);
+	exit (msl->exit_status);
 }

@@ -1,23 +1,25 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/10/04 23:43:51 by alejandro         #+#    #+#             */
+/*   Updated: 2025/10/05 14:46:18 by alejandro        ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "../inc/minishell.h"
-/*
- * env: Es lo mismo que extern char **environ
-  *         env[i] = "PATH=/usr/bin" (ejemplo)
-  *         env[N] == NULL
- */
 
-int g_signal = S_INIT;
+int	g_signal = S_INIT;
 
-void	evaluate_line(t_msl *msl, unsigned char *clean_line);
-void	interactive_mode(t_msl **msl, char **env);
-
-int main(int argc, char **argv, char **env)
+int	main(int argc, char **argv, char **env)
 {
-	t_msl *msl;
+	t_msl	*msl;
 	int		interpreter_exit;
 
-    if (argc > 3)
+	if (argc > 3)
 		return (ft_errormini(), 1);
 	if (argc == 1)
 		interactive_mode(&msl, env);
@@ -39,7 +41,7 @@ int main(int argc, char **argv, char **env)
 	return (free_msl(&msl), 0);
 }
 
-void evaluate_line(t_msl *msl, unsigned char *clean_line)
+void	evaluate_line(t_msl *msl, unsigned char *clean_line)
 {
 	if (g_signal == S_SIGINT)
 	{
@@ -47,43 +49,49 @@ void evaluate_line(t_msl *msl, unsigned char *clean_line)
 		g_signal = S_INIT;
 	}
 	lexer_parser(msl, clean_line);
-	// print_lex(msl->lexer, parser);//para ver el lexer
-	// free_lexer(msl, 1);//liberar el lexer
-	clean_expand_add_toexecuter(msl);//siq uitas este tienes que meter un free_lexer(msl, 1)
-	// print_tockens(msl);//para ver los tockens
-	executer(msl);//si quitas este tienes que meter el free_tockens(msl)
-	// free_tockens(msl);//Para liberar los tockens cunado no tengo executer
+	clean_expand_add_toexecuter(msl);
+	executer(msl);
 }
 
 void	interactive_mode(t_msl **msl, char **env)
 {
-	char *line;//la linea en bruto
+	char	*line;
 
-	char *tmp = readline("PRESS ENTER TO START MINISHELL ...");
-	free(tmp);
+	reset_readlineoff();
 	minishell_init(msl, env, 0);
 	while (1)
 	{
-		if (g_signal == S_EXECUTION_S)//ajuste para el prompt de la linea 
+		if (g_signal == S_EXECUTION_S)
 		{
 			g_signal = S_INIT;
 			write(1, "\n", 1);
 		}
 		set_ps1((*msl), (*msl)->sys);
-		line = readline((*msl)->sys->ps1);//leo la linea
-		add_history(line);//exit tambien se mete al historial
-		(*msl)->clean_line = ft_strtrim(line, " \t\n\v\f\r");//por el mod literal de bash con control+V
+		line = readline((*msl)->sys->ps1);
+		add_history(line);
+		(*msl)->clean_line = ft_strtrim(line, " \t\n\v\f\r");
 		if (!(*msl)->clean_line)
 		{
 			ft_putstr_fd("exit\n", 2);
-			free((*msl)->clean_line);
-			(*msl)->clean_line = NULL;
-			free(line);
+			free_line(line, *msl);
 			break ;
 		}
-		evaluate_line((*msl), (unsigned char *) (*msl)->clean_line);
-		free(line);
-		free((*msl)->clean_line);
-		(*msl)->clean_line = NULL;
+		evaluate_line ((*msl), (unsigned char *)(*msl)->clean_line);
+		free_line(line, *msl);
 	}
+}
+
+void	free_line(char *line, t_msl *msl)
+{
+	free(line);
+	free(msl->clean_line);
+	msl->clean_line = NULL;
+}
+
+void	reset_readlineoff(void)
+{
+	char	*tmp;
+
+	tmp = readline("PRESS ENTER TO START MINISHELL ...");
+	free(tmp);
 }
