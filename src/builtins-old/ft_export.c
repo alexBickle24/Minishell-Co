@@ -1,1 +1,0 @@
-//Depende de arquitectura ademas de ordenar las env

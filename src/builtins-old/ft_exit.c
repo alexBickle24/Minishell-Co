@@ -1,1 +1,0 @@
-// Depende de la arquitectura
