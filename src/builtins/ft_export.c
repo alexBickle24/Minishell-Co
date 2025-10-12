@@ -73,18 +73,29 @@ void	ft_print_env(t_env *own_env)
 	while(tmp)
 	{
 		if (!ft_strcmp(tmp->id, "_"))
-			printf("\r");
+            ft_putendl_fd("\r", 1);
 		else if (tmp->value[0])
 		{
-			printf("declare -x %s", tmp->id);
-			printf("=\"%s\"\n", tmp->value);
+            ft_putstr_fd("declare -x ", 1);
+            ft_putstr_fd(tmp->id, 1);
+            ft_putstr_fd("=\"", 1);
+            ft_putstr_fd(tmp->value, 1);
+            ft_putendl_fd("\"", 1);
 		}
 		else
-			printf("declare -x %s\n", tmp->id);
+        {
+            ft_putstr_fd("declare -x ", 1);
+            ft_putendl_fd(tmp->id, 1);
+        }
 		tmp = tmp->next;
 	}
 }
 
+/*
+ft_putstr_fd(tmp->id, 1);
+ft_putchar_fd('=', 1);
+ft_putendl_fd(tmp->value, 1);
+*/
 int	ft_check_export(char *cmd)
 {
 	int	i;
@@ -94,7 +105,9 @@ int	ft_check_export(char *cmd)
 	id = ft_get_env_id(cmd);
 	if (ft_isdigit(id[i]))
 	{
-		printf("export: %s not a valid identifier\n", cmd);
+        ft_putstr_fd("export : ", 1);
+        ft_putstr_fd(cmd, 1);
+        ft_putendl_fd("not a valid identifier", 1);
 		ft_freeptr(id);
 		return (0);
 	}
@@ -104,7 +117,7 @@ int	ft_check_export(char *cmd)
 			i++;
 		else
 		{
-			printf("export: %s not a valid identifier\n", cmd);
+			printf("export: %s not a valid identifier\n", cmd); //--------------------- printf
 			ft_freeptr(id);
 			return (0);
 		}
@@ -123,7 +136,6 @@ char	*ft_get_one_env_value(char *env, char *id)
 	i = -1;
 	while (env[++i])
 	{
-		printf("check -> %c\n",env[i]);
 		if (env[i] == '=')
 			break;
 	}
@@ -141,13 +153,11 @@ int	ft_check_id(t_msl *msl, char *id, char *value)
 {
 	t_env *tmp_env;
 
-	printf("Start ft_check_id\n");
 	tmp_env = msl->own_env;
 	while (tmp_env)
 	{
 		if (!ft_strcmp(tmp_env->id, id))
 		{
-			printf("Mismo id\n");
 			ft_freeptr(tmp_env->id);
 			tmp_env->id = ft_strdup(id);
 			ft_freeptr(tmp_env->value);
@@ -156,51 +166,37 @@ int	ft_check_id(t_msl *msl, char *id, char *value)
 		}
 		tmp_env = tmp_env->next;
 	}
-	printf("End ft_check_id\n");
 	return (0);
 }
 
 void	ft_add_env(t_msl *msl, char *cmd)
 {
-	//t_env	*tmp_env;
 	char	*id;
 	char	*value;
 	t_env	*new_env;
 
-	//tmp_env = msl->own_env;
 	if (!ft_strrchr(cmd, '='))
-		return ; // Error leak
-	printf("%d\n", ft_tokencounter(msl));
+		return ;
 	id = ft_get_env_id(cmd);
-	value = ft_get_one_env_value(cmd, id); //duda
-	printf("%s - %s\n", id, value);
+	value = ft_get_one_env_value(cmd, id);
 	if (!ft_check_id(msl, id, value))
 	{
-		printf("ok\n");
 		new_env = ft_lstnew_env(id, value, 1);
 		ft_lstadd_back_env(&msl->own_env, new_env);
 		ft_freeptr(id);
 		ft_freeptr(value);
 		return ;
 	}
-	printf("Error value\n");
 	ft_freeptr(id);
 	ft_freeptr(value);
 	return ;
 }
 
 
-
-/*
- * Export es para añadir variables de entorno
- * 
- * Caso 1: export sin argc -> lista ordenada con declare
- */
 void	ft_export(t_msl *msl)
 {
 	t_pcmds	*tmp;
 
-	printf("Start ft_export . . .\n");
 	if (ft_tokencounter(msl) == 1 && !ft_strcmp(msl->tocken->pcmds->cmd, "export"))
 	{
 		ft_print_env(ft_sort_env(msl->own_env));
@@ -210,7 +206,6 @@ void	ft_export(t_msl *msl)
 		tmp = msl->tocken->pcmds->next;
 		while (tmp)
 		{
-			printf("-------------------\n");
 			if (ft_check_export(tmp->cmd))
 				ft_add_env(msl, tmp->cmd);
 			else

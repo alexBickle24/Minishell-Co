@@ -53,9 +53,3 @@ int	ft_tokencounter(t_msl *msl)
 	}
 	return (i);
 }
-
-/*
-	Cambiar de directorio
-	Podemos recibir una ruta o cambiar a HOME 
-*/
-
