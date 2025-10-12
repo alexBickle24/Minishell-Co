@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd_alex3.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: vicalons <vicalons@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:30:08 by alejandro         #+#    #+#             */
-/*   Updated: 2025/10/06 16:06:08 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/12 19:33:59 by vicalons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ int	search_first_parent(t_msl *msl)
 		tmp1 = ft_strrchr(pwd, '/');
 		if (tmp1 != pwd)
 			*tmp1 = '\0';
-		else if ((tmp1 == pwd))
+		else if (tmp1 == pwd)
 		{
 			if (go_root(msl, pwd) == 1)
 				return (1);

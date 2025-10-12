@@ -6,7 +6,7 @@
 /*   By: vicalons <vicalons@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 19:18:13 by vicalons          #+#    #+#             */
-/*   Updated: 2025/10/12 19:21:15 by vicalons         ###   ########.fr       */
+/*   Updated: 2025/10/12 20:25:35 by vicalons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,8 @@ t_env	*ft_sort_env(t_env *own_env)
 	swap = ft_lstnew_env("", "", 0);
 	while (own_env->next != NULL)
 	{
-		if (own_env->next && ft_strcmp(own_env->id, own_env->next->id) > 0)
+		if (own_env->next && ft_strncmp(own_env->id, own_env->next->id,
+				ft_strlen(own_env->id) + 1) > 0)
 		{
 			swap->id = own_env->id;
 			swap->value = own_env->value;
@@ -46,8 +47,8 @@ void	ft_print_env(t_env *own_env)
 	tmp = own_env;
 	while (tmp)
 	{
-		if (!ft_strcmp(tmp->id, "_"))
-			ft_putendl_fd("\r", 1);
+		if (!ft_strncmp(tmp->id, "_\0", 2))
+			ft_putstr_fd("\r", 1);
 		else if (tmp->value[0])
 		{
 			ft_putstr_fd("declare -x ", 1);
@@ -89,35 +90,37 @@ char	*ft_get_one_env_value(char *env, char *id)
 	return (value);
 }
 
-void	ft_add_env(t_msl *msl, char *cmd)
+int	ft_add_env(t_msl *msl, char *cmd)
 {
 	char	*id;
 	char	*value;
 	t_env	*new_env;
 
 	if (!ft_strrchr(cmd, '='))
-		return ;
+		return (2);
 	id = ft_get_env_id(cmd);
 	value = ft_get_one_env_value(cmd, id);
 	if (!ft_check_id(msl, id, value))
 	{
 		new_env = ft_lstnew_env(id, value, 1);
-		ft_lstadd_back_env(&msl->own_env, new_env);
+		list_addback_env(new_env, &(msl->own_env));
 		ft_freeptr(id);
 		ft_freeptr(value);
-		return ;
+		return (0);
 	}
 	ft_freeptr(id);
 	ft_freeptr(value);
-	return ;
+	return (1);
 }
 
-void	ft_export(t_msl *msl, t_pcmds *pcmds)
+int	ft_export(t_msl *msl, t_pcmds *pcmds)
 {
 	t_pcmds	*tmp;
+	int ret;
 
+	ret = 0;
 	if (ft_argscounter(pcmds) == 1
-		&& !ft_strcmp(pcmds->cmd, "export"))
+		&& !ft_strncmp(pcmds->cmd, "export\0", 8))
 	{
 		ft_print_env(ft_sort_env(msl->own_env));
 	}
@@ -126,11 +129,11 @@ void	ft_export(t_msl *msl, t_pcmds *pcmds)
 		tmp = pcmds->next;
 		while (tmp)
 		{
-			if (ft_check_export(tmp->cmd))
+			ret = ft_check_export(tmp->cmd);
+			if (ret == 0)
 				ft_add_env(msl, tmp->cmd);
-			else
-				return ;
 			tmp = tmp->next;
 		}
 	}
+	return(ret);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils2.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: vicalons <vicalons@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:48:27 by alejandro         #+#    #+#             */
-/*   Updated: 2025/10/05 00:04:52 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/12 20:35:19 by vicalons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,7 @@ int	father_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
 	else if (builtin == 3)
 		return (ft_pwd(msl));
 	else if (builtin == 4)
-	{
-		// return(ft_export(c_tocken->cmds, msl->own_env));
-	}
+		return(ft_export(msl, c_tocken->pcmds));
 	else if (builtin == 5)
 		return (ft_unset(msl, c_tocken));
 	else if (builtin == 6)
@@ -91,9 +89,7 @@ void	cmd_vs_builtin(t_msl *msl, t_tocken *c_tocken, int builtin)
 	else if (builtin == 3)
 		exit (ft_pwd(msl));
 	else if (builtin == 4)
-	{
-		// exit(ft_export(c_tocken->cmds, msl->own_env));
-	}
+		exit(ft_export(msl, c_tocken->pcmds));
 	else if (builtin == 5)
 		exit (ft_unset(msl, c_tocken));
 	else if (builtin == 6)

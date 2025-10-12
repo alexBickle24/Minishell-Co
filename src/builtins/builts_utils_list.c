@@ -6,7 +6,7 @@
 /*   By: vicalons <vicalons@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 19:18:31 by vicalons          #+#    #+#             */
-/*   Updated: 2025/10/12 19:18:32 by vicalons         ###   ########.fr       */
+/*   Updated: 2025/10/12 20:15:25 by vicalons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,17 +35,4 @@ t_env	*ft_lstnew_env(char *id, char *value, int alloc)
 	return (new);
 }
 
-void	ft_lstadd_back_env(t_env **msl_env, t_env *new_env)
-{
-	t_env	*tmp_env;
 
-	if (!*msl_env)
-	{
-		*msl_env = new_env;
-		return ;
-	}
-	tmp_env = *msl_env;
-	while (tmp_env->next)
-		tmp_env = tmp_env->next;
-	tmp_env->next = new_env;
-}

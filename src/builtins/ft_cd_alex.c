@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_cd_alex.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
+/*   By: vicalons <vicalons@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 00:54:28 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/26 18:59:55 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/12 19:33:31 by vicalons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ int	ft_cd(t_msl *msl, t_pcmds *pcmds)
 	char	succes;
 	char	*old_pwd;
 
+	succes = 0;
 	old_pwd = ft_strdup(msl->sys->pwd);
 	nbr_tockens = ft_argscounter(pcmds);
 	if (nbr_tockens > 2)

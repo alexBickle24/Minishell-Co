@@ -6,7 +6,7 @@
 /*   By: vicalons <vicalons@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 19:18:37 by vicalons          #+#    #+#             */
-/*   Updated: 2025/10/12 19:18:38 by vicalons         ###   ########.fr       */
+/*   Updated: 2025/10/12 20:23:37 by vicalons         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	ft_check_id(t_msl *msl, char *id, char *value)
 	tmp_env = msl->own_env;
 	while (tmp_env)
 	{
-		if (!ft_strcmp(tmp_env->id, id))
+		if (!ft_strncmp(tmp_env->id, id, ft_strlen(id) + 1))
 		{
 			ft_freeptr(tmp_env->id);
 			tmp_env->id = ft_strdup(id);
@@ -59,18 +59,19 @@ int	ft_check_export(char *cmd)
 
 	i = 0;
 	id = ft_get_env_id(cmd);
-	if (ft_isalpha(id[i]))
+	if (!ft_isalpha(id[i]) && id[i] != '_')
 	{
-		ft_putstr_fd("export: not a valid identifier ", 1);
-		ft_putendl_fd(id, 1);
+		ft_putstr_fd("export: ", 1);
+		ft_putstr_fd(cmd, 1);
+		ft_putendl_fd("not a valid identifier", 1);
 		ft_freeptr(id);
-		return (0);
+		return (1);
 	}
 	if (ft_check_isalnum_id(cmd, id) == 0)
 	{
 		ft_freeptr(id);
-		return (0);
+		return (1);
 	}
 	ft_freeptr(id);
-	return (1);
+	return (0);
 }
