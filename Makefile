@@ -15,10 +15,10 @@ SRC_DIR = src/
 #falta añadir los builtins
 #Cambiando el archivo de la carpeta main testeamos unas cosas u otras /mains/"archivo.c"
 SRC_FILES=  mains/main.c\
-			builtins/ft_pwd.c\
 			builtins/builts_utils.c\
+			builtins/builts_utils_check.c\
+			builtins/builts_utils_list.c\
 			builtins/ft_env.c\
-			builtins/ft_cd.c\
 			builtins/ft_cd_alex.c\
 			builtins/ft_cd_alex2.c\
 			builtins/ft_cd_alex3.c\
@@ -26,6 +26,8 @@ SRC_FILES=  mains/main.c\
 			builtins/ft_unset.c\
 			builtins/ft_echo.c\
 			builtins/ft_exit.c\
+			builtins/ft_pwd.c\
+			builtins/ft_export.c\
 			debugin/print.c\
 			minishell/init.c\
 			minishell/close_minishell.c\

@@ -458,6 +458,15 @@ int	ft_tokencounter(t_msl *msl);//hay que editarla porque sino simepre cuneta el
 void	ft_edit_env(t_msl *msl, char *id, char *value);
 int		ft_argscounter(t_pcmds *pcmds);
 
+// Utils_check
+int	ft_check_id(t_msl *msl, char *id, char *value);
+int	ft_check_isalnum_id(char *cmd, char *id);
+int	ft_check_export(char *cmd);
+
+// Utils_list
+t_env	*ft_lstnew_env(char *id, char *value, int alloc);
+void	ft_lstadd_back_env(t_env **msl_env, t_env *new_env);
+
 //cd
 int		ft_cd(t_msl *msl, t_pcmds *pcmds);
 int		one_arg_cases(t_msl *msl, t_pcmds *pcmds);
@@ -494,5 +503,12 @@ int	ft_pwd(t_msl *msl);
 
 //env
 int	ft_env(t_msl *msl, t_pcmds *pcmds);
+
+//export
+void	ft_export(t_msl *msl, t_pcmds *pcmds);
+void	ft_add_env(t_msl *msl, char *cmd);
+char	*ft_get_one_env_value(char *env, char *id);
+void	ft_print_env(t_env *own_env);
+t_env	*ft_sort_env(t_env *own_env);
 
 #endif
