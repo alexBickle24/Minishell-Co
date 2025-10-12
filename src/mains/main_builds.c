@@ -134,115 +134,6 @@ int main(int argc, char **argv, char **env)
 
 
 /*
-	Check Builtins:
-		x pwd
-		s env
-		o cd
-		o echo
-		o exit
-		o export
-		o unset
-*/
-// void	ft_freeptr(void *ptr)
-// {
-// 	if (!ptr)
-// 		return ;
-// 	free(ptr);
-// 	ptr = NULL;
-// }
-
-
-/*
- * ft_printexport() 
- * La diferencia con env es que export imprime las variables no declaradas y ordenada
- * Falta ordenarlo!!!!!!!!!!
- */
-// void	ft_printexport(t_msl *msl)
-// {
-// 	t_env	*tmp;
-
-// 	printf("Start ft_printexport\n");
-// 	tmp = msl->own_env;
-// 	while(tmp)
-// 	{
-// 		printf("id: %s -> ", tmp->id);
-// 		printf("value: %s\n", tmp->value);
-// 		tmp = tmp->next;
-// 	}
-// }
-
-// /*
-//  * Chequea si el argumento es valido para export
-// */
-// int	ft_checkexport(char *str)
-// {
-// 	char	*id;
-// 	int	i;
-
-// 	printf("Start ft_checkexport!\n");
-// 	// extraemos el nombre antes del '='
-// 	id = ft_get_env_id(str);
-// 	i = 0;
-// 	if (ft_isdigit(id[i]))
-// 	{
-// 		free(id);
-// 		return (0);
-// 	}
-// 	while (id[i])
-// 	{
-// 		if (!ft_isalnum(id[i]) && id[i] != '_')
-// 		{
-// 			free(id);
-// 			return (0);
-// 		}
-// 		i++;
-// 	}
-// 	printf("Ok\n");
-// 	free(id);
-// 	return (1);
-// }
-
-// /*
-//  * 
-//  */
-// void	ft_addexport(t_msl *msl, char *str)
-// {
-// 	char	*id;
-// 	char	*value;
-
-// 	if (!ft_strrchr(str, '='))
-// 		return ;
-// 	id = ft_get_env_id(str);
-// 	//value = ft_get_env_value(str);      ------> next
-// 	free(id);
-// 	free(value);
-// }
-
-// /*
-//  * Exportar variables de entorno, si no hay variables las mostramos
-//  */
-// void	ft_export(t_msl *msl)
-// {
-// 	t_pcmds	*tmp;
-
-// 	printf("Strat ft_export\n");
-// 	printf("counter token: %d\n", ft_tokencounter(msl));
-// 	if (ft_tokencounter(msl) == 1)
-// 		ft_printexport(msl);
-// 	else
-// 	{
-// 		tmp = msl->tocken->pcmds;
-// 		tmp = tmp->next;
-// 		while(tmp)
-// 		{
-// 			ft_checkexport(tmp->cmd);
-// 			printf("add tocken: %s\n", tmp->cmd);
-// 			tmp = tmp->next;
-// 		}
-// 	}
-// }
-
-/*
 	El prompt que puedes usar es el siguiente;
 	<nombre del building> <argumento> <arguemnto1> .... 
 */
@@ -258,6 +149,8 @@ int main(int argc, char **argv, char **env)
 	// 	printf("%s\n", tmp->cmd);
 	// 	tmp = tmp->next;
 	// }
+
+
 
 t_env	*ft_lstnew_env(char *id, char *value, int alloc)
 {
@@ -280,6 +173,21 @@ t_env	*ft_lstnew_env(char *id, char *value, int alloc)
 	}
 	new->next = NULL;
 	return (new);
+}
+
+void	ft_lstadd_back_env(t_env **msl_env, t_env *new_env)
+{
+	t_env	*tmp_env;
+
+	if (!*msl_env)
+	{
+		*msl_env = new_env;
+		return ;
+	}
+	tmp_env = *msl_env;
+	while (tmp_env->next)
+		tmp_env = tmp_env->next;
+	tmp_env->next = new_env;
 }
 
 t_env	*ft_sort_env(t_env *own_env)
@@ -309,7 +217,6 @@ t_env	*ft_sort_env(t_env *own_env)
 	return (tmp);
 }
 
-// Dudas con tmp->value[0]
 void	ft_print_env(t_env *own_env)
 {
 	t_env	*tmp;
@@ -320,12 +227,12 @@ void	ft_print_env(t_env *own_env)
 		if (!ft_strcmp(tmp->id, "_"))
 			printf("\r");
 		else if (tmp->value[0])
-			printf("declare -x %s\n", tmp->id);
-		else
 		{
 			printf("declare -x %s", tmp->id);
-			printf("=\"%s\n\"", tmp->value);
+			printf("=\"%s\"\n", tmp->value);
 		}
+		else
+			printf("declare -x %s\n", tmp->id);
 		tmp = tmp->next;
 	}
 }
@@ -357,11 +264,10 @@ int	ft_check_export(char *cmd)
 	ft_freeptr(id);
 	return (1);
 }
-void	*ft_get_one_env_value(char *env, char *id)
+char	*ft_get_one_env_value(char *env, char *id)
 {
 	int		i;
 	int		j;
-// 	int		k;
 	char	*value;
 
 	if (!env || !id)
@@ -378,47 +284,64 @@ void	*ft_get_one_env_value(char *env, char *id)
 		return (NULL);
 	j = 0;
 	while (env[++i])
-	{
 		value[j++] = env[i];
+	value[j] = '\0';
+	return (value);
+}
+
+int	ft_check_id(t_msl *msl, char *id, char *value)
+{
+	t_env *tmp_env;
+
+	printf("Start ft_check_id\n");
+	tmp_env = msl->own_env;
+	while (tmp_env)
+	{
+		if (!ft_strcmp(tmp_env->id, id))
+		{
+			printf("Mismo id\n");
+			ft_freeptr(tmp_env->id);
+			tmp_env->id = ft_strdup(id);
+			ft_freeptr(tmp_env->value);
+			tmp_env->value = ft_strdup(value);
+			return (1);
+		}
+		tmp_env = tmp_env->next;
 	}
-	printf("%d\n", i);
-	printf("%ld\n", ft_strlen(env));
-// 	while (env[++i])
-// 	{
-// 		if (ft_strncmp(env[i], id, ft_strlen_c(id)) == 0
-// 			&& env[i][ft_strlen_c(id)] == '=')
-// 		{
-// 			j = ft_strlen_c(id) + 1;
-// 			value = malloc(sizeof(char) * (ft_strlen(env[i]) - j + 1));
-// 			if (!value)
-// 				return (NULL);
-// 			k = 0;
-// 			while (env[i][j])
-// 				value[k++] = env[i][j++];
-// 			value[k] = '\0';
-// 			return (value);
-// 		}
-// 	}
-	return (NULL);
+	printf("End ft_check_id\n");
+	return (0);
 }
 
 void	ft_add_env(t_msl *msl, char *cmd)
 {
 	//t_env	*tmp_env;
 	char	*id;
-	// char	*value;
+	char	*value;
+	t_env	*new_env;
 
 	//tmp_env = msl->own_env;
+	if (!ft_strrchr(cmd, '='))
+		return ; // Error leak
 	printf("%d\n", ft_tokencounter(msl));
 	id = ft_get_env_id(cmd);
-	ft_get_one_env_value(cmd, id); //duda
-	// printf("id: %s - value: %s\n", id, value);
-	// check value
-	// env = lst_new
-	// add back
+	value = ft_get_one_env_value(cmd, id); //duda
+	printf("%s - %s\n", id, value);
+	if (!ft_check_id(msl, id, value))
+	{
+		printf("ok\n");
+		new_env = ft_lstnew_env(id, value, 1);
+		ft_lstadd_back_env(&msl->own_env, new_env);
+		ft_freeptr(id);
+		ft_freeptr(value);
+		return ;
+	}
+	printf("Error value\n");
 	ft_freeptr(id);
-	// ft_freeptr(value);
+	ft_freeptr(value);
+	return ;
 }
+
+
 
 /*
  * Export es para añadir variables de entorno
