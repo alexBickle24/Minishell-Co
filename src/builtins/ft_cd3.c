@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_cd_alex3.c                                      :+:      :+:    :+:   */
+/*   ft_cd3.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vicalons <vicalons@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 18:30:08 by alejandro         #+#    #+#             */
-/*   Updated: 2025/10/12 19:33:59 by vicalons         ###   ########.fr       */
+/*   Updated: 2025/10/14 04:31:38 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,7 +125,7 @@ int	go_oldpwd(t_msl *msl)
 	t_env	*oldpwd;
 
 	oldpwd = search_id_node(msl, "OLDPWD");
-	if (oldpwd != NULL)
+	if (oldpwd != NULL && *(oldpwd->value))
 	{
 		if (chdir(oldpwd->value) == -1)
 		{
