@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 23:43:51 by alejandro         #+#    #+#             */
-/*   Updated: 2025/10/14 20:06:50 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/14 20:31:25 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ void	interactive_mode(t_msl **msl, char **env)
 {
 	char	*line;
 
-	reset_readlineoff();
 	minishell_init(msl, env, 0);
 	while (1)
 	{
@@ -86,12 +85,4 @@ void	free_line(char *line, t_msl *msl)
 	free(line);
 	free(msl->clean_line);
 	msl->clean_line = NULL;
-}
-
-void	reset_readlineoff(void)
-{
-	char	*tmp;
-
-	tmp = readline("PRESS ENTER TO START MINISHELL ...");
-	free(tmp);
 }

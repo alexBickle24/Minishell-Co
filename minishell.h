@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/14 19:40:39 by alejandro         #+#    #+#             */
-/*   Updated: 2025/10/14 19:55:06 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/14 20:31:38 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -194,7 +194,6 @@ void							interactive_mode(t_msl **msl, char **env);
 void							evaluate_line(t_msl *msl,
 									unsigned char *clean_line);
 void							free_line(char *line, t_msl *msl);
-void							reset_readlineoff(void);
 void							free_own_env(t_msl *msl);
 void							free_sys(t_system **sys);
 void							free_msl(t_msl **msl);
