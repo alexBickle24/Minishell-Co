@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_cd_alex.c                                       :+:      :+:    :+:   */
+/*   ft_cd.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vicalons <vicalons@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/25 00:54:28 by alejandro         #+#    #+#             */
-/*   Updated: 2025/10/12 19:33:31 by vicalons         ###   ########.fr       */
+/*   Updated: 2025/10/14 04:06:37 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@ int	ft_cd(t_msl *msl, t_pcmds *pcmds)
 	if (nbr_tockens > 2)
 	{
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		free(old_pwd);
 		return (1);
 	}
 	if (nbr_tockens == 1)

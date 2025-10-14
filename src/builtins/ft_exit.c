@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 20:30:44 by alejandro         #+#    #+#             */
-/*   Updated: 2025/10/14 02:41:34 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/14 03:56:26 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,9 @@ void	exit_onearg(t_msl **msl, t_pcmds *pcmds)
 	exit_code = ft_atoi(pcmds->cmd);
 	while (pcmds->cmd[i] != '\0')
 	{
+		if (i == 0 && (pcmds->cmd[i] == '+' || pcmds->cmd[i] == '-')
+			&& pcmds->cmd[i])
+			i++;
 		if (!ft_isdigit(pcmds->cmd[i]))
 		{
 			ft_putstr_fd("minishell: exit: numeric argument required\n", 2);
