@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builts_utils_list.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vicalons <vicalons@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 19:18:31 by vicalons          #+#    #+#             */
-/*   Updated: 2025/10/12 20:15:25 by vicalons         ###   ########.fr       */
+/*   Updated: 2025/10/14 02:34:23 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,5 +34,3 @@ t_env	*ft_lstnew_env(char *id, char *value, int alloc)
 	new->next = NULL;
 	return (new);
 }
-
-

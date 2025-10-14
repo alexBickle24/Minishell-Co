@@ -491,6 +491,7 @@ void	print_args(t_pcmds *args);
 
 //exit
 void	ft_exit(t_msl *msl, t_tocken *tocken, char father);
+void	exit_onearg(t_msl **msl, t_pcmds *pcmds);
 
 //unset
 int		ft_unset(t_msl *msl, t_tocken *tocken);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_export.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vicalons <vicalons@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 19:18:13 by vicalons          #+#    #+#             */
-/*   Updated: 2025/10/12 20:25:35 by vicalons         ###   ########.fr       */
+/*   Updated: 2025/10/14 02:55:46 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,7 @@ int	ft_add_env(t_msl *msl, char *cmd)
 {
 	char	*id;
 	char	*value;
+	char	*trim_value;
 	t_env	*new_env;
 
 	if (!ft_strrchr(cmd, '='))
@@ -102,10 +103,12 @@ int	ft_add_env(t_msl *msl, char *cmd)
 	value = ft_get_one_env_value(cmd, id);
 	if (!ft_check_id(msl, id, value))
 	{
-		new_env = ft_lstnew_env(id, value, 1);
+		trim_value = ft_strtrim(value, " \t\n\v\f\r");
+		new_env = ft_lstnew_env(id, trim_value, 1);
 		list_addback_env(new_env, &(msl->own_env));
 		ft_freeptr(id);
 		ft_freeptr(value);
+		ft_freeptr(trim_value);
 		return (0);
 	}
 	ft_freeptr(id);
@@ -116,7 +119,7 @@ int	ft_add_env(t_msl *msl, char *cmd)
 int	ft_export(t_msl *msl, t_pcmds *pcmds)
 {
 	t_pcmds	*tmp;
-	int ret;
+	int		ret;
 
 	ret = 0;
 	if (ft_argscounter(pcmds) == 1
@@ -135,5 +138,5 @@ int	ft_export(t_msl *msl, t_pcmds *pcmds)
 			tmp = tmp->next;
 		}
 	}
-	return(ret);
+	return (ret);
 }

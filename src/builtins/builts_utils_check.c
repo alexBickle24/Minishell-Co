@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builts_utils_check.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: vicalons <vicalons@student.42.fr>          +#+  +:+       +#+        */
+/*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/12 19:18:37 by vicalons          #+#    #+#             */
-/*   Updated: 2025/10/12 20:23:37 by vicalons         ###   ########.fr       */
+/*   Updated: 2025/10/14 03:12:29 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,9 +43,10 @@ int	ft_check_isalnum_id(char *cmd, char *id)
 			i++;
 		else
 		{
-			ft_putstr_fd("export: ", 1);
-			ft_putstr_fd(cmd, 1);
-			ft_putendl_fd("not a valid identifier", 1);
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd("export: `", 2);
+			ft_putstr_fd(cmd, 2);
+			ft_putendl_fd("': not a valid identifier", 2);
 			return (0);
 		}
 	}
@@ -61,9 +62,10 @@ int	ft_check_export(char *cmd)
 	id = ft_get_env_id(cmd);
 	if (!ft_isalpha(id[i]) && id[i] != '_')
 	{
-		ft_putstr_fd("export: ", 1);
-		ft_putstr_fd(cmd, 1);
-		ft_putendl_fd("not a valid identifier", 1);
+		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd("export: `", 2);
+		ft_putstr_fd(cmd, 2);
+		ft_putendl_fd("': not a valid identifier", 2);
 		ft_freeptr(id);
 		return (1);
 	}
