@@ -3,7 +3,7 @@ CC = cc
 FLAGS = -Wall -Wextra -Werror -fsanitize=address
 RM = rm -rf
 LIBS = -lreadline
-MKDIR = mkdir -p # Si ya existe no da problemas
+MKDIR = mkdir -p 
 
 INCLUDE_DIR = inc
 LIBFT_DIR = inc/libft
@@ -12,22 +12,20 @@ INCLUDE_FLAG = -I$(INCLUDE_DIR) -I$(LIBFT_DIR)
 INCLUDE = $(INCLUDE_DIR)/minishell.h
 
 SRC_DIR = src/
-#falta añadir los builtins
-#Cambiando el archivo de la carpeta main testeamos unas cosas u otras /mains/"archivo.c"
+
 SRC_FILES=  mains/main.c\
 			builtins/builts_utils.c\
-			builtins/builts_utils_check.c\
-			builtins/builts_utils_list.c\
 			builtins/ft_env.c\
-			builtins/ft_cd_alex.c\
-			builtins/ft_cd_alex2.c\
-			builtins/ft_cd_alex3.c\
-			builtins/ft_cd_alex4.c\
+			builtins/ft_cd.c\
+			builtins/ft_cd2.c\
+			builtins/ft_cd3.c\
+			builtins/ft_cd4.c\
 			builtins/ft_unset.c\
 			builtins/ft_echo.c\
 			builtins/ft_exit.c\
 			builtins/ft_pwd.c\
 			builtins/ft_export.c\
+			builtins/ft_export2.c\
 			debugin/print.c\
 			minishell/init.c\
 			minishell/close_minishell.c\
