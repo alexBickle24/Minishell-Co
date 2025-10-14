@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/04 21:31:56 by alejandro         #+#    #+#             */
-/*   Updated: 2025/10/05 00:54:41 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/14 17:59:47 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ int	ft_unset(t_msl *msl, t_tocken *tocken)
 		{
 			if (!ft_strncmp(arg->cmd, env_node->id, ft_strlen(arg->cmd) + 1))
 			{
+				if (!ft_strncmp(arg->cmd, "OLDPWD\0", 7))
+					msl->builts->unst_oldpwd = 1;
 				remove_envnode(env_node, &(msl->own_env), prev_node);
 				break ;
 			}
