@@ -6,7 +6,7 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 23:53:04 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/08 19:02:09 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/16 15:21:07 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,7 @@ char	*create_heredoc(t_msl *msl, char *delimiter, char sangria)
 	fd = open(file_name, O_CREAT | O_TRUNC | O_RDWR, 0664);
 	if (fd < 0)
 		return (NULL);
+	set_heredocs_modes(modes, delimiter, sangria);
 	tmp = delimiter;
 	while (*delimiter)
 	{
@@ -32,7 +33,6 @@ char	*create_heredoc(t_msl *msl, char *delimiter, char sangria)
 			delimiter++;
 	}
 	delimiter = tmp;
-	set_heredocs_modes(modes, delimiter, sangria);
 	heredoc_child_process(msl, fd, delimiter, modes);
 	return (close(fd), file_name);
 }
