@@ -6,12 +6,28 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/07 23:42:37 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/25 01:13:57 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/27 17:52:16 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+/**
+ * @brief Expands variables and handles quotes in a string.
+ * 
+ * This function iterates through a string, expanding variables (e.g., `$VAR`)
+ * and handling quotes. It checks for `$` characters and calls `dollar_expansion`
+ * to process them. Single quotes prevent expansion, while double quotes allow it.
+ * 
+ * - If a `$` is found and the lexer state is not `S_QUOTES`, variable expansion is performed.
+ * - Handles the end of the string to avoid out-of-bounds errors.
+ * - The index is always moved to the end of the expanded variable to prevent
+ *   infinite loops in cases where the expanded value contains another `$`.
+ * 
+ * @param str Pointer to the string to be processed.
+ * @param msl Pointer to the main structure of the program.
+ * @param len Pointer to the length of the string.
+ */
 void	vars_interpolation(char **str, t_msl *msl, size_t *len)
 {
 	int	i;
@@ -31,6 +47,25 @@ void	vars_interpolation(char **str, t_msl *msl, size_t *len)
 	}
 }
 
+/**
+ * @brief Handles the expansion of `$` in a string.
+ * 
+ * This function processes `$` characters in a string based on the `dollar_lim`
+ * dictionary, which defines the behavior for characters following `$`:
+ * - Codes 1-4: Skip the `$` character.
+ * - Code 5: Remove the `$` if not in quotes.
+ * - Codes 6 or 0: Skip the `$` without expansion.
+ * - Codes >= 7: Calls `dollar_expansion2` for further processing.
+ * 
+ * The index is always moved to the end of the expanded variable to avoid
+ * infinite loops in cases where the expanded value contains another `$`.
+ * 
+ * 
+ * @param str Pointer to the string being processed.
+ * @param i Pointer to the current index in the string.
+ * @param len Pointer to the length of the string.
+ * @param msl Pointer to the main structure of the program.
+ */
 void	dollar_expansion(char **str, int *i, size_t *len, t_msl *msl)
 {
 	char			*dolim;
@@ -56,6 +91,23 @@ void	dollar_expansion(char **str, int *i, size_t *len, t_msl *msl)
 		dollar_expansion2(str, i, len, msl);
 }
 
+/**
+ * @brief Handles advanced cases of `$` expansion.
+ * 
+ * This function processes `$` characters with codes >= 7 in the `dollar_lim`
+ * dictionary:
+ * - Codes 7-8: Calls `replace_dollar` to replace special variables (e.g., `$$`, `$?`).
+ * - Code 9: Removes the `$` and the following character.
+ * - Code 10: Calls `expand_vars` to expand environment variables.
+ * 
+ *  * The index is always moved to the end of the expanded variable to avoid
+ * infinite loops in cases where the expanded value contains another `$`.
+ * 
+ * @param str Pointer to the string being processed.
+ * @param i Pointer to the current index in the string.
+ * @param len Pointer to the length of the string.
+ * @param msl Pointer to the main structure of the program.
+ */
 void	dollar_expansion2(char **str, int *i, size_t *len, t_msl *msl)
 {
 	char			*dolim;
@@ -75,6 +127,24 @@ void	dollar_expansion2(char **str, int *i, size_t *len, t_msl *msl)
 		expand_vars(str, i, len, msl);
 }
 
+/**
+ * @brief Replaces special `$` variables with their values.
+ * 
+ * This function replaces special `$` variables with their corresponding values:
+ * - `$$`: Replaced with the shell's process ID.
+ * - `$!`: Replaced with the last background process ID.
+ * - `$?`: Replaced with the exit status of the last command.
+ * - `$0`: Replaced with the name of the interpreter.
+ * 
+ * The replacement string is appended to the result, and the original `$` is removed.
+ * The index is always moved to the end of the expanded variable to avoid
+ * infinite loops in cases where the expanded value contains another `$`.
+ * 
+ * @param str Pointer to the string being processed.
+ * @param i Pointer to the current index in the string.
+ * @param len Pointer to the length of the string.
+ * @param msl Pointer to the main structure of the program.
+ */
 void	replace_dollar(char **str, int *i, size_t *len, t_msl *msl)
 {
 	char	*replace;
@@ -93,6 +163,24 @@ void	replace_dollar(char **str, int *i, size_t *len, t_msl *msl)
 	concatenate_strings(str, i, len, replace);
 }
 
+/**
+ * @brief Expands environment variables in a string.
+ * 
+ * This function expands variables of the form `$VAR` by searching for their
+ * values in the environment. If the variable exists, its value is appended
+ * to the result. If it does not exist, the `$VAR` is removed from the string.
+ * 
+ * - The variable name is extracted using the `dollar_lim` dictionary.
+ * - If the variable exists, its value is appended using `concatenate_strings2`.
+ * - If the variable does not exist, the `$VAR` is removed from the string.
+ *  The index is always moved to the end of the expanded variable to avoid
+ * infinite loops in cases where the expanded value contains another `$`.
+ * 
+ * @param str Pointer to the string being processed.
+ * @param i Pointer to the current index in the string.
+ * @param len Pointer to the length of the string.
+ * @param msl Pointer to the main structure of the program.
+ */
 void	expand_vars(char **str, int *i, size_t *len, t_msl *msl)
 {
 	t_env	*env_node;

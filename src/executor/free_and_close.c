@@ -6,12 +6,20 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 21:42:24 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/26 21:44:13 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/27 18:45:42 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+/**
+ * @brief Closes both ends of a pipe.
+ * 
+ * This function closes the read (`pipe_ports[0]`) and write (`pipe_ports[1]`)
+ * ends of a pipe if the `pipe_ports` array is not `NULL`.
+ * 
+ * @param pipe_ports Pointer to an array containing the file descriptors of the pipe.
+ */
 void	close_fds(int *pipe_ports)
 {
 	if (pipe_ports)
@@ -21,6 +29,15 @@ void	close_fds(int *pipe_ports)
 	}
 }
 
+/**
+ * @brief Frees a null-terminated array of strings.
+ * 
+ * This function iterates through a null-terminated array of strings, frees
+ * each string, and then frees the array itself. It ensures that all pointers
+ * are set to `NULL` after being freed to avoid dangling pointers.
+ * 
+ * @param ptr Pointer to the null-terminated array of strings to be freed.
+ */
 void	ft_free_table(char **ptr)
 {
 	int	i;
@@ -38,6 +55,19 @@ void	ft_free_table(char **ptr)
 	ptr = NULL;
 }
 
+/**
+ * @brief Frees the file list associated with a token.
+ * 
+ * This function iterates through the list of files (`t_files`) associated
+ * with a token and frees the memory allocated for each file. If the file
+ * is a heredoc, it also unlinks (deletes) the temporary file from the filesystem.
+ * 
+ * - Frees the `file_name` field of each file node.
+ * - Unlinks temporary files for heredocs (`T_HEREDOC`, `T_HEREDOC_S`, `T_HERE_STR`).
+ * - Frees each file node and sets the `files` pointer to `NULL`.
+ * 
+ * @param tocken Pointer to the token whose file list will be freed.
+ */
 void	free_tocken_files(t_tocken *tocken)
 {
 	t_files	*files;
@@ -60,6 +90,18 @@ void	free_tocken_files(t_tocken *tocken)
 	tocken->files = NULL;
 }
 
+/**
+ * @brief Frees the command list associated with a token.
+ * 
+ * This function iterates through the list of commands (`t_pcmds`) associated
+ * with a token and frees the memory allocated for each command. It ensures
+ * that all memory is properly released and sets the `pcmds` pointer to `NULL`.
+ * 
+ * - Frees the `cmd` field of each command node.
+ * - Frees each command node and sets the `pcmds` pointer to `NULL`.
+ * 
+ * @param tocken Pointer to the token whose command list will be freed.
+ */
 void	free_tocken_cmds(t_tocken *tocken)
 {
 	t_pcmds	*pcmds;
@@ -77,6 +119,21 @@ void	free_tocken_cmds(t_tocken *tocken)
 	tocken->pcmds = NULL;
 }
 
+/**
+ * @brief Frees the entire token list and its associated resources.
+ * 
+ * This function iterates through the list of tokens (`t_tocken`) in the shell
+ * structure and frees all associated resources, including:
+ * - Command tables (`cmd_tb`).
+ * - Environment tables (`env_tb`).
+ * - Command lists (`pcmds`).
+ * - File lists (`files`).
+ * 
+ * It also resets the `redir_in` and `redir_out` pointers and sets the token
+ * list pointer (`msl->tocken`) to `NULL`. The total token count is reset to `0`.
+ * 
+ * @param msl Pointer to the main structure of the shell.
+ */
 void	free_tockens(t_msl *msl)
 {
 	t_tocken	*c_tocken;

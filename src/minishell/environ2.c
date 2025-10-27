@@ -1,17 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   environ_utils2.c                                   :+:      :+:    :+:   */
+/*   environ2.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/26 23:19:24 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/26 23:20:55 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/27 15:08:15 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
+/**
+ * @brief Sets the `LESSOPEN` environment variable if it is not already defined.
+ * 
+ * This function ensures that the `LESSOPEN` environment variable is set to
+ * its default value if it is not already present in the shell's environment.
+ * The `LESSOPEN` variable is used by the `less` command to preprocess files
+ * before displaying them.
+ * 
+ * - If `LESSOPEN` is not found in the environment, it is created with the
+ *   default value: `"| /usr/bin/lesspipe %s"`.
+ * - Allocates memory for the variable and its value, and adds it to the
+ *   environment list.
+ * - If memory allocation fails, the function cleans up and returns.
+ * 
+ * @param msl Pointer to the main structure of the shell.
+ */
 void	set_lessopen(t_msl *msl)
 {
 	t_env	*l_open;
@@ -32,7 +48,22 @@ void	set_lessopen(t_msl *msl)
 		list_addback_env(l_open, &(msl->own_env));
 	}
 }
-
+/**
+ * @brief Sets the `LESSCLOSE` environment variable if it is not already defined.
+ * 
+ * This function ensures that the `LESSCLOSE` environment variable is set to
+ * its default value if it is not already present in the shell's environment.
+ * The `LESSCLOSE` variable is used by the `less` command to clean up temporary
+ * files after processing.
+ * 
+ * - If `LESSCLOSE` is not found in the environment, it is created with the
+ *   default value: `"/usr/bin/lesspipe %s %s"`.
+ * - Allocates memory for the variable and its value, and adds it to the
+ *   environment list.
+ * - If memory allocation fails, the function cleans up and returns.
+ * 
+ * @param msl Pointer to the main structure of the shell.
+ */
 void	set_lessclose(t_msl *msl)
 {
 	t_env	*l_close;
@@ -54,6 +85,22 @@ void	set_lessclose(t_msl *msl)
 	}
 }
 
+/**
+ * @brief Sets or updates the `_` environment variable to the value of `PATH`.
+ * 
+ * This function ensures that the `_` environment variable, which stores the
+ * last argument of the last executed command, is initialized to the value of
+ * the `PATH` environment variable during shell initialization.
+ * 
+ * - Searches for the `PATH` variable in the environment. If it is not found,
+ *   the function returns without making changes.
+ * - If `_` is already defined, its value is updated to match `PATH`.
+ * - If `_` is not defined, it is created with the value of `PATH`.
+ * - Allocates memory for the variable and its value, and adds it to the
+ *   environment list.
+ * 
+ * @param msl Pointer to the main structure of the shell.
+ */
 void	set_last_arg_init(t_msl *msl)
 {
 	t_env	*last;

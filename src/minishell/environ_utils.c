@@ -6,14 +6,25 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/06 17:24:42 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/06 17:27:44 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/27 15:08:54 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
-//This functions is used in the process of convert the env in char **format
-//to a list. alloc memery for the id.
+/**
+ * @brief Extracts the `id` (key) from an environment variable string.
+ * 
+ * This function processes a string in the format `key=value` and extracts
+ * the `key` portion. It allocates memory for the `id` and copies the
+ * characters up to the `=` delimiter.
+ * 
+ * This function is used during the conversion of the environment from
+ * a `char **` format to a linked list format.
+ * 
+ * @param env_line The environment variable string in `key=value` format.
+ * @return A pointer to the newly allocated `id` string, or `NULL` on failure.
+ */
 char	*ft_get_env_id(char *env_line)
 {
 	char	*id;
@@ -36,9 +47,20 @@ char	*ft_get_env_id(char *env_line)
 	return (id);
 }
 
-//This funtion allocs memery for the value of a env_var once you hace the id
-//we use it as well in the process to convert the env in char ** format to
-//env in format list.
+/**
+ * @brief Extracts the `value` from an environment variable string.
+ * 
+ * This function searches for a specific `id` (key) in the environment array
+ * and extracts its corresponding `value`. It allocates memory for the `value`
+ * and copies the characters after the `=` delimiter.
+ * 
+ * This function is used during the conversion of the environment from
+ * a `char **` format to a linked list format.
+ * 
+ * @param env The environment array in `char **` format.
+ * @param id The `id` (key) to search for in the environment array.
+ * @return A pointer to the newly allocated `value` string, or `NULL` on failure.
+ */
 char	*ft_get_env_value(char **env, char *id)
 {
 	int		i;
@@ -68,8 +90,17 @@ char	*ft_get_env_value(char **env, char *id)
 	return (NULL);
 }
 
-//This function searchs env vals by his id, if the node is in the env_list
-//the function returns a pointer to the node, if not returns NULL
+/**
+ * @brief Searches for an environment variable node by its `id`.
+ * 
+ * This function iterates through the environment linked list to find a node
+ * with a matching `id`. If the node is found, it returns a pointer to the node.
+ * If no matching node is found, it returns `NULL`.
+ * 
+ * @param msl Pointer to the main structure of the shell.
+ * @param id The `id` (key) to search for in the environment list.
+ * @return A pointer to the matching `t_env` node, or `NULL` if not found.
+ */
 t_env	*search_id_node(t_msl *msl, char *id)
 {
 	t_env	*current;
@@ -86,8 +117,16 @@ t_env	*search_id_node(t_msl *msl, char *id)
 	return (NULL);
 }
 
-//Use: Create a new node of envinment list. You have to alloc memery for de 
-//node and alloc memery for the id and the value.
+/**
+ * @brief Creates a new node for the environment linked list.
+ * 
+ * This function allocates memory for a new `t_env` node and initializes its
+ * fields with the provided `id` and `value`. The `next` pointer is set to `NULL`.
+ * 
+ * @param id The `id` (key) of the environment variable.
+ * @param value The `value` of the environment variable.
+ * @return A pointer to the newly created `t_env` node, or `NULL` on failure.
+ */
 t_env	*list_new_ownenv(char *id, char *value)
 {
 	t_env	*node;
@@ -101,8 +140,15 @@ t_env	*list_new_ownenv(char *id, char *value)
 	return (node);
 }
 
-//Once you create the node with the previus function, you can use this to add
-//the node to de back of the list.
+/**
+ * @brief Adds a new node to the end of the environment linked list.
+ * 
+ * This function appends a new `t_env` node to the end of the environment
+ * linked list. If the list is empty, the new node becomes the head of the list.
+ * 
+ * @param node Pointer to the new `t_env` node to be added.
+ * @param env Pointer to the pointer of the environment linked list.
+ */
 void	list_addback_env(t_env *node, t_env **env)
 {
 	t_env	*current;

@@ -13,7 +13,7 @@ INCLUDE = $(INCLUDE_DIR)/minishell.h
 
 SRC_DIR = src/
 
-SRC_FILES=  mains/main.c\
+SRC_FILES=  main.c\
 			builtins/builts_utils.c\
 			builtins/ft_env.c\
 			builtins/ft_cd.c\
@@ -26,7 +26,6 @@ SRC_FILES=  mains/main.c\
 			builtins/ft_pwd.c\
 			builtins/ft_export.c\
 			builtins/ft_export2.c\
-			debugin/print.c\
 			minishell/init.c\
 			minishell/close_minishell.c\
 			minishell/environ.c\

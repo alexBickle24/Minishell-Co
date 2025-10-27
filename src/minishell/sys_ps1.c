@@ -6,12 +6,26 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/05 22:08:20 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/26 23:26:21 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/27 17:58:35 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+/**
+ * @brief Creates the "user@host" portion of the shell prompt (`PS1`).
+ * 
+ * This function constructs the "user@host" string for the shell prompt by
+ * concatenating the username and hostname with formatting and color codes.
+ * 
+ * - Combines the username (`sys->user`) and hostname (`sys->host`) with an `@` separator.
+ * - Adds a green color code (`C_GREEN`) and a reset code (`C_RESET`) for formatting.
+ * - Frees intermediate strings to avoid memory leaks.
+ * 
+ * @param sys Pointer to the `t_system` structure containing user and host information.
+ * @return A dynamically allocated string representing the "user@host" portion of the prompt,
+ *         or `NULL` if memory allocation fails.
+ */
 char	*set_ps1_hostuser(t_system *sys)
 {
 	char	*tmp;
@@ -36,6 +50,24 @@ char	*set_ps1_hostuser(t_system *sys)
 	return (final);
 }
 
+/**
+ * @brief Creates the current working directory portion of the shell prompt (`PS1`).
+ * 
+ * This function constructs the path portion of the shell prompt by retrieving
+ * the current working directory (`PWD`) and formatting it with color codes.
+ * If the current directory is inside the user's home directory, it replaces
+ * the home directory path with `~`.
+ * 
+ * - Retrieves the current working directory from `msl->sys->pwd`.
+ * - Checks if the `PWD` environment variable matches the current directory.
+ * - Calls `get_display_path` to handle home directory replacement with `~`.
+ * - Adds a blue color code (`C_BLUE`) and a reset code (`C_RESET`) for formatting.
+ * - Frees intermediate strings to avoid memory leaks.
+ * 
+ * @param msl Pointer to the main structure of the shell.
+ * @return A dynamically allocated string representing the path portion of the prompt,
+ *         or `NULL` if memory allocation fails.
+ */
 char	*set_ps1_path(t_msl *msl)
 {
 	char	*cwd;
@@ -60,6 +92,23 @@ char	*set_ps1_path(t_msl *msl)
 	return (display_path);
 }
 
+/**
+ * @brief Formats the current working directory for display in the shell prompt.
+ * 
+ * This function checks if the current working directory (`cwd`) is inside the
+ * user's home directory. If it is, it replaces the home directory path with `~`.
+ * Otherwise, it returns the full path as is.
+ * 
+ * - Searches for the `HOME` environment variable using `search_id_node`.
+ * - If the current directory starts with the home directory path, replaces it with `~`.
+ * - If the home directory is not found or does not match, returns the full path.
+ * - Frees intermediate strings to avoid memory leaks.
+ * 
+ * @param msl Pointer to the main structure of the shell.
+ * @param cwd The current working directory.
+ * @return A dynamically allocated string representing the formatted path,
+ *         or `NULL` if memory allocation fails.
+ */
 char	*get_display_path(t_msl *msl, char *cwd)
 {
 	t_env	*home_node;
@@ -86,6 +135,22 @@ char	*get_display_path(t_msl *msl, char *cwd)
 	return (display_path);
 }
 
+/**
+ * @brief Sets the full shell prompt (`PS1`).
+ * 
+ * This function constructs the full shell prompt by combining the "user@host"
+ * portion and the current working directory portion. It also appends a `$`
+ * or `#` symbol depending on the shell's state.
+ * 
+ * - Calls `set_ps1_path` to generate the path portion of the prompt.
+ * - Combines the "user@host" portion (`sys->ps1_hostuser`) and the path portion.
+ * - Appends the `BOOSTER` symbol (`$` or `#`) to the prompt.
+ * - Frees any previously allocated prompt strings to avoid memory leaks.
+ * - If memory allocation fails, sets a default prompt (`minishell$`).
+ * 
+ * @param msl Pointer to the main structure of the shell.
+ * @param sys Pointer to the `t_system` structure containing prompt components.
+ */
 void	set_ps1(t_msl *msl, t_system *sys)
 {
 	char	*tmp;

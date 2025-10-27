@@ -6,12 +6,32 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 19:46:29 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/26 22:36:37 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/27 18:13:58 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+/**
+ * @brief Evaluates errors in the command of a token and resolves its path.
+ * 
+ * This function checks for errors in the command associated with a token
+ * and resolves its executable path. It handles direct paths, searches for
+ * the command in the `PATH` environment variable, and sets error codes
+ * if the command is invalid or inaccessible.
+ * 
+ * - Converts the `pcmds` list to a command table (`cmd_tb`) if not already set.
+ * - Converts the environment list to a table (`env_tb`) if not already set.
+ * - Handles direct paths using `handle_direct_path`.
+ * - Searches for the command in the `PATH` variable using `check_path`.
+ * - Sets error codes:
+ *   - `1`: Command exists but is not executable.
+ *   - `2`: Command not found.
+ *   - `3`: Command is a directory.
+ * 
+ * @param c_tocken Pointer to the current token being evaluated.
+ * @param msl Pointer to the main structure of the shell.
+ */
 void	evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl)
 {
 	char	*path;
@@ -36,6 +56,20 @@ void	evaluate_tocken_cmds_errors(t_tocken *c_tocken, t_msl *msl)
 		c_tocken->error_cmd = 1;
 }
 
+/**
+ * @brief Handles direct paths for commands.
+ * 
+ * This function checks if the command is provided as a direct path (contains `/`).
+ * A direct path can be a relative or absolute path to the executable. The shell
+ * does not allow creating files with `/` in their name, so any command containing
+ * `/` is treated as a path.
+ * 
+ * - If the path exists and is a directory, sets `error_cmd = 3`.
+ * - If the path exists but is not executable, sets `error_cmd = 1`.
+ * 
+ * @param c_tocken Pointer to the current token being evaluated.
+ * @return `1` if the command is a direct path, `0` otherwise.
+ */
 int	handle_direct_path(t_tocken *c_tocken)
 {
 	struct stat	st;
@@ -51,6 +85,22 @@ int	handle_direct_path(t_tocken *c_tocken)
 	return (0);
 }
 
+/**
+ * @brief Searches for a command in the `PATH` environment variable.
+ * 
+ * This function retrieves the `PATH` variable from the environment, splits it
+ * into individual directories, and searches for the command in each directory.
+ * If the command is found, it returns the full path to the executable.
+ * 
+ * - Retrieves the `PATH` variable using `get_env_value`.
+ * - Splits the `PATH` variable into directories using `ft_split`.
+ * - Searches for the command in each directory using `find_exe_file`.
+ * - Frees the allocated memory for the directory table.
+ * 
+ * @param x_file The command to search for.
+ * @param env The environment table.
+ * @return The full path to the executable, or `NULL` if not found.
+ */
 char	*check_path(char *x_file, char **env)
 {
 	char	**absolute_paths_table;
@@ -72,6 +122,19 @@ char	*check_path(char *x_file, char **env)
 	return (path);
 }
 
+/**
+ * @brief Retrieves the value of an environment variable.
+ * 
+ * This function searches for a specific environment variable in the environment
+ * table and returns its value. The variable is identified by its key (e.g., `PATH`).
+ * 
+ * - Constructs the key in the format `key=`.
+ * - Iterates through the environment table to find a matching key.
+ * 
+ * @param key_value The key of the environment variable to search for.
+ * @param env The environment table.
+ * @return The value of the environment variable, or `NULL` if not found.
+ */
 char	*get_env_value(const char *key_value, char **env)
 {
 	int		i;
@@ -100,6 +163,21 @@ char	*get_env_value(const char *key_value, char **env)
 	return (NULL);
 }
 
+/**
+ * @brief Searches for an executable file in a list of directories.
+ * 
+ * This function iterates through a list of possible directories and checks
+ * if the command exists and is accessible in any of them. If found, it returns
+ * the full path to the executable.
+ * 
+ * - Combines each directory with the command name to form a full path.
+ * - Checks if the file exists and is accessible using `access`.
+ * - Frees intermediate memory allocations for each path.
+ * 
+ * @param posible_paths Array of directories to search in.
+ * @param x_file The command to search for.
+ * @return The full path to the executable, or `NULL` if not found.
+ */
 char	*find_exe_file(char **posible_paths, char *x_file)
 {
 	char	*relative_path;

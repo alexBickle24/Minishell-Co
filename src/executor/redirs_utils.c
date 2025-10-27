@@ -6,12 +6,28 @@
 /*   By: alejandro <alejandro@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/09/20 20:08:16 by alejandro         #+#    #+#             */
-/*   Updated: 2025/09/26 22:52:32 by alejandro        ###   ########.fr       */
+/*   Updated: 2025/10/27 18:22:08 by alejandro        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../inc/minishell.h"
 
+/**
+ * @brief Checks and sets up input redirections for a command.
+ * 
+ * This function iterates through the list of files associated with a token
+ * and sets up input redirections (`redir_in`) for the command. It handles
+ * heredocs, input files, and here-strings. If an error occurs (e.g., file
+ * not found, permission denied, or ambiguous redirection), it stops processing.
+ * 
+ * - For input redirections (`T_HEREDOC`, `T_INFILE`, `T_HEREDOC_S`, `T_HERE_STR`):
+ *   - Sets `redir_in` to the current file.
+ *   - Checks file access permissions using `access`.
+ * - Calls `check_out_redirs` to handle output redirections.
+ * 
+ * @param c_tocken Pointer to the current token being processed.
+ * @param files_list Pointer to the list of files associated with the token.
+ */
 void	check_create_redirs(t_tocken *c_tocken, t_files *files_list)
 {
 	t_files	*current_f;
@@ -35,6 +51,25 @@ void	check_create_redirs(t_tocken *c_tocken, t_files *files_list)
 	}
 }
 
+/**
+ * @brief Checks and sets up output redirections for a command.
+ * 
+ * This function handles output redirections (`redir_out`) for a command.
+ * It creates or appends to the specified output file, depending on the
+ * redirection type (`T_OUTFILE` or `T_APPEND`). If an error occurs (e.g.,
+ * ambiguous redirection or file creation failure), it stops processing.
+ * 
+ * - For output redirections (`T_OUTFILE`, `T_APPEND`):
+ *   - Sets `redir_out` to the current file.
+ *   - Opens the file with the appropriate flags:
+ *     - `O_TRUNC` for overwriting (`T_OUTFILE`).
+ *     - `O_APPEND` for appending (`T_APPEND`).
+ *   - Closes the file descriptor after opening.
+ * 
+ * @param c_tocken Pointer to the current token being processed.
+ * @param cur_f Pointer to the current file being checked.
+ * @return `1` if an error occurs, `0` otherwise.
+ */
 int	check_out_redirs(t_tocken *c_tocken, t_files *cur_f)
 {
 	int	fd;
@@ -55,6 +90,24 @@ int	check_out_redirs(t_tocken *c_tocken, t_files *cur_f)
 	return (0);
 }
 
+/**
+ * @brief Forwards input redirection for a command.
+ * 
+ * This function sets up the input redirection for a command based on the
+ * `redir_in` field of the token. If no input redirection is specified, it
+ * forwards the input from the previous pipe. If an error occurs (e.g.,
+ * ambiguous redirection or file access failure), it sets the `error_file`
+ * flag in the token.
+ * 
+ * - If `redir_in` is `NULL`:
+ *   - Forwards input from the previous pipe using `pipe_forward`.
+ * - If `redir_in` is set:
+ *   - Closes the previous pipe.
+ *   - Checks for ambiguous redirection or file access errors using `tunel_in_file`.
+ *   - Calls `ft_error_redirs` to display an error message if necessary.
+ * 
+ * @param c_tocken Pointer to the current token being processed.
+ */
 void	fordward_in(t_tocken *c_tocken)
 {
 	t_files	*red_in;
@@ -80,6 +133,24 @@ void	fordward_in(t_tocken *c_tocken)
 	}
 }
 
+/**
+ * @brief Forwards output redirection for a command.
+ * 
+ * This function sets up the output redirection for a command based on the
+ * `redir_out` field of the token. If no output redirection is specified, it
+ * forwards the output to the next pipe. If an error occurs (e.g., ambiguous
+ * redirection or file creation failure), it sets the `error_file` flag in the token.
+ * 
+ * - If `redir_out` is `NULL`:
+ *   - Forwards output to the next pipe using `pipe_forward`.
+ * - If `redir_out` is set:
+ *   - Determines the redirection type (`T_APPEND` or `T_OUTFILE`).
+ *   - Closes the next pipe.
+ *   - Checks for ambiguous redirection or file creation errors using `tunel_out_file`.
+ *   - Calls `ft_error_redirs` to display an error message if necessary.
+ * 
+ * @param c_tocken Pointer to the current token being processed.
+ */
 void	fordward_out(t_tocken *c_tocken)
 {
 	char	ap_m;
